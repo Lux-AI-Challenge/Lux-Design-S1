@@ -1,0 +1,32 @@
+{
+  "name": "lux-ai-challenge-2020",
+  "version": "1.0.0",
+  "description": "The design for the first Lux AI Challenge",
+  "main": "lib/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lux-AI-Challenge/LuxDesign.git"
+  },
+  "keywords": [
+    "AI",
+    "Lux",
+    "Competition"
+  ],
+  "author": "Lux-AI-Challenge",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lux-AI-Challenge/LuxDesign/issues"
+  },
+  "homepage": "https://github.com/Lux-AI-Challenge/LuxDesign#readme",
+  "dependencies": {
+    "dimensions-ai": "^4.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.6.2",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.2"
+  }
+}
