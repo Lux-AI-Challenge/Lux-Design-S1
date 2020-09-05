@@ -10,6 +10,8 @@ import { DEFAULT_CONFIGS } from '../defaults';
 
 /**
  * Holds basically all game data, including the map
+ *
+ * All entities that require light are any Units or Cities
  */
 export class Game {
   /**

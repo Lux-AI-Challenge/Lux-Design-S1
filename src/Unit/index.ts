@@ -1,15 +1,17 @@
 import { genID } from '../utils';
 import { LuxMatchConfigs } from '../types';
+import { Actionable } from '../Actionable';
 
-export abstract class Unit {
+export abstract class Unit extends Actionable {
   public id: string;
   constructor(
     public x: number,
     public y: number,
     public type: Unit.Type,
     public team: Unit.TEAM,
-    public configs: LuxMatchConfigs
+    configs: LuxMatchConfigs
   ) {
+    super(configs);
     this.id = 'u_' + genID();
   }
   abstract getLightUpkeep(): number;
