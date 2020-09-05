@@ -7,6 +7,10 @@ import { genID } from '../utils';
  */
 export class City {
   /**
+   * fuel stored in city
+   */
+  public fuel = 0;
+  /**
    * the map cells that compose this city
    */
   public citycells: Array<Cell> = [];
