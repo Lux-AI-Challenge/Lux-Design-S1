@@ -1,10 +1,12 @@
 import 'colors';
 import { Resource } from '../Resource';
 import { Unit } from '../Unit';
-import { City, CityTile } from './city';
+import { City } from './city';
 import { GameMap } from '../GameMap';
 import { Worker } from '../Unit/worker';
 import { Cart } from '../Unit/cart';
+import { LuxMatchConfigs } from '../types';
+import { DEFAULT_CONFIGS } from '../defaults';
 
 /**
  * Holds basically all game data, including the map
@@ -55,15 +57,12 @@ export class Game {
     },
   };
 
-  public configs: Game.Configs = {
-    width: 16,
-    height: 16,
-  };
+  public configs: Readonly<LuxMatchConfigs> = { ...DEFAULT_CONFIGS };
   /**
    * Initialize a game, with all its state and stats
    * @param configs
    */
-  constructor(configs: Partial<Game.Configs> = {}) {
+  constructor(configs: Readonly<Partial<LuxMatchConfigs>> = {}) {
     this.configs = {
       ...this.configs,
       ...configs,
@@ -73,14 +72,14 @@ export class Game {
 
   spawnWorker(team: Unit.TEAM, x: number, y: number): void {
     const cell = this.map.getCell(x, y);
-    const unit = new Worker(x, y, team);
+    const unit = new Worker(x, y, team, this.configs);
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
   }
 
   spawnCart(team: Unit.TEAM, x: number, y: number): void {
     const cell = this.map.getCell(x, y);
-    const unit = new Cart(x, y, team);
+    const unit = new Cart(x, y, team, this.configs);
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
   }
@@ -105,7 +104,7 @@ export class Game {
 
     // if no adjacent city cells of same team, generate new city
     if (adjSameTeamCityTiles.length === 0) {
-      const city = new City(team);
+      const city = new City(team, this.configs);
       cell.setCityTile(team, city.id);
       city.addCityTile(cell);
       this.cities.set(city.id, city);
@@ -143,6 +142,7 @@ export namespace Game {
   export interface Configs {
     width: number;
     height: number;
+    parameters: LuxMatchConfigs;
   }
   export interface Stats {
     teamStats: {

@@ -1,6 +1,7 @@
 import { Unit } from '../Unit';
 import { Cell } from '../GameMap/cell';
 import { genID } from '../utils';
+import { LuxMatchConfigs } from '../types';
 
 /**
  * A city is composed of adjacent city tiles of the same team
@@ -15,13 +16,13 @@ export class City {
    */
   public citycells: Array<Cell> = [];
   public id: string;
-  constructor(public team: Unit.TEAM) {
+  constructor(public team: Unit.TEAM, public configs: LuxMatchConfigs) {
     this.id = 'city_' + genID();
   }
 
   // TODO
   getLightUpkeep(): number {
-    return 0;
+    return;
   }
 
   addCityTile(cell: Cell): void {

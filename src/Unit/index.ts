@@ -1,4 +1,5 @@
 import { genID } from '../utils';
+import { LuxMatchConfigs } from '../types';
 
 export class Unit {
   public id: string;
@@ -6,7 +7,8 @@ export class Unit {
     public x: number,
     public y: number,
     public type: Unit.Type,
-    public team: Unit.TEAM
+    public team: Unit.TEAM,
+    public configs: LuxMatchConfigs
   ) {
     this.id = 'u_' + genID();
   }
