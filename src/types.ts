@@ -1,10 +1,12 @@
+import { Game } from './Game';
+
 export interface LuxMatchResults {
   ranks: Array<{ rank: number; agentID: number }>;
 }
 
 export interface LuxMatchState {
   configs: LuxMatchConfigs;
-  turn: number;
+  game: Game;
 }
 
 /**

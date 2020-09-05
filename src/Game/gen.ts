@@ -1,4 +1,4 @@
-import { GameMap } from '.';
+import { Game } from '.';
 import { Resource } from '../Resource';
 import { Unit } from '../Unit';
 
@@ -9,12 +9,12 @@ const defaultGenerationConfigs = {
 };
 export const generateMap = (
   mapconfigs: Partial<GenerationConfigs> = {}
-): GameMap => {
+): Game => {
   const configs = {
     ...defaultGenerationConfigs,
     ...mapconfigs,
   };
-  const map = new GameMap(configs.width, configs.height);
+  const map = new Game(configs.width, configs.height);
 
   // for testing, hardcode wood and coal
   map.getCell(3, 3).setResource(Resource.Types.WOOD, 1000);

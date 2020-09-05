@@ -1,4 +1,4 @@
-import { generateMap } from '../src/GameMap/gen';
+import { generateMap } from '../src/Game/gen';
 
 const map = generateMap();
 console.log(map.getMapString());

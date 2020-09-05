@@ -15,7 +15,7 @@ const luxdim = Dimensions.create(design, {
 
 const botList = [];
 const tourney = luxdim.createTournament(botList, {
-  rankSystem: Tournament.RankSystem.TRUESKILL,
+  rankSystem: Tournament.RankSystemTypes.TRUESKILL,
   type: TournamentType.LADDER,
   resultHandler: LuxDesign.resultHandler,
   agentsPerMatch: [2],
