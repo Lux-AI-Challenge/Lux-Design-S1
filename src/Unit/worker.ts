@@ -1,5 +1,6 @@
 import { Unit } from '.';
 import { LuxMatchConfigs } from '../types';
+import { Game } from '../Game';
 
 export class Worker extends Unit {
   public cooldown = 0;
@@ -9,7 +10,7 @@ export class Worker extends Unit {
   getLightUpkeep(): number {
     return this.configs.parameters.LIGHT_UPKEEP.WORKER;
   }
-  turn(commands: Array<string>): void {
+  turn(state: Game.State, commands: Array<string>): void {
     if (this.cooldown > 0) {
       this.cooldown--;
     }

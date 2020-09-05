@@ -49,10 +49,12 @@ export class Game {
     turn: 0,
     teamStates: {
       [Unit.TEAM.A]: {
+        researchPoints: 0,
         units: new Map(),
         fuel: 0,
       },
       [Unit.TEAM.B]: {
+        researchPoints: 0,
         units: new Map(),
         fuel: 0,
       },
@@ -165,6 +167,7 @@ export namespace Game {
   }
   export interface TeamState {
     fuel: number;
+    researchPoints: number;
     units: Map<string, Unit>;
   }
 

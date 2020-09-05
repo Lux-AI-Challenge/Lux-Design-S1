@@ -1,14 +1,15 @@
 import { Unit } from '../Unit';
 import { Cell } from '../GameMap/cell';
 import { genID } from '../utils';
-import { LuxMatchConfigs } from '../types';
+import { LuxMatchConfigs, LuxMatchState } from '../types';
 import { Game } from '.';
 import { MatchWarn } from 'dimensions-ai';
+import { Actionable } from '../Actionable';
 
 /**
  * A city is composed of adjacent city tiles of the same team
  */
-export class City {
+export class City extends Actionable {
   /**
    * fuel stored in city
    */
@@ -22,7 +23,8 @@ export class City {
   /** turns before this city is allowed to build or research */
   public actionCooldown = 0;
 
-  constructor(public team: Unit.TEAM, public configs: LuxMatchConfigs) {
+  constructor(public team: Unit.TEAM, configs: LuxMatchConfigs) {
+    super(configs);
     this.id = 'city_' + genID();
   }
 
@@ -43,7 +45,7 @@ export class City {
     return this.actionCooldown === 0;
   }
 
-  turn(commands: Array<string>): void {
+  turn(state: Game.State, commands: Array<string>): void {
     if (this.actionCooldown > 0) {
       this.actionCooldown--;
     }
@@ -75,6 +77,7 @@ export class City {
       } else if (cmd === Game.ACTIONS.RESEARCH) {
         if (this.canResearch()) {
           this.resetCooldown();
+          state.teamStates[this.team].researchPoints++;
         } else {
           throw new MatchWarn(
             `City ${this.id} is still has cooldown: ${this.actionCooldown} and can't research`
