@@ -4,6 +4,7 @@ import { Resource } from '../Resource';
 import { Unit } from '../Unit';
 import { genID } from '../utils';
 import { City } from './city';
+import { GameMap } from '../GameMap';
 
 /**
  * Holds basically all game data, including the map
@@ -12,7 +13,7 @@ export class Game {
   /**
    * The actual map
    */
-  public map: Array<Array<Cell>>;
+  public map: GameMap;
 
   /**
    * Map a internal city id to the array of cells that are city tiles part of the same city
@@ -20,10 +21,9 @@ export class Game {
   public cities: Map<string, City> = new Map();
 
   public stats: Game.Stats = {
-    turn: 0,
     teamStats: {
       [Unit.TEAM.A]: {
-        fuel: 0,
+        fuelGenerated: 0,
         resourcesCollected: {
           wood: 0,
           coal: 0,
@@ -31,7 +31,7 @@ export class Game {
         },
       },
       [Unit.TEAM.B]: {
-        fuel: 0,
+        fuelGenerated: 0,
         resourcesCollected: {
           wood: 0,
           coal: 0,
@@ -41,45 +41,42 @@ export class Game {
     },
   };
 
+  public state: Game.State = {
+    turn: 0,
+    teamStates: {
+      [Unit.TEAM.A]: {
+        fuel: 0,
+      },
+      [Unit.TEAM.B]: {
+        fuel: 0,
+      },
+    },
+  };
+
   public configs: Game.Configs = {
     width: 16,
     height: 16,
   };
   /**
-   * Constructor to initialize empty game map with empty cells
-   * @param width - width of map
-   * @param height - height of map
+   * Initialize a game, with all its state and stats
+   * @param configs
    */
   constructor(configs: Partial<Game.Configs> = {}) {
     this.configs = {
       ...this.configs,
       ...configs,
     };
-    this.map = new Array(this.configs.height);
-    for (let y = 0; y < this.configs.height; y++) {
-      this.map[y] = new Array(this.configs.width);
-      for (let x = 0; x < this.configs.width; x++) {
-        this.map[y][x] = new Cell(x, y);
-      }
-    }
-  }
-
-  getCell(x: number, y: number): Cell {
-    return this.map[y][x];
-  }
-
-  getRow(y: number): Array<Cell> {
-    return this.map[y];
+    this.map = new GameMap(this.configs.width, this.configs.height);
   }
 
   /**
    * Spawn city tile for a team at (x, y)
    */
   spawnCityTile(team: Unit.TEAM, x: number, y: number): void {
-    const cell = this.getCell(x, y);
+    const cell = this.map.getCell(x, y);
     cell.setCityTile(team);
     // now update the cities field accordingly
-    const adjCells = this.getAdjacentCells(cell);
+    const adjCells = this.map.getAdjacentCells(cell);
 
     const adjSameTeamCityTiles = adjCells.filter((cell) => {
       return cell.isCityTile() && cell.citytile.team === team;
@@ -100,71 +97,6 @@ export class Game {
       city.addCityTile(cell);
     }
   }
-
-  getAdjacentCells(cell: Cell): Array<Cell> {
-    const cells: Array<Cell> = [];
-    if (cell.x > 0) {
-      cells.push(this.getCell(cell.x - 1, cell.y));
-    }
-    if (cell.y > 0) {
-      cells.push(this.getCell(cell.x, cell.y - 1));
-    }
-    if (cell.x < this.width - 1) {
-      cells.push(this.getCell(cell.x + 1, cell.y));
-    }
-    if (cell.x < this.height - 1) {
-      cells.push(this.getCell(cell.x, cell.y + 1));
-    }
-    return cells;
-  }
-
-  /**
-   * Return printable map string
-   */
-  getMapString(): string {
-    let str = '';
-    for (let y = 0; y < this.height; y++) {
-      str +=
-        this.getRow(y)
-          .map((cell) => {
-            if (cell.hasUnits()) {
-              if (cell.units.size === 1) {
-                let unitstr = '';
-                cell.units.forEach((unit) => {
-                  let identifier = 'w';
-                  if (unit.type === Unit.Type.CART) {
-                    identifier = 'c';
-                  }
-                  if (unit.team === Unit.TEAM.A) {
-                    unitstr = identifier.cyan;
-                  } else {
-                    unitstr = identifier.red;
-                  }
-                });
-                return unitstr;
-              }
-            } else if (cell.hasResource()) {
-              switch (cell.resource.type) {
-                case Resource.Types.WOOD:
-                  return `▩`.yellow;
-                case Resource.Types.COAL:
-                  return `▩`.gray;
-                case Resource.Types.URANIUM:
-                  return `▩`.magenta;
-              }
-            } else if (cell.isCityTile()) {
-              if (cell.citytile.team === Unit.TEAM.A) {
-                return `▩`.cyan;
-              } else {
-                return `▩`.red;
-              }
-            }
-            return '0';
-          })
-          .join(' ') + '\n';
-    }
-    return str;
-  }
 }
 export namespace Game {
   export interface Configs {
@@ -172,15 +104,23 @@ export namespace Game {
     height: number;
   }
   export interface Stats {
-    turns: number;
     teamStats: {
       [x in Unit.TEAM]: TeamStats;
     };
   }
   export interface TeamStats {
-    fuel: number;
+    fuelGenerated: number;
     resourcesCollected: {
       [x in Resource.Types]: number;
     };
+  }
+  export interface State {
+    turn: number;
+    teamStates: {
+      [x in Unit.TEAM]: TeamState;
+    };
+  }
+  export interface TeamState {
+    fuel: number;
   }
 }

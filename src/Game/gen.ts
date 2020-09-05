@@ -7,14 +7,18 @@ const defaultGenerationConfigs = {
   height: 16,
   seed: 0,
 };
-export const generateMap = (
+export const generateGame = (
   mapconfigs: Partial<GenerationConfigs> = {}
 ): Game => {
   const configs = {
     ...defaultGenerationConfigs,
     ...mapconfigs,
   };
-  const map = new Game(configs.width, configs.height);
+  const game = new Game({
+    width: configs.width,
+    height: configs.height,
+  });
+  const map = game.map;
 
   // for testing, hardcode wood and coal
   map.getCell(3, 3).setResource(Resource.Types.WOOD, 1000);
@@ -34,10 +38,10 @@ export const generateMap = (
   map.getCell(8, 8).setResource(Resource.Types.URANIUM, 1000);
 
   // hardcode initial city tiles
-  map.spawnCityTile(Unit.TEAM.A, 1, 1);
-  map.spawnCityTile(Unit.TEAM.B, 14, 1);
+  game.spawnCityTile(Unit.TEAM.A, 1, 1);
+  game.spawnCityTile(Unit.TEAM.B, 14, 1);
 
-  return map;
+  return game;
 };
 
 export interface GenerationConfigs {

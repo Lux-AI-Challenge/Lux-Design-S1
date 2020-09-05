@@ -1,5 +1,5 @@
-import { generateMap } from '../src/Game/gen';
+import { generateGame } from '../src/Game/gen';
 
-const map = generateMap();
-console.log(map.getMapString());
-console.log(map.cities);
+const game = generateGame();
+console.log(game.map.getMapString());
+console.log(game.cities);
