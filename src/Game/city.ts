@@ -41,9 +41,6 @@ export class City {
     return this.actionCooldown === 0;
   }
 
-  /**
-   * Process all commands for this city
-   */
   turn(commands: Array<string>): void {
     if (this.actionCooldown > 0) {
       this.actionCooldown--;
