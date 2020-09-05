@@ -5,6 +5,11 @@ export abstract class Unit extends Actionable {
   public id: string;
   static globalIdCount = 0;
   public cooldown = 0;
+  public cargo = {
+    wood: 0,
+    coal: 0,
+    uranium: 0,
+  };
   constructor(
     public x: number,
     public y: number,

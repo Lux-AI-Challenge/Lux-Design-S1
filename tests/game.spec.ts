@@ -56,14 +56,17 @@ describe('Test Game', () => {
   });
 
   describe('test validate commands', () => {
-    const game = new Game({
-      width: 16,
-      height: 16,
+    let game: Game;
+    let citytile23;
+    beforeEach(() => {
+      game = new Game({
+        width: 16,
+        height: 16,
+      });
+      game.spawnCityTile(0, 2, 2);
+      citytile23 = game.spawnCityTile(0, 2, 3);
     });
-    game.spawnCityTile(0, 2, 2);
-    const citytile23 = game.spawnCityTile(0, 2, 3);
     it('should validate build carts', () => {
-      citytile23.cooldown = 0;
       game.validateCommand({
         command: 'bc 2 2',
         agentID: 0,
@@ -115,7 +118,6 @@ describe('Test Game', () => {
     });
 
     it('should validate build workers', () => {
-      citytile23.cooldown = 0;
       game.validateCommand({
         command: 'bw 2 2',
         agentID: 0,
@@ -167,7 +169,6 @@ describe('Test Game', () => {
     });
 
     it('should validate research', () => {
-      citytile23.cooldown = 0;
       game.validateCommand({
         command: 'r 2 2',
         agentID: 0,
@@ -268,6 +269,71 @@ describe('Test Game', () => {
         // eslint-disable-next-line no-empty
       } catch (err) {}
       if (valid) fail('can not move an unit that is on cooldown');
+    });
+    it('should validate resource transfer commands', () => {
+      const worker1 = game.spawnWorker(0, 10, 10);
+      const worker2 = game.spawnWorker(0, 11, 10);
+      const worker3 = game.spawnWorker(0, 11, 15);
+      const teamBworker4 = game.spawnWorker(1, 10, 9);
+      worker1.cargo.wood = 100;
+      game.validateCommand({
+        command: `t ${worker1.id} ${worker2.id} wood 100`,
+        agentID: 0,
+      });
+      let valid = false;
+      try {
+        game.validateCommand({
+          command: `t ${worker1.id} ${worker2.id} invalidresource 100`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not give invalid resource');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: `t ${worker1.id} ${worker3.id} wood 100`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not give resources to non-adjacent units');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: `t ${worker1.id} ${teamBworker4.id} wood 100`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not give resources to opponent units');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: `t ${teamBworker4.id} ${worker1.id} wood 100`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not transfer from opponent units');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: `t ${worker1.id} ${worker1.id} wood 100`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not transfer to same unit');
     });
   });
 });

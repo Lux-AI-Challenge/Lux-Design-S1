@@ -179,7 +179,52 @@ export class Game {
           }
           break;
         case Game.ACTIONS.TRANSFER:
-          if (strs.length === 3) {
+          if (strs.length === 5) {
+            const srcID = strs[1];
+            const destID = strs[2];
+            const resourceType = strs[3];
+            const amount = parseInt(strs[4]);
+            const teamState = this.state.teamStates[team];
+            if (!teamState.units.has(srcID)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} does not own source unit: ${srcID} for transfer`;
+              break;
+            }
+            if (!teamState.units.has(destID)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} does not own destination unit: ${srcID} for transfer`;
+              break;
+            }
+            const srcUnit = teamState.units.get(srcID);
+            const destUnit = teamState.units.get(destID);
+            if (srcID === destID) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to transfer between the same unit ${srcID}`;
+              break;
+            }
+            if (
+              !this.map.isAdjacent(srcUnit.x, srcUnit.y, destUnit.x, destUnit.y)
+            ) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to transfer between non-adjacent units: ${srcID}, ${destID}`;
+              break;
+            }
+
+            if (isNaN(amount)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to transfer invalid amount: ${strs[3]}`;
+              break;
+            }
+            switch (resourceType) {
+              case Resource.Types.WOOD:
+              case Resource.Types.COAL:
+              case Resource.Types.URANIUM:
+                break;
+              default:
+                valid = false;
+                errormsg = `Agent ${cmd.agentID} tried to transfer invalid resource: ${resourceType}`;
+                break;
+            }
           } else {
             valid = false;
           }
@@ -301,7 +346,10 @@ export namespace Game {
     BUILD_WORKER = 'bw',
     /** Formatted as `bc x y`. (x,y) should be an owned city tile */
     BUILD_CART = 'bc',
-    /** Formatted as `t source_unitid destination_unitid`. Both units in transfer should be adjacent */
+    /**
+     * Formatted as `t source_unitid destination_unitid resource_type amount`. Both units in transfer should be
+     * adjacent
+     */
     TRANSFER = 't',
   }
 

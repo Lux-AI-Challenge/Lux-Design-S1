@@ -34,6 +34,15 @@ export class GameMap {
     return this.map[y];
   }
 
+  isAdjacent(x1: number, y1: number, x2: number, y2: number): boolean {
+    const dx = x1 - x2;
+    const dy = y1 - y2;
+    if (Math.abs(dx) + Math.abs(dy) > 1) {
+      return false;
+    }
+    return true;
+  }
+
   getAdjacentCells(cell: Cell): Array<Cell> {
     const cells: Array<Cell> = [];
     if (cell.x > 0) {
