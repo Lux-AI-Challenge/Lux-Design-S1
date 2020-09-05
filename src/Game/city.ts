@@ -1,7 +1,7 @@
 import { Unit } from '../Unit';
 import { Cell } from '../GameMap/cell';
 import { genID } from '../utils';
-import { LuxMatchConfigs, LuxMatchState } from '../types';
+import { LuxMatchConfigs } from '../types';
 import { Game } from '.';
 import { MatchWarn } from 'dimensions-ai';
 import { Actionable } from '../Actionable';

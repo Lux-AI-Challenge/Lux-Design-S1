@@ -7,6 +7,7 @@ import { Worker } from '../Unit/worker';
 import { Cart } from '../Unit/cart';
 import { LuxMatchConfigs } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
+import { MatchError, MatchEngine, MatchWarn } from 'dimensions-ai';
 
 /**
  * Holds basically all game data, including the map
@@ -72,6 +73,36 @@ export class Game {
       ...configs,
     };
     this.map = new GameMap(this.configs.width, this.configs.height);
+  }
+
+  /**
+   * throws error if command is invalid
+   */
+  validateCommand(cmd: MatchEngine.Command): void {
+    const strs = cmd.command.split(' ');
+    if (strs.length === 0) {
+      throw new MatchWarn(
+        `Agent ${cmd.agentID} sent malformed command: ${cmd.command}`
+      );
+    } else {
+      const action = strs[0];
+      if (action in Game.ACTIONS) {
+        switch (action) {
+          case Game.ACTIONS.BUILD_CART:
+            break;
+          case Game.ACTIONS.BUILD_WORKER:
+            break;
+          case Game.ACTIONS.MOVE:
+            break;
+          case Game.ACTIONS.RESEARCH:
+            break;
+        }
+      } else {
+        throw new MatchWarn(
+          `Agent ${cmd.agentID} sent invalid command: ${cmd.command}`
+        );
+      }
+    }
   }
 
   spawnWorker(team: Unit.TEAM, x: number, y: number): void {
