@@ -26,7 +26,9 @@
   "homepage": "https://github.com/Lux-AI-Challenge/LuxDesign#readme",
   "dependencies": {
     "@types/seedrandom": "^2.4.28",
+    "colors": "^1.4.0",
     "dimensions-ai": "^4.5.0",
+    "nanoid": "^3.1.12",
     "seedrandom": "^3.0.5"
   },
   "devDependencies": {
