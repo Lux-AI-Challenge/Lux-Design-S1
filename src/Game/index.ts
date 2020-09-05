@@ -72,11 +72,11 @@ export class Game {
       ...this.configs,
       ...configs,
     };
-    this.map = new GameMap(this.configs.width, this.configs.height);
+    this.map = new GameMap(this.configs);
   }
 
   /**
-   * throws error if command is invalid
+   * throws error if command is valid
    */
   validateCommand(cmd: MatchEngine.Command): void {
     const strs = cmd.command.split(' ');
@@ -86,37 +86,123 @@ export class Game {
       );
     } else {
       const action = strs[0];
-      if (action in Game.ACTIONS) {
-        switch (action) {
-          case Game.ACTIONS.BUILD_CART:
+      let valid = true;
+      const team: Unit.TEAM = cmd.agentID;
+      let errormsg = `Agent ${cmd.agentID} sent invalid command`;
+      switch (action) {
+        case Game.ACTIONS.BUILD_CART:
+        case Game.ACTIONS.BUILD_WORKER:
+          if (strs.length === 3) {
+            const x = parseInt(strs[1]);
+            const y = parseInt(strs[2]);
+            if (isNaN(x) || isNaN(y)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build with invalid coordinates`;
+              break;
+            }
+            // check if being built on owned city tile
+            const cell = this.map.getCell(x, y);
+            if (!cell.isCityTile() || cell.citytile.team !== team) {
+              // invalid if not a city or not owned
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) that it does not own`;
+              break;
+            }
+
+            const citytile = cell.citytile;
+            if (!citytile.canBuildUnit()) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
+              break;
+            }
+          } else {
+            valid = false;
             break;
-          case Game.ACTIONS.BUILD_WORKER:
-            break;
-          case Game.ACTIONS.MOVE:
-            break;
-          case Game.ACTIONS.RESEARCH:
-            break;
-        }
-      } else {
-        throw new MatchWarn(
-          `Agent ${cmd.agentID} sent invalid command: ${cmd.command}`
-        );
+          }
+          break;
+        case Game.ACTIONS.MOVE:
+          if (strs.length === 3) {
+            const unitid = strs[1];
+            const direction = strs[2];
+            const teamState = this.state.teamStates[team];
+            if (!teamState.units.has(unitid)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} that it does not own`;
+              break;
+            }
+            const unit = teamState.units.get(unitid);
+            if (!unit.canMove()) {
+              errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} with cooldown: ${unit.cooldown}`;
+              valid = false;
+              break;
+            }
+            switch (direction) {
+              case Game.DIRECTIONS.NORTH:
+              case Game.DIRECTIONS.EAST:
+              case Game.DIRECTIONS.SOUTH:
+              case Game.DIRECTIONS.WEST:
+                break;
+              default:
+                errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} in invalid direction ${direction}`;
+                valid = false;
+                break;
+            }
+          } else {
+            valid = false;
+          }
+          break;
+        case Game.ACTIONS.RESEARCH:
+          if (strs.length === 3) {
+            const x = parseInt(strs[1]);
+            const y = parseInt(strs[2]);
+            if (isNaN(x) || isNaN(y)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to run research at invalid coordinates`;
+              break;
+            }
+            // check if being researched on owned city tile
+            const cell = this.map.getCell(x, y);
+            if (!cell.isCityTile() || cell.citytile.team !== team) {
+              // invalid if not a city or not owned
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to run research at tile (${x}, ${y}) that it does not own`;
+              break;
+            }
+            const citytile = cell.citytile;
+            if (!citytile.canResearch()) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
+              break;
+            }
+          } else {
+            valid = false;
+          }
+          break;
+        case Game.ACTIONS.TRANSFER:
+          break;
+        default:
+          valid = false;
+      }
+      if (valid === false) {
+        throw new MatchWarn(errormsg + `; cmd: ${cmd.command}`);
       }
     }
   }
 
-  spawnWorker(team: Unit.TEAM, x: number, y: number): void {
+  spawnWorker(team: Unit.TEAM, x: number, y: number): Worker {
     const cell = this.map.getCell(x, y);
     const unit = new Worker(x, y, team, this.configs);
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
+    return unit;
   }
 
-  spawnCart(team: Unit.TEAM, x: number, y: number): void {
+  spawnCart(team: Unit.TEAM, x: number, y: number): Cart {
     const cell = this.map.getCell(x, y);
     const unit = new Cart(x, y, team, this.configs);
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
+    return unit;
   }
 
   /**
@@ -203,10 +289,16 @@ export namespace Game {
   }
 
   export enum ACTIONS {
+    /** Formatted as `m unitid direction`. unitid should be valid and should have empty space in that direction */
     MOVE = 'm',
+    /** Formatted as `r x, y`. (x,y) should be an owned city tile */
     RESEARCH = 'r',
+    /** Formatted as `bw x y`. (x,y) should be an owned city tile */
     BUILD_WORKER = 'bw',
+    /** Formatted as `bc x y`. (x,y) should be an owned city tile */
     BUILD_CART = 'bc',
+    /** Formatted as `t source_unitid destination_unitid`. Both units in transfer should be adjacent */
+    TRANSFER = 't',
   }
 
   export enum DIRECTIONS {

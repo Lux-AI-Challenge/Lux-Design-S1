@@ -1,8 +1,11 @@
 import { Cell } from '../GameMap/cell';
 import { Unit } from '../Unit';
 import { Resource } from '../Resource';
+import { LuxMatchConfigs } from '../types';
 
 export class GameMap {
+  public height: number;
+  public width: number;
   /**
    * The actual map
    */
@@ -12,12 +15,14 @@ export class GameMap {
    * @param width - width of map
    * @param height - height of map
    */
-  constructor(public width: number, public height: number) {
+  constructor(public configs: Readonly<LuxMatchConfigs>) {
+    this.height = this.configs.height;
+    this.width = this.configs.width;
     this.map = new Array(this.height);
     for (let y = 0; y < this.height; y++) {
       this.map[y] = new Array(this.width);
       for (let x = 0; x < this.width; x++) {
-        this.map[y][x] = new Cell(x, y);
+        this.map[y][x] = new Cell(x, y, this.configs);
       }
     }
   }

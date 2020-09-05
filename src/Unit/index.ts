@@ -1,9 +1,10 @@
-import { genID } from '../utils';
 import { LuxMatchConfigs } from '../types';
 import { Actionable } from '../Actionable';
 
 export abstract class Unit extends Actionable {
   public id: string;
+  static globalIdCount = 0;
+  public cooldown = 0;
   constructor(
     public x: number,
     public y: number,
@@ -12,9 +13,11 @@ export abstract class Unit extends Actionable {
     configs: LuxMatchConfigs
   ) {
     super(configs);
-    this.id = 'u_' + genID();
+    this.id = 'u_' + Unit.globalIdCount;
+    Unit.globalIdCount++;
   }
   abstract getLightUpkeep(): number;
+  abstract canMove(): boolean;
 }
 
 export namespace Unit {
