@@ -44,6 +44,9 @@ export const generateGame = (
   game.spawnWorker(Unit.TEAM.A, 2, 2);
   game.spawnWorker(Unit.TEAM.B, 13, 2);
 
+  game.spawnCart(Unit.TEAM.A, 3, 2);
+  game.spawnCart(Unit.TEAM.B, 12, 2);
+
   return game;
 };
 

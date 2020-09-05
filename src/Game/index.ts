@@ -1,10 +1,10 @@
 import 'colors';
 import { Resource } from '../Resource';
 import { Unit } from '../Unit';
-import { genID } from '../utils';
 import { City } from './city';
 import { GameMap } from '../GameMap';
 import { Worker } from '../Unit/worker';
+import { Cart } from '../Unit/cart';
 
 /**
  * Holds basically all game data, including the map
@@ -78,23 +78,35 @@ export class Game {
     this.state.teamStates[team].units.set(unit.id, unit);
   }
 
+  spawnCart(team: Unit.TEAM, x: number, y: number): void {
+    const cell = this.map.getCell(x, y);
+    const unit = new Cart(x, y, team);
+    cell.units.set(unit.id, unit);
+    this.state.teamStates[team].units.set(unit.id, unit);
+  }
+
   /**
    * Spawn city tile for a team at (x, y)
    */
   spawnCityTile(team: Unit.TEAM, x: number, y: number): void {
     const cell = this.map.getCell(x, y);
-    cell.setCityTile(team);
+
     // now update the cities field accordingly
     const adjCells = this.map.getAdjacentCells(cell);
 
+    const cityIdsFound: Set<string> = new Set();
     const adjSameTeamCityTiles = adjCells.filter((cell) => {
-      return cell.isCityTile() && cell.citytile.team === team;
+      if (cell.isCityTile() && cell.citytile.team === team) {
+        cityIdsFound.add(cell.citytile.cityid);
+        return true;
+      }
+      return false;
     });
 
     // if no adjacent city cells of same team, generate new city
     if (adjSameTeamCityTiles.length === 0) {
       const city = new City(team);
-      cell.citytile.cityid = city.id;
+      cell.setCityTile(team, city.id);
       city.addCityTile(cell);
       this.cities.set(city.id, city);
     }
@@ -102,7 +114,20 @@ export class Game {
     else {
       const cityid = adjSameTeamCityTiles[0].citytile.cityid;
       const city = this.cities.get(cityid);
+      cell.setCityTile(team, cityid);
       city.addCityTile(cell);
+
+      // update all merged cities' cells with merged cityid, move to merged city and delete old city
+      cityIdsFound.forEach((id) => {
+        if (id !== cityid) {
+          const oldcity = this.cities.get(id);
+          oldcity.citycells.forEach((cell) => {
+            cell.citytile.cityid = cityid;
+            city.addCityTile(cell);
+          });
+          this.cities.delete(id);
+        }
+      });
     }
   }
 }
