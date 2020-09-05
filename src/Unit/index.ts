@@ -1,15 +1,20 @@
 import { genID } from '../utils';
+import { LuxMatchConfigs } from '../types';
+import { Actionable } from '../Actionable';
 
-export class Unit {
+export abstract class Unit extends Actionable {
   public id: string;
   constructor(
     public x: number,
     public y: number,
     public type: Unit.Type,
-    public team: Unit.TEAM
+    public team: Unit.TEAM,
+    configs: LuxMatchConfigs
   ) {
+    super(configs);
     this.id = 'u_' + genID();
   }
+  abstract getLightUpkeep(): number;
 }
 
 export namespace Unit {

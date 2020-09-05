@@ -3,6 +3,8 @@ import { LuxMatchConfigs } from './types';
 // some temporary default configurations and parameters
 export const DEFAULT_CONFIGS: LuxMatchConfigs = {
   mapType: 'random',
+  width: 16,
+  height: 16,
   parameters: {
     DAY_LENGTH: 20,
     MAX_DAYS: 20,
@@ -28,5 +30,6 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
       COAL: 40,
       URANIUM: 60,
     },
+    CITY_ACTION_COOLDOWN: 10,
   },
 };

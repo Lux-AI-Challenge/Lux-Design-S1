@@ -14,6 +14,8 @@ export interface LuxMatchState {
  */
 export interface LuxMatchConfigs {
   mapType: string;
+  width: number;
+  height: number;
   parameters: {
     DAY_LENGTH: number;
     MAX_DAYS: number;
@@ -39,5 +41,6 @@ export interface LuxMatchConfigs {
       COAL: number;
       URANIUM: number;
     };
+    CITY_ACTION_COOLDOWN: number;
   };
 }
