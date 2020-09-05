@@ -1,10 +1,15 @@
+import { genID } from '../utils';
+
 export class Unit {
+  public id: string;
   constructor(
     public x: number,
     public y: number,
     public type: Unit.Type,
     public team: Unit.TEAM
-  ) {}
+  ) {
+    this.id = 'u_' + genID();
+  }
 }
 
 export namespace Unit {

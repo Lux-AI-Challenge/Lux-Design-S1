@@ -4,6 +4,7 @@ import { Unit } from '../Unit';
 import { genID } from '../utils';
 import { City } from './city';
 import { GameMap } from '../GameMap';
+import { Worker } from '../Unit/worker';
 
 /**
  * Holds basically all game data, including the map
@@ -44,9 +45,11 @@ export class Game {
     turn: 0,
     teamStates: {
       [Unit.TEAM.A]: {
+        units: new Map(),
         fuel: 0,
       },
       [Unit.TEAM.B]: {
+        units: new Map(),
         fuel: 0,
       },
     },
@@ -68,6 +71,13 @@ export class Game {
     this.map = new GameMap(this.configs.width, this.configs.height);
   }
 
+  spawnWorker(team: Unit.TEAM, x: number, y: number): void {
+    const cell = this.map.getCell(x, y);
+    const unit = new Worker(x, y, team);
+    cell.units.set(unit.id, unit);
+    this.state.teamStates[team].units.set(unit.id, unit);
+  }
+
   /**
    * Spawn city tile for a team at (x, y)
    */
@@ -83,11 +93,10 @@ export class Game {
 
     // if no adjacent city cells of same team, generate new city
     if (adjSameTeamCityTiles.length === 0) {
-      const cityid = genID();
-      cell.citytile.cityid = cityid;
-      const city = new City(cityid, team);
+      const city = new City(team);
+      cell.citytile.cityid = city.id;
       city.addCityTile(cell);
-      this.cities.set(cityid, city);
+      this.cities.set(city.id, city);
     }
     // otherwise add tile to city
     else {
@@ -121,5 +130,6 @@ export namespace Game {
   }
   export interface TeamState {
     fuel: number;
+    units: Map<string, Unit>;
   }
 }

@@ -41,6 +41,9 @@ export const generateGame = (
   game.spawnCityTile(Unit.TEAM.A, 1, 1);
   game.spawnCityTile(Unit.TEAM.B, 14, 1);
 
+  game.spawnWorker(Unit.TEAM.A, 2, 2);
+  game.spawnWorker(Unit.TEAM.B, 13, 2);
+
   return game;
 };
 

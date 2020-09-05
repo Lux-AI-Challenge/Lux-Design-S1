@@ -29,6 +29,7 @@ export class Cell {
     return this.resource !== undefined;
   }
 
+  /** Marks this as a city tile with the specified team */
   setCityTile(team: Unit.TEAM): void {
     this.citytile = new CityTile(team);
   }
