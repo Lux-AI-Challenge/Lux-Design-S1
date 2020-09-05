@@ -3,6 +3,8 @@ import Match = Dimension.Match;
 import Tournament = Dimension.Tournament;
 import { LuxMatchResults, LuxMatchState } from './types';
 import { DEFAULT_CONFIGS } from './defaults';
+import { generateGame } from './Game/gen';
+import { Game } from './Game';
 
 export class LuxDesign extends Dimension.Design {
   constructor(name: string) {
@@ -14,7 +16,7 @@ export class LuxDesign extends Dimension.Design {
     // initialize with default state and configurations
     const state: LuxMatchState = {
       configs: { ...DEFAULT_CONFIGS },
-      turn: 0,
+      game: generateGame(),
     };
 
     state.configs = { ...state.configs, ...match.configs };
@@ -37,7 +39,8 @@ export class LuxDesign extends Dimension.Design {
     commands: Array<Dimension.MatchEngine.Command>
   ): Promise<Match.Status> {
     const state: LuxMatchState = match.state;
-    state.turn++;
+    const game = state.game;
+    game.state.turn++;
 
     // loop over commands and handle them
     for (let i = 0; i < commands.length; i++) {
@@ -46,7 +49,7 @@ export class LuxDesign extends Dimension.Design {
       const agentID = commands[i].agentID;
     }
 
-    if (state.turn % state.configs.parameters.DAY_LENGTH === 0) {
+    if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {
       // do something at night
       this.handleNight(state);
     }
@@ -67,7 +70,7 @@ export class LuxDesign extends Dimension.Design {
    * @param state
    */
   matchOver(state: Readonly<LuxMatchState>): boolean {
-    if (state.turn === state.configs.parameters.MAX_DAYS) {
+    if (state.game.state.turn === state.configs.parameters.MAX_DAYS) {
       return true;
     }
   }

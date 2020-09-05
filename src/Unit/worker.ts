@@ -1,7 +1,7 @@
-import { Unit, UnitType } from '.';
+import { Unit } from '.';
 
 export class Worker extends Unit {
-  constructor(x: number, y: number) {
-    super(x, y, UnitType.WORKER);
+  constructor(x: number, y: number, team: Unit.TEAM) {
+    super(x, y, Unit.Type.WORKER, team);
   }
 }
