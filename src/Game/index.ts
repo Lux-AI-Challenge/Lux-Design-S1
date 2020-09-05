@@ -1,7 +1,7 @@
 import 'colors';
 import { Resource } from '../Resource';
 import { Unit } from '../Unit';
-import { City } from './city';
+import { City, CityTile } from './city';
 import { GameMap } from '../GameMap';
 import { Worker } from '../Unit/worker';
 import { Cart } from '../Unit/cart';
@@ -179,6 +179,10 @@ export class Game {
           }
           break;
         case Game.ACTIONS.TRANSFER:
+          if (strs.length === 3) {
+          } else {
+            valid = false;
+          }
           break;
         default:
           valid = false;
@@ -208,7 +212,7 @@ export class Game {
   /**
    * Spawn city tile for a team at (x, y)
    */
-  spawnCityTile(team: Unit.TEAM, x: number, y: number): City {
+  spawnCityTile(team: Unit.TEAM, x: number, y: number): CityTile {
     const cell = this.map.getCell(x, y);
 
     // now update the cities field accordingly
@@ -229,7 +233,7 @@ export class Game {
       cell.setCityTile(team, city.id);
       city.addCityTile(cell);
       this.cities.set(city.id, city);
-      return city;
+      return cell.citytile;
     }
     // otherwise add tile to city
     else {
@@ -250,7 +254,7 @@ export class Game {
           this.cities.delete(id);
         }
       });
-      return city;
+      return cell.citytile;
     }
   }
 

@@ -68,10 +68,13 @@ export class CityTile extends Actionable {
       const info = commands[0].split(' ');
       const action = info[0];
       if (action === Game.ACTIONS.BUILD_CART) {
+        // TODO
         this.resetCooldown();
       } else if (action === Game.ACTIONS.BUILD_WORKER) {
+        // TODO
         this.resetCooldown();
       } else if (action === Game.ACTIONS.RESEARCH) {
+        // TODO
         this.resetCooldown();
         state.teamStates[this.team].researchPoints++;
       }

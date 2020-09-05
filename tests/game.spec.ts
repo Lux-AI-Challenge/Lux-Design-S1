@@ -19,12 +19,12 @@ describe('Test Game', () => {
     });
     // the following 4 will first create 3 cities, which then merge into 1 and merge the fuel deposits
     const c1 = game.spawnCityTile(0, 1, 1);
-    c1.fuel = 500;
+    game.cities.get(c1.cityid).fuel = 500;
     const c2 = game.spawnCityTile(0, 3, 1);
-    c2.fuel = 500;
+    game.cities.get(c2.cityid).fuel = 500;
     game.spawnCityTile(0, 2, 2);
     const c3 = game.spawnCityTile(0, 2, 1);
-    expect(c3.fuel).to.equal(1000);
+    expect(game.cities.get(c3.cityid).fuel).to.equal(1000);
 
     // the following 4 will first create 2 cities, which then merge into 1
     game.spawnCityTile(0, 14, 14);
@@ -61,8 +61,9 @@ describe('Test Game', () => {
       height: 16,
     });
     game.spawnCityTile(0, 2, 2);
-    game.spawnCityTile(0, 2, 3);
+    const citytile23 = game.spawnCityTile(0, 2, 3);
     it('should validate build carts', () => {
+      citytile23.cooldown = 0;
       game.validateCommand({
         command: 'bc 2 2',
         agentID: 0,
@@ -93,12 +94,128 @@ describe('Test Game', () => {
       try {
         game.validateCommand({
           command: 'bc 2 3 4',
-          agentID: 1,
+          agentID: 0,
         });
         valid = true;
         // eslint-disable-next-line no-empty
       } catch (err) {}
       if (valid) fail('malformed command');
+
+      citytile23.cooldown = 0.2;
+      valid = false;
+      try {
+        game.validateCommand({
+          command: 'bw 2 3',
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('cannot act during cooldown');
+    });
+
+    it('should validate build workers', () => {
+      citytile23.cooldown = 0;
+      game.validateCommand({
+        command: 'bw 2 2',
+        agentID: 0,
+      });
+      let valid = false;
+      try {
+        game.validateCommand({
+          command: 'bw 10 10',
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not build on non city tile');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: 'bw 2 3',
+          agentID: 1,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not build on opponents city');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: 'bw 2 3 4',
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('malformed command');
+
+      citytile23.cooldown = 0.2;
+      valid = false;
+      try {
+        game.validateCommand({
+          command: 'bw 2 3',
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('cannot act during cooldown');
+    });
+
+    it('should validate research', () => {
+      citytile23.cooldown = 0;
+      game.validateCommand({
+        command: 'r 2 2',
+        agentID: 0,
+      });
+      let valid = false;
+      try {
+        game.validateCommand({
+          command: 'r 10 10',
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not build on non city tile');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: 'r 2 3',
+          agentID: 1,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not build on opponents city');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: 'r 2 3 4',
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('malformed command');
+
+      citytile23.cooldown = 0.2;
+      valid = false;
+      try {
+        game.validateCommand({
+          command: 'bw 2 3',
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('cannot act during cooldown');
     });
 
     it('should validate move commands', () => {
@@ -138,7 +255,19 @@ describe('Test Game', () => {
         valid = true;
         // eslint-disable-next-line no-empty
       } catch (err) {}
-      if (valid) fail('can not move a inexisting unit');
+      if (valid) fail('can not move an unit that does not exist');
+
+      valid = false;
+      worker.cooldown = 0.1;
+      try {
+        game.validateCommand({
+          command: `m ${worker.id} n`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not move an unit that is on cooldown');
     });
   });
 });
