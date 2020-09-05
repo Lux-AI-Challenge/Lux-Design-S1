@@ -14,7 +14,7 @@ export class GameMap {
   /**
    * Map a internal city id to the array of cells that are city tiles part of the same city
    */
-  public cities: Map<string, City>;
+  public cities: Map<string, City> = new Map();
 
   /**
    * Constructor to initialize empty game map with empty cells
@@ -56,7 +56,9 @@ export class GameMap {
     if (adjSameTeamCityTiles.length === 0) {
       const cityid = genID();
       cell.citytile.cityid = cityid;
-      this.cities.set(cityid, new City(cityid, team));
+      const city = new City(cityid, team);
+      city.addCityTile(cell);
+      this.cities.set(cityid, city);
     }
     // otherwise add tile to city
     else {

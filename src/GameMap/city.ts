@@ -8,7 +8,7 @@ export class City {
   /**
    * the map cells that compose this city
    */
-  public citycells: Array<Cell>;
+  public citycells: Array<Cell> = [];
   constructor(public id: string, public team: Unit.TEAM) {}
 
   // TODO
