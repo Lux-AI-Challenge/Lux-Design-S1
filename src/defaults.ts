@@ -1,4 +1,4 @@
-import { LuxMatchConfigs } from "./types";
+import { LuxMatchConfigs } from './types';
 
 // some temporary default configurations and parameters
 export const DEFAULT_CONFIGS: LuxMatchConfigs = {
@@ -13,7 +13,7 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
     },
     RESOURCE_CAPACITY: {
       WORKER: 50,
-      CART: 200
+      CART: 200,
     },
     WORKER_COLLECTION_RATE: {
       WOOD: 10,
@@ -27,6 +27,6 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
     RESEARCH_TIME: {
       COAL: 40,
       URANIUM: 60,
-    }
-  }
-}
+    },
+  },
+};

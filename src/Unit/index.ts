@@ -3,7 +3,5 @@ export enum UnitType {
   CART,
 }
 export class Unit {
-  constructor(public x: number, public y: number, public type: UnitType) {
-
-  }
+  constructor(public x: number, public y: number, public type: UnitType) {}
 }

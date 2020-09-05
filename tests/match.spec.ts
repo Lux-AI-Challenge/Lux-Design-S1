@@ -6,16 +6,17 @@ const design = new LuxDesign('Lux Design');
 const luxdim = Dimensions.create(design, {
   name: 'luxdimension',
   id: 'luxdim',
-  defaultMatchConfigs: {
-
-  },
+  defaultMatchConfigs: {},
   loggingLevel: Logger.LEVEL.INFO,
   secureMode: true,
   observe: true,
-  activateStation: true
+  activateStation: true,
 });
 
-let botList = [];
-luxdim.runMatch(botList).then((res) => {
-  console.log(res);
-}).catch(console.error);
+const botList = [];
+luxdim
+  .runMatch(botList)
+  .then((res) => {
+    console.log(res);
+  })
+  .catch(console.error);

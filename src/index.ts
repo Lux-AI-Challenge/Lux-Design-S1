@@ -4,7 +4,6 @@ import Tournament = Dimension.Tournament;
 import { LuxMatchResults, LuxMatchState } from './types';
 import { DEFAULT_CONFIGS } from './defaults';
 
-
 export class LuxDesign extends Dimension.Design {
   constructor(name: string) {
     super(name);
@@ -14,11 +13,11 @@ export class LuxDesign extends Dimension.Design {
   async initialize(match: Match): Promise<void> {
     // initialize with default state and configurations
     const state: LuxMatchState = {
-      configs: {...DEFAULT_CONFIGS},
-      turn: 0
+      configs: { ...DEFAULT_CONFIGS },
+      turn: 0,
     };
 
-    state.configs = {...state.configs, ...match.configs}
+    state.configs = { ...state.configs, ...match.configs };
 
     // store the state into the match so it can be used again in `update` and `getResults`
     match.state = state;
@@ -37,7 +36,7 @@ export class LuxDesign extends Dimension.Design {
     match: Match,
     commands: Array<Dimension.MatchEngine.Command>
   ): Promise<Match.Status> {
-    const state: LuxMatchState = match.state
+    const state: LuxMatchState = match.state;
     state.turn++;
 
     // loop over commands and handle them
@@ -65,7 +64,7 @@ export class LuxDesign extends Dimension.Design {
 
   /**
    * Determine if match is over or not
-   * @param state 
+   * @param state
    */
   matchOver(state: Readonly<LuxMatchState>): boolean {
     if (state.turn === state.configs.parameters.MAX_DAYS) {
@@ -75,11 +74,9 @@ export class LuxDesign extends Dimension.Design {
 
   /**
    * Handle nightfall and update state accordingly
-   * @param state 
+   * @param state
    */
-  handleNight(state: LuxMatchState): void {
-
-  }
+  handleNight(state: LuxMatchState): void {}
 
   // Result calculation of concluded match. Should return the results of a match after it finishes
   async getResults(match: Match): Promise<LuxMatchResults> {
@@ -95,11 +92,10 @@ export class LuxDesign extends Dimension.Design {
     // return them
     return results;
   }
-  
-  // result handler for RankSystem.TRUESKILL or RankSystem.ELO
+
   static resultHandler(
     results: LuxMatchResults
-  ): Tournament.RankSystem.TRUESKILL.Results | Tournament.RankSystem.ELO.Results {
+  ): Tournament.RankSystem.Results {
     const rankings = [];
     for (let i = 0; i < results.ranks.length; i++) {
       const info = results.ranks[i];

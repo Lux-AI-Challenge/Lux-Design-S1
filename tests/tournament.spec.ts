@@ -6,13 +6,11 @@ const design = new LuxDesign('Lux Design');
 const luxdim = Dimensions.create(design, {
   name: 'luxdimension',
   id: 'luxdim',
-  defaultMatchConfigs: {
-
-  },
+  defaultMatchConfigs: {},
   loggingLevel: Logger.LEVEL.INFO,
   secureMode: true,
   observe: true,
-  activateStation: true
+  activateStation: true,
 });
 
 const botList = [];
@@ -23,6 +21,6 @@ const tourney = luxdim.createTournament(botList, {
   agentsPerMatch: [2],
   consoleDisplay: true,
   name: 'Lux Tournament',
-  id: 'luxtourney'
+  id: 'luxtourney',
 });
 tourney.run();
