@@ -1,4 +1,4 @@
-import { Cell } from '../Game/cell';
+import { Cell } from '../GameMap/cell';
 import { Unit } from '../Unit';
 import { Resource } from '../Resource';
 

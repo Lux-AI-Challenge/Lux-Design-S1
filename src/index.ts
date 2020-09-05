@@ -4,7 +4,6 @@ import Tournament = Dimension.Tournament;
 import { LuxMatchResults, LuxMatchState } from './types';
 import { DEFAULT_CONFIGS } from './defaults';
 import { generateGame } from './Game/gen';
-import { Game } from './Game';
 
 export class LuxDesign extends Dimension.Design {
   constructor(name: string) {

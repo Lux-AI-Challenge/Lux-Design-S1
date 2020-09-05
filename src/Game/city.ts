@@ -1,5 +1,5 @@
 import { Unit } from '../Unit';
-import { Cell } from './cell';
+import { Cell } from '../GameMap/cell';
 
 /**
  * A city is composed of adjacent city tiles of the same team

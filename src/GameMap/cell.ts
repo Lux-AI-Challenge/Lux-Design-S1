@@ -1,6 +1,6 @@
 import { Resource } from '../Resource';
 import { Unit } from '../Unit';
-import { CityTile } from './city';
+import { CityTile } from '../game/city';
 
 /**
  * Cell class for map cells
