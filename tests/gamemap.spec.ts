@@ -16,7 +16,6 @@ describe('Test GameMap', () => {
       width: 16,
       height: 16,
     });
-    const m = game.map;
     // the following 4 will first create 3 cities, which then merge into 1
     game.spawnCityTile(0, 1, 1);
     game.spawnCityTile(0, 3, 1);
