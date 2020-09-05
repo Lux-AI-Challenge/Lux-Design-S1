@@ -30,5 +30,6 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
       COAL: 40,
       URANIUM: 60,
     },
+    CITY_ACTION_COOLDOWN: 10,
   },
 };

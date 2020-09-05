@@ -41,5 +41,6 @@ export interface LuxMatchConfigs {
       COAL: number;
       URANIUM: number;
     };
+    CITY_ACTION_COOLDOWN: number;
   };
 }

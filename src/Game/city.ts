@@ -2,6 +2,8 @@ import { Unit } from '../Unit';
 import { Cell } from '../GameMap/cell';
 import { genID } from '../utils';
 import { LuxMatchConfigs } from '../types';
+import { Game } from '.';
+import { MatchWarn } from 'dimensions-ai';
 
 /**
  * A city is composed of adjacent city tiles of the same team
@@ -46,10 +48,44 @@ export class City {
       this.actionCooldown--;
     }
     if (commands.length > 1) {
-      throw Error(
+      throw new MatchWarn(
         'Too many commands. City can perform only one action at a time'
       );
+    } else if (commands.length === 1) {
+      const info = commands[0].split(' ');
+      const cmd = info[0];
+      if (cmd === Game.ACTIONS.BUILD_CART) {
+        if (this.canBuildUnit()) {
+          // TODO
+          this.resetCooldown();
+        } else {
+          throw new MatchWarn(
+            `City ${this.id} is still has cooldown: ${this.actionCooldown} and can't build cart`
+          );
+        }
+      } else if (cmd === Game.ACTIONS.BUILD_WORKER) {
+        if (this.canBuildUnit()) {
+          // TODO
+          this.resetCooldown();
+        } else {
+          throw new MatchWarn(
+            `City ${this.id} is still has cooldown: ${this.actionCooldown} and can't build worker`
+          );
+        }
+      } else if (cmd === Game.ACTIONS.RESEARCH) {
+        if (this.canResearch()) {
+          this.resetCooldown();
+        } else {
+          throw new MatchWarn(
+            `City ${this.id} is still has cooldown: ${this.actionCooldown} and can't research`
+          );
+        }
+      }
     }
+  }
+
+  resetCooldown(): void {
+    this.actionCooldown = this.configs.parameters.CITY_ACTION_COOLDOWN;
   }
 }
 

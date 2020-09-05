@@ -167,4 +167,18 @@ export namespace Game {
     fuel: number;
     units: Map<string, Unit>;
   }
+
+  export enum ACTIONS {
+    MOVE = 'm',
+    RESEARCH = 'r',
+    BUILD_WORKER = 'bw',
+    BUILD_CART = 'bc',
+  }
+
+  export enum DIRECTIONS {
+    NORTH = 'n',
+    EAST = 'e',
+    SOUTH = 's',
+    WEST = 'w',
+  }
 }
