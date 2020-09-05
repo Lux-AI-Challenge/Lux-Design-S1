@@ -5,4 +5,7 @@ export class Cart extends Unit {
   constructor(x: number, y: number, team: Unit.TEAM, configs: LuxMatchConfigs) {
     super(x, y, Unit.Type.CART, team, configs);
   }
+  getLightUpkeep(): number {
+    return this.configs.parameters.LIGHT_UPKEEP.WORKER;
+  }
 }

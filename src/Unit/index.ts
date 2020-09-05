@@ -1,7 +1,7 @@
 import { genID } from '../utils';
 import { LuxMatchConfigs } from '../types';
 
-export class Unit {
+export abstract class Unit {
   public id: string;
   constructor(
     public x: number,
@@ -12,6 +12,7 @@ export class Unit {
   ) {
     this.id = 'u_' + genID();
   }
+  abstract getLightUpkeep(): number;
 }
 
 export namespace Unit {

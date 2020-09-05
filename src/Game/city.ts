@@ -20,9 +20,9 @@ export class City {
     this.id = 'city_' + genID();
   }
 
-  // TODO
+  // TODO: Add adjacency bonuses
   getLightUpkeep(): number {
-    return;
+    return this.citycells.length * this.configs.parameters.LIGHT_UPKEEP.CITY;
   }
 
   addCityTile(cell: Cell): void {
