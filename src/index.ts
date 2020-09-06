@@ -243,22 +243,28 @@ export class LuxDesign extends Dimension.Design {
         }
       });
     });
-    game.state.teamStates[0].units.forEach((unit) => {
-      try {
-        unit.handleTurn(game);
-      } catch (err) {
-        match.throw(unit.team, err);
-      }
-    });
-    game.state.teamStates[1].units.forEach((unit) => {
-      try {
-        unit.handleTurn(game);
-      } catch (err) {
-        match.throw(unit.team, err);
-      }
-    });
+    const teams = [Unit.TEAM.A, Unit.TEAM.B];
+    for (const team of teams) {
+      game.state.teamStates[team].units.forEach((unit) => {
+        try {
+          unit.handleTurn(game);
+        } catch (err) {
+          match.throw(unit.team, err);
+        }
+      });
+    }
 
-    if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {
+    // now we make all units with cargo drop all resources on the city they are standing on
+    for (const team of teams) {
+      game.state.teamStates[team].units.forEach((unit) => {
+        game.handleResourceDeposit(unit);
+      });
+    }
+
+    if (
+      game.state.turn !== 0 &&
+      game.state.turn % state.configs.parameters.DAY_LENGTH === 0
+    ) {
       // do something at night
       this.handleNight(state);
     }
@@ -282,6 +288,17 @@ export class LuxDesign extends Dimension.Design {
   async debugViewer(game: Game): Promise<void> {
     console.clear();
     console.log(game.map.getMapString());
+    console.log(`Turn: ${game.state.turn}`);
+    // const teams = [Unit.TEAM.A, Unit.TEAM.B];
+    // for (const team of teams) {
+    // }
+    game.cities.forEach((city) => {
+      let iden = `City ${city.id}`.red;
+      if (city.team === 0) {
+        iden = `City ${city.id}`.cyan;
+      }
+      console.log(`${iden} light: ${city.fuel}`);
+    });
     await sleep(game.configs.debugDelay);
   }
 
@@ -325,23 +342,23 @@ export class LuxDesign extends Dimension.Design {
       } else {
         city.fuel -= city.getLightUpkeep();
       }
-      game.state.teamStates[0].units.forEach((unit) => {
-        // TODO: add condition for different light upkeep for units stacked on a city.
-        if (!game.map.getCellByPos(unit.pos).isCityTile()) {
-          if (!unit.spendFuelToSurvive()) {
-            // delete unit
-            game.destroyUnit(unit.team, unit.id);
-          }
+    });
+    game.state.teamStates[0].units.forEach((unit) => {
+      // TODO: add condition for different light upkeep for units stacked on a city.
+      if (!game.map.getCellByPos(unit.pos).isCityTile()) {
+        if (!unit.spendFuelToSurvive()) {
+          // delete unit
+          game.destroyUnit(unit.team, unit.id);
         }
-      });
-      game.state.teamStates[1].units.forEach((unit) => {
-        if (!game.map.getCellByPos(unit.pos).isCityTile()) {
-          if (!unit.spendFuelToSurvive()) {
-            // delete unit
-            game.destroyUnit(unit.team, unit.id);
-          }
+      }
+    });
+    game.state.teamStates[1].units.forEach((unit) => {
+      if (!game.map.getCellByPos(unit.pos).isCityTile()) {
+        if (!unit.spendFuelToSurvive()) {
+          // delete unit
+          game.destroyUnit(unit.team, unit.id);
         }
-      });
+      }
     });
   }
 

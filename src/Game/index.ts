@@ -482,6 +482,26 @@ export class Game {
     }
   }
 
+  // deposits the units resources on city tile it is on
+  handleResourceDeposit(unit: Unit): void {
+    const cell = this.map.getCellByPos(unit.pos);
+    if (cell.isCityTile() && cell.citytile.team === unit.team) {
+      const city = this.cities.get(cell.citytile.cityid);
+      city.fuel +=
+        unit.cargo.wood * this.configs.parameters.RESOURCE_TO_FUEL_RATE.WOOD;
+      city.fuel +=
+        unit.cargo.coal * this.configs.parameters.RESOURCE_TO_FUEL_RATE.COAL;
+      city.fuel +=
+        unit.cargo.uranium *
+        this.configs.parameters.RESOURCE_TO_FUEL_RATE.URANIUM;
+      unit.cargo = {
+        wood: 0,
+        uranium: 0,
+        coal: 0,
+      };
+    }
+  }
+
   getTeamsUnits(team: Unit.TEAM): Map<string, Unit> {
     return this.state.teamStates[team].units;
   }
