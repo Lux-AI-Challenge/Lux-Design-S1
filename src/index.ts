@@ -11,6 +11,7 @@ import {
   SpawnCartAction,
   ResearchAction,
   TransferAction,
+  MoveAction,
 } from './Actions';
 import { Game } from './Game';
 
@@ -97,6 +98,14 @@ export class LuxDesign extends Dimension.Design {
     });
     actionsMap.get(Game.ACTIONS.TRANSFER).forEach((action: TransferAction) => {
       game.getUnit(action.team, action.srcID).giveAction(action);
+    });
+
+    const prunedMoveActions = game.handleMovementActions(
+      actionsMap.get(Game.ACTIONS.MOVE) as Array<MoveAction>
+    );
+
+    prunedMoveActions.forEach((action) => {
+      game.getUnit(action.team, action.unitid).giveAction(action);
     });
 
     if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {
