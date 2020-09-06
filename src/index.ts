@@ -15,6 +15,7 @@ import {
 } from './Actions';
 import { Game } from './Game';
 import { Unit } from './Unit';
+import seedrandom from 'seedrandom';
 
 export class LuxDesign extends Dimension.Design {
   constructor(name: string) {
@@ -23,13 +24,17 @@ export class LuxDesign extends Dimension.Design {
 
   // Initialization step of each match
   async initialize(match: Match): Promise<void> {
-    // initialize with default state and configurations
+    // initialize with default state and configurations and default RNG
     const state: LuxMatchState = {
       configs: { ...DEFAULT_CONFIGS },
       game: generateGame(),
+      rng: seedrandom(`${Math.random()}`),
     };
-
     state.configs = { ...state.configs, ...match.configs };
+
+    if (state.configs.seed !== undefined) {
+      state.rng = seedrandom(`${state.configs.seed}`);
+    }
 
     // store the state into the match so it can be used again in `update` and `getResults`
     match.state = state;
@@ -199,16 +204,46 @@ export class LuxDesign extends Dimension.Design {
   // Result calculation of concluded match. Should return the results of a match after it finishes
   async getResults(match: Match): Promise<LuxMatchResults> {
     // calculate results
-    match;
+    const state: LuxMatchState = match.state;
+    const game = state.game;
+    let winningTeam = Unit.TEAM.A;
+    let losingTeam = Unit.TEAM.B;
+    figureresults: {
+      // count city tiles
+      const cityTileCount = [0, 0];
+      game.cities.forEach((city) => {
+        cityTileCount[city.team] += city.citycells.length;
+      });
+      if (cityTileCount[Unit.TEAM.A] > cityTileCount[Unit.TEAM.B]) {
+        break figureresults;
+      } else if (cityTileCount[Unit.TEAM.A] < cityTileCount[Unit.TEAM.B]) {
+        winningTeam = Unit.TEAM.B;
+        losingTeam = Unit.TEAM.A;
+        break figureresults;
+      }
+
+      // if tied, count by units
+      const unitCount = [
+        game.getTeamsUnits(Unit.TEAM.A),
+        game.getTeamsUnits(Unit.TEAM.B),
+      ];
+      if (unitCount[Unit.TEAM.A] > unitCount[Unit.TEAM.B]) {
+        break figureresults;
+      } else if (unitCount[Unit.TEAM.A] < unitCount[Unit.TEAM.B]) {
+        winningTeam = Unit.TEAM.B;
+        losingTeam = Unit.TEAM.A;
+        break figureresults;
+      }
+
+      // if still undecided, for now, go by random choice
+    }
+
     const results = {
       ranks: [
-        { rank: 1, agentID: 0 },
-        { rank: 2, agentID: 2 },
-        { rank: 3, agentID: 1 },
+        { rank: 1, agentID: winningTeam },
+        { rank: 2, agentID: losingTeam },
       ],
     };
-
-    // return them
     return results;
   }
 
