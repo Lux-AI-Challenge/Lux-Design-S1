@@ -1,8 +1,9 @@
 import { LuxMatchConfigs } from './types';
+import { GameMap } from './GameMap';
 
 // some temporary default configurations and parameters
 export const DEFAULT_CONFIGS: LuxMatchConfigs = {
-  mapType: 'random',
+  mapType: GameMap.Types.RANDOM,
   width: 16,
   height: 16,
   parameters: {
@@ -31,5 +32,9 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
       URANIUM: 60,
     },
     CITY_ACTION_COOLDOWN: 10,
+    UNIT_ACTION_COOLDOWN: {
+      CART: 3,
+      WORKER: 1,
+    },
   },
 };

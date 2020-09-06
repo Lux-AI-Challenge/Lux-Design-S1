@@ -2,6 +2,7 @@ import { LuxMatchConfigs } from '../types';
 import { Game } from '../Game';
 import { Action } from '../Actions';
 
+// any entity that has actions that are "a per unit" basis (not global) must extends this
 export abstract class Actionable {
   // array of actions to handle in turn function
   public currentActions: Array<Action> = [];

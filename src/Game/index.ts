@@ -220,7 +220,10 @@ export class Game {
                 action,
                 team,
                 unitid,
-                direction as Game.DIRECTIONS
+                direction as Game.DIRECTIONS,
+                this.map.getCellByPos(
+                  unit.pos.translate(direction as Game.DIRECTIONS, 1)
+                )
               );
             }
           } else {
@@ -247,7 +250,7 @@ export class Game {
             const citytile = cell.citytile;
             if (!citytile.canResearch()) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
+              errormsg = `Agent ${cmd.agentID} tried to run research at tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
               break;
             }
             if (valid) {
@@ -483,6 +486,10 @@ export class Game {
     return this.state.teamStates[team].units.get(unitid);
   }
 
+  /**
+   * Transfer resouces on a given team between 2 units. This does not check adjacency requirement, but its expected
+   * that the 2 units are adjacent. This allows for simultaneous movement of 1 unit and transfer of another
+   */
   transferResources(
     team: Unit.TEAM,
     srcID: string,
@@ -512,6 +519,77 @@ export class Game {
   /** destroys the city with this id */
   destroyCity(cityID: string): boolean {
     return this.cities.delete(cityID);
+  }
+
+  /**
+   * Process given move actions and returns a pruned array of actions that can all be executed with no collisions
+   */
+  handleMovementActions(actions: Array<MoveAction>): Array<MoveAction> {
+    /**
+     * Algo:
+     *
+     * iterate through all moves and store a mapping from cell to the actions that will cause a unit to move there
+     *
+     * for each cell that has multiple mapped to actions, we remove all actions as that cell is a "bump" cell
+     * where no units can get there because they all bumped into each other
+     *
+     * for all removed actions for that particular cell, find the cell the unit that wants to execute the action is
+     * currently at, labeled `origcell`. Revert these removed actions by first getting all the actions mapped from
+     * `origcell` and then deleting that mapping, and then recursively reverting the actions mapped from `origcell`
+     *
+     */
+    const cellsToActionsToThere: Map<Cell, Array<MoveAction>> = new Map();
+    actions.forEach((action) => {
+      const newcell = action.newcell;
+      const currActions = cellsToActionsToThere.get(newcell);
+      if (currActions === undefined) {
+        cellsToActionsToThere.set(newcell, [action]);
+      } else {
+        cellsToActionsToThere.set(newcell, [...currActions, action]);
+      }
+    });
+
+    // reverts a given action such that cellsToActionsToThere has no collisions due to action and all related actions
+    const revertAction = (action: MoveAction): void => {
+      const origcell = this.map.getCellByPos(
+        this.getUnit(action.team, action.unitid).pos
+      );
+
+      // get the colliding actions caused by a revert of the given action and then delete them from the mapped origcell
+      const collidingActions = cellsToActionsToThere.get(origcell);
+      cellsToActionsToThere.delete(origcell);
+
+      if (collidingActions) {
+        // for each colliding action, revert it.
+        collidingActions.forEach((collidingAction) => {
+          revertAction(collidingAction);
+        });
+      }
+    };
+
+    const actionedCells = Array.from(cellsToActionsToThere.keys());
+    for (const cell of actionedCells) {
+      const currActions = cellsToActionsToThere.get(cell);
+      if (currActions !== undefined && currActions.length > 1) {
+        // if there are collisions, revert those actions and remove the mapping
+        currActions.forEach((action) => {
+          revertAction(action);
+        });
+        currActions.forEach((action) => {
+          cellsToActionsToThere.delete(action.newcell);
+        });
+      }
+    }
+
+    const prunedActions: Array<MoveAction> = [];
+    cellsToActionsToThere.forEach((currActions) => {
+      if (currActions.length > 1) {
+        console.error('still have collisions after pruning');
+      }
+      prunedActions.push(currActions[0]);
+    });
+
+    return prunedActions;
   }
 }
 export namespace Game {

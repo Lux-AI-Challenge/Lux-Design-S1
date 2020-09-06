@@ -5,7 +5,7 @@ import { Game } from '../src/Game';
 import { Resource } from '../src/Resource';
 import { DEFAULT_CONFIGS } from '../src/defaults';
 
-describe('test resource collection and distribution', () => {
+describe('Test resource collection and distribution', () => {
   let game: Game;
   const rates = DEFAULT_CONFIGS.parameters.WORKER_COLLECTION_RATE;
   beforeEach(() => {

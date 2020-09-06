@@ -11,6 +11,7 @@ import {
   SpawnCartAction,
   ResearchAction,
   TransferAction,
+  MoveAction,
 } from './Actions';
 import { Game } from './Game';
 
@@ -73,13 +74,12 @@ export class LuxDesign extends Dimension.Design {
       game.handleResourceRelease(cell);
     });
 
-    // give units and city tiles their actions to use
+    // give units and city tiles their validated actions to use
     actionsMap
       .get(Game.ACTIONS.BUILD_CITY)
       .forEach((action: SpawnCityAction) => {
         game.getUnit(action.team, action.unitid).giveAction(action);
       });
-
     actionsMap
       .get(Game.ACTIONS.BUILD_WORKER)
       .forEach((action: SpawnWorkerAction) => {
@@ -98,6 +98,27 @@ export class LuxDesign extends Dimension.Design {
     });
     actionsMap.get(Game.ACTIONS.TRANSFER).forEach((action: TransferAction) => {
       game.getUnit(action.team, action.srcID).giveAction(action);
+    });
+
+    const prunedMoveActions = game.handleMovementActions(
+      actionsMap.get(Game.ACTIONS.MOVE) as Array<MoveAction>
+    );
+
+    prunedMoveActions.forEach((action) => {
+      game.getUnit(action.team, action.unitid).giveAction(action);
+    });
+
+    // now we go through every actionable entity and execute actions
+    game.cities.forEach((city) => {
+      city.citycells.forEach((cellWithCityTile) => {
+        cellWithCityTile.citytile.handleTurn(game);
+      });
+    });
+    game.state.teamStates[0].units.forEach((unit) => {
+      unit.handleTurn(game);
+    });
+    game.state.teamStates[1].units.forEach((unit) => {
+      unit.handleTurn(game);
     });
 
     if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {

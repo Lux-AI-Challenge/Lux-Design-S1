@@ -1,2 +1,7 @@
 node_modules
 lib
+coverage
+.nyc_output
+
+# we have mac users
+.DS_Store
