@@ -486,6 +486,10 @@ export class Game {
     return this.state.teamStates[team].units.get(unitid);
   }
 
+  /**
+   * Transfer resouces on a given team between 2 units. This does not check adjacency requirement, but its expected
+   * that the 2 units are adjacent. This allows for simultaneous movement of 1 unit and transfer of another
+   */
   transferResources(
     team: Unit.TEAM,
     srcID: string,
@@ -518,7 +522,7 @@ export class Game {
   }
 
   /**
-   * Process given move actions and returns a pruned array of actions that can all be executed with no issues
+   * Process given move actions and returns a pruned array of actions that can all be executed with no collisions
    */
   handleMovementActions(actions: Array<MoveAction>): Array<MoveAction> {
     /**
