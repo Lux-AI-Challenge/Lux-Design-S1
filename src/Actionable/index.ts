@@ -7,5 +7,5 @@ export abstract class Actionable {
    * Process all commands for this actionable object in the match. It expects all given commands are completely valid
    * and can be run.
    */
-  abstract turn(state: Game.State, commands: Array<string>): void;
+  abstract turn(game: Game, commands: Array<string>): void;
 }

@@ -55,7 +55,7 @@ export class CityTile extends Actionable {
     return this.cooldown === 0;
   }
 
-  turn(state: Game.State, commands: Array<string>): void {
+  turn(game: Game, commands: Array<string>): void {
     if (this.cooldown > 0) {
       this.cooldown--;
     }
@@ -75,7 +75,7 @@ export class CityTile extends Actionable {
       } else if (action === Game.ACTIONS.RESEARCH) {
         // TODO
         this.resetCooldown();
-        state.teamStates[this.team].researchPoints++;
+        game.state.teamStates[this.team].researchPoints++;
       }
     }
   }

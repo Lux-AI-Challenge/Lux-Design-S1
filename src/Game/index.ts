@@ -7,7 +7,7 @@ import { Worker } from '../Unit/worker';
 import { Cart } from '../Unit/cart';
 import { LuxMatchConfigs } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
-import { MatchError, MatchEngine, MatchWarn } from 'dimensions-ai';
+import { MatchEngine, MatchWarn } from 'dimensions-ai';
 
 /**
  * Holds basically all game data, including the map
