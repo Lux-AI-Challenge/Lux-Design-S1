@@ -39,17 +39,22 @@ export class GameMap {
   }
   getAdjacentCells(cell: Cell): Array<Cell> {
     const cells: Array<Cell> = [];
-    if (cell.pos.x > 0) {
-      cells.push(this.getCell(cell.pos.x - 1, cell.pos.y));
-    }
+
+    // NORTH
     if (cell.pos.y > 0) {
       cells.push(this.getCell(cell.pos.x, cell.pos.y - 1));
     }
+    // EAST
     if (cell.pos.x < this.width - 1) {
       cells.push(this.getCell(cell.pos.x + 1, cell.pos.y));
     }
+    // SOUTH
     if (cell.pos.x < this.height - 1) {
       cells.push(this.getCell(cell.pos.x, cell.pos.y + 1));
+    }
+    // WEST
+    if (cell.pos.x > 0) {
+      cells.push(this.getCell(cell.pos.x - 1, cell.pos.y));
     }
     return cells;
   }

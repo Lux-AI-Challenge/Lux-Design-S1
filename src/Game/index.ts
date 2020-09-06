@@ -17,6 +17,7 @@ import {
   TransferAction,
   SpawnCityAction,
 } from '../Actions';
+import { Cell } from '../GameMap/cell';
 
 /**
  * Holds basically all game data, including the map.
@@ -64,11 +65,21 @@ export class Game {
         researchPoints: 0,
         units: new Map(),
         fuel: 0,
+        researched: {
+          wood: true,
+          coal: false,
+          uranium: false,
+        },
       },
       [Unit.TEAM.B]: {
         researchPoints: 0,
         units: new Map(),
         fuel: 0,
+        researched: {
+          wood: true,
+          coal: false,
+          uranium: false,
+        },
       },
     },
   };
@@ -104,7 +115,7 @@ export class Game {
         case Game.ACTIONS.BUILD_CITY:
           if (strs.length === 2) {
             const unitid = strs[1];
-            const unit = this.state.teamStates[team].units.get(unitid);
+            const unit = this.getUnit(team, unitid);
             if (!unit) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to build city with invalid/unowned unit id: ${unitid}`;
@@ -380,8 +391,79 @@ export class Game {
   }
 
   moveUnit(team: Unit.TEAM, unitid: string, direction: Game.DIRECTIONS): void {
-    const unit = this.state.teamStates[team].units.get(unitid);
+    const unit = this.getUnit(team, unitid);
+    // remove unit from old cell and move to new one and update unit pos
+    this.map.getCellByPos(unit.pos).units.delete(unit.id);
     unit.pos = unit.pos.translate(direction, 1);
+    this.map.getCellByPos(unit.pos).units.set(unit.id, unit);
+  }
+
+  /**
+   * For cells with resources, this will release the resource to all adjacent workers (including any unit on top) in a
+   * even manner and taking in account for the worker's team's research level. This is effectively a worker mining.
+   *
+   * Workers adjacent will only receive resources if they can mine it and if they aren't on a city tile. They will
+   * never receive more than they carry
+   *
+   * This function is called on cells in the order of uranium, coal, then wood resource deposits
+   *
+   * @param cell - a cell with a resource
+   */
+  handleResourceRelease(originalCell: Cell): void {
+    if (originalCell.hasResource()) {
+      const type = originalCell.resource.type;
+      const cells = [originalCell, ...this.map.getAdjacentCells(originalCell)];
+      const workersToReceiveResources: Array<Worker> = [];
+      for (const cell of cells) {
+        if (!cell.isCityTile()) {
+          // there should never be more than one unit per tile
+          cell.units.forEach((unit) => {
+            if (
+              unit.type === Unit.Type.WORKER &&
+              this.state.teamStates[unit.team].researched[type]
+            ) {
+              workersToReceiveResources.push(unit);
+            }
+          });
+        }
+      }
+
+      let rate: number;
+      switch (type) {
+        case Resource.Types.WOOD:
+          rate = this.configs.parameters.WORKER_COLLECTION_RATE.WOOD;
+          break;
+        case Resource.Types.COAL:
+          rate = this.configs.parameters.WORKER_COLLECTION_RATE.COAL;
+          break;
+        case Resource.Types.URANIUM:
+          rate = this.configs.parameters.WORKER_COLLECTION_RATE.URANIUM;
+          break;
+      }
+      // find out how many resources to distribute and release
+      let amountToDistribute = rate * workersToReceiveResources.length;
+      // distribute only as much as the cell contains
+      amountToDistribute = Math.min(
+        amountToDistribute,
+        originalCell.resource.amount
+      );
+
+      // distribute resources as evenly as possible
+      workersToReceiveResources.forEach((worker, i) => {
+        const spaceLeft = worker.getCargoSpaceLeft();
+        const maxReceivable =
+          amountToDistribute / (workersToReceiveResources.length - i);
+        const distributeAmount = Math.floor(Math.min(spaceLeft, maxReceivable));
+        worker.cargo[type] += distributeAmount;
+
+        // subtract how much was given.
+        amountToDistribute -= distributeAmount;
+      });
+    }
+  }
+
+  getUnit(team: Unit.TEAM, unitid: string): Unit {
+    return this.state.teamStates[team].units.get(unitid);
   }
 
   transferResources(
@@ -391,8 +473,8 @@ export class Game {
     resourceType: Resource.Types,
     amount: number
   ): void {
-    const srcunit = this.state.teamStates[team].units.get(srcID);
-    const destunit = this.state.teamStates[team].units.get(destID);
+    const srcunit = this.getUnit(team, srcID);
+    const destunit = this.getUnit(team, destID);
     // the amount to actually transfer
     let transferAmount = amount;
     if (srcunit.cargo[resourceType] >= amount) {
@@ -442,6 +524,9 @@ export namespace Game {
     fuel: number;
     researchPoints: number;
     units: Map<string, Unit>;
+    researched: {
+      [x in Resource.Types]: boolean;
+    };
   }
 
   /**
