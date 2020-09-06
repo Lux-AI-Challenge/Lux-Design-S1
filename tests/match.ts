@@ -13,9 +13,14 @@ const luxdim = Dimensions.create(design, {
   activateStation: true,
 });
 
-const botList = [];
+const js = './kits/js/bot.js';
+const botList = [js, js];
 luxdim
-  .runMatch(botList)
+  .runMatch(botList, {
+    storeErrorLogs: false,
+    storeReplay: false,
+    seed: 1,
+  })
   .then((res) => {
     console.log(res);
   })
