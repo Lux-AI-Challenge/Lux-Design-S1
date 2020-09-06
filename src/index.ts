@@ -236,6 +236,10 @@ export class LuxDesign extends Dimension.Design {
       }
 
       // if still undecided, for now, go by random choice
+      if (state.rng() > 0.5) {
+        winningTeam = Unit.TEAM.B;
+        losingTeam = Unit.TEAM.A;
+      }
     }
 
     const results = {
