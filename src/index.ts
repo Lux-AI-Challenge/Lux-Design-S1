@@ -14,6 +14,7 @@ import {
   MoveAction,
 } from './Actions';
 import { Game } from './Game';
+import { Unit } from './Unit';
 
 export class LuxDesign extends Dimension.Design {
   constructor(name: string) {
@@ -142,8 +143,22 @@ export class LuxDesign extends Dimension.Design {
    * @param state
    */
   matchOver(state: Readonly<LuxMatchState>): boolean {
-    if (state.game.state.turn === state.configs.parameters.MAX_DAYS) {
+    const game = state.game;
+    if (game.state.turn === state.configs.parameters.MAX_DAYS) {
       return true;
+    }
+    // over if at least one team has no units left or city tiles
+    const teams = [Unit.TEAM.A, Unit.TEAM.B];
+    const cityCount = [0, 0];
+
+    game.cities.forEach((city) => {
+      cityCount[city.team] += 1;
+    });
+
+    for (const team of teams) {
+      if (game.getTeamsUnits(team).size + cityCount[team] === 0) {
+        return true;
+      }
     }
   }
 
