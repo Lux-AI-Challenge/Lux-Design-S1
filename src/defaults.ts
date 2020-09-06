@@ -23,6 +23,11 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
       COAL: 10,
       URANIUM: 1,
     },
+    RESOURCE_TO_FUEL_RATE: {
+      WOOD: 1,
+      COAL: 5,
+      URANIUM: 20,
+    },
     BUILD_TIME: {
       WORKER: 5,
       CART: 10,

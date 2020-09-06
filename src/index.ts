@@ -152,7 +152,33 @@ export class LuxDesign extends Dimension.Design {
    * @param state
    */
   handleNight(state: LuxMatchState): void {
-    state;
+    const game = state.game;
+    game.cities.forEach((city) => {
+      // if city does not have enough fuel, destroy it
+      // TODO, probably add this event to replay
+      if (city.fuel < city.getLightUpkeep()) {
+        //
+        game.destroyCity(city.id);
+      } else {
+        city.fuel -= city.getLightUpkeep();
+      }
+      game.state.teamStates[0].units.forEach((unit) => {
+        if (game.map.getCellByPos(unit.pos).isCityTile()) {
+          if (!unit.spendFuelToSurvive()) {
+            // delete unit
+            game.destroyUnit(unit.team, unit.id);
+          }
+        }
+      });
+      game.state.teamStates[1].units.forEach((unit) => {
+        if (game.map.getCellByPos(unit.pos).isCityTile()) {
+          if (!unit.spendFuelToSurvive()) {
+            // delete unit
+            game.destroyUnit(unit.team, unit.id);
+          }
+        }
+      });
+    });
   }
 
   // Result calculation of concluded match. Should return the results of a match after it finishes

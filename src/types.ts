@@ -34,6 +34,11 @@ export interface LuxMatchConfigs {
       COAL: number;
       URANIUM: number;
     };
+    RESOURCE_TO_FUEL_RATE: {
+      WOOD: number;
+      COAL: number;
+      URANIUM: number;
+    };
     BUILD_TIME: {
       WORKER: number;
       CART: number;

@@ -521,6 +521,11 @@ export class Game {
     return this.cities.delete(cityID);
   }
 
+  /** destroys the unit with this id and team */
+  destroyUnit(team: Unit.TEAM, unitid: string): boolean {
+    return this.state.teamStates[team].units.delete(unitid);
+  }
+
   /**
    * Process given move actions and returns a pruned array of actions that can all be executed with no collisions
    */
