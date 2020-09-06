@@ -75,7 +75,9 @@ export class LuxDesign extends Dimension.Design {
       const teams = [Unit.TEAM.A, Unit.TEAM.B];
       for (const team of teams) {
         if (agentsTerminated[team]) {
-          game.state.teamStates[team].units.clear();
+          game.state.teamStates[team].units.forEach((unit) => {
+            game.destroyUnit(unit.team, unit.id);
+          });
         }
       }
       await this.debugViewer(game);
