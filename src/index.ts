@@ -16,6 +16,7 @@ import {
 import { Game } from './Game';
 import { Unit } from './Unit';
 import seedrandom from 'seedrandom';
+import { sleep } from './utils';
 
 export class LuxDesign extends Dimension.Design {
   constructor(name: string) {
@@ -27,7 +28,7 @@ export class LuxDesign extends Dimension.Design {
     // initialize with default state and configurations and default RNG
     const state: LuxMatchState = {
       configs: { ...DEFAULT_CONFIGS },
-      game: generateGame(),
+      game: null,
       rng: seedrandom(`${Math.random()}`),
     };
     state.configs = { ...state.configs, ...match.configs };
@@ -35,17 +36,106 @@ export class LuxDesign extends Dimension.Design {
     if (state.configs.seed !== undefined) {
       state.rng = seedrandom(`${state.configs.seed}`);
     }
+    state.game = generateGame(state.configs);
 
+    match.log.info(state.configs);
     // store the state into the match so it can be used again in `update` and `getResults`
     match.state = state;
 
     // send each agent their id
     for (let i = 0; i < match.agents.length; i++) {
       const agentID = match.agents[i].id;
-      match.send(`${agentID}`, agentID);
+      await match.send(`${agentID}`, agentID);
     }
-    // send all agents some global configs / parameters
-    match.sendAll('');
+    // send all agents the current map width and height
+    // `width height` - width and height of the map
+    await match.sendAll(`${state.game.map.width} ${state.game.map.height}`);
+
+    await this.sendAllAgentsGameInformation(match);
+    await match.sendAll('D_DONE');
+  }
+
+  /**
+   * Sends map information formatted as so
+   *
+   * `rp t points` - the number of research points team `t` has
+   *
+   * `r resource_type x y amount` - the amount of resource of that type at `(x, y)`
+   * ...
+   *
+   * `u unit_type t unit_id x y cd w c u` - the unit on team `t` with id unit_id of type unit_type at `(x, y)` with cooldown `cd`,
+   * and `w` `c` `u` units of wood, coal, uranium
+   * ...
+   *
+   * `c t city_id f` - citeam `t`'s city with id city_id and fuel `f`
+   * ...
+   *
+   * `ct t city_id x y cd` - team `t`'s city tile part of city with id city_id at `(x, y)` with cooldown `cd`
+   * ...
+   *
+   *
+   *
+   *
+   *
+   */
+  async sendAllAgentsGameInformation(match: Match): Promise<void> {
+    const game: Game = match.state.game;
+    const map = game.map;
+
+    let promises: Array<Promise<boolean>> = [];
+    const teams = [Unit.TEAM.A, Unit.TEAM.B];
+
+    // send research points
+    teams.forEach((team) => {
+      const pts = game.state.teamStates[team].researchPoints;
+      promises.push(match.sendAll(`rp ${team} ${pts}`));
+    });
+    await Promise.all(promises);
+
+    // send resource information
+    promises = [];
+    map.resourcesMap.forEach((cell) => {
+      promises.push(
+        match.sendAll(
+          `r ${cell.resource.type} ${cell.pos.x} ${cell.pos.y} ${cell.resource.amount}`
+        )
+      );
+    });
+    await Promise.all(promises);
+
+    // send unit information
+    promises = [];
+    teams.forEach((team) => {
+      const units = game.getTeamsUnits(team);
+      units.forEach((unit) => {
+        promises.push(
+          match.sendAll(
+            `u ${unit.type} ${team} ${unit.id} ${unit.pos.x} ${unit.pos.y} ${unit.cooldown} ${unit.cargo.wood} ${unit.cargo.coal} ${unit.cargo.uranium}`
+          )
+        );
+      });
+    });
+
+    await Promise.all(promises);
+
+    // send city information
+    promises = [];
+    game.cities.forEach((city) => {
+      promises.push(match.sendAll(`c ${city.team} ${city.id} ${city.fuel}`));
+    });
+    await Promise.all(promises);
+
+    promises = [];
+    game.cities.forEach((city) => {
+      city.citycells.forEach((cell) => {
+        promises.push(
+          match.sendAll(
+            `ct ${city.team} ${city.id} ${cell.pos.x} ${cell.pos.y} ${cell.citytile.cooldown}`
+          )
+        );
+      });
+    });
+    await Promise.all(promises);
   }
 
   // Update step of each match, called whenever the match moves forward by a single unit in time (1 timeStep)
@@ -55,7 +145,36 @@ export class LuxDesign extends Dimension.Design {
   ): Promise<Match.Status> {
     const state: LuxMatchState = match.state;
     const game = state.game;
-    game.state.turn++;
+
+    match.log.detail('Processing turn ' + game.state.turn);
+    // check if any agents are terminated and finish game if so
+    const agentsTerminated = [false, false];
+    match.agents.forEach((agent) => {
+      if (agent.isTerminated()) {
+        agentsTerminated[agent.id] = true;
+      }
+    });
+
+    if (agentsTerminated[0] || agentsTerminated[1]) {
+      // if at least 1 agent was terminated, destroy the terminated agents' cities and units
+      game.cities.forEach((city) => {
+        if (agentsTerminated[city.team]) {
+          game.destroyCity(city.id);
+        }
+      });
+      const teams = [Unit.TEAM.A, Unit.TEAM.B];
+      for (const team of teams) {
+        if (agentsTerminated[team]) {
+          game.state.teamStates[team].units.forEach((unit) => {
+            game.destroyUnit(unit.team, unit.id);
+          });
+        }
+      }
+      if (state.configs.debug) {
+        await this.debugViewer(game);
+      }
+      return Match.Status.FINISHED;
+    }
 
     // loop over commands and validate and map into internal action representations
     const actionsMap: Map<Game.ACTIONS, Array<Action>> = new Map();
@@ -117,14 +236,26 @@ export class LuxDesign extends Dimension.Design {
     // now we go through every actionable entity and execute actions
     game.cities.forEach((city) => {
       city.citycells.forEach((cellWithCityTile) => {
-        cellWithCityTile.citytile.handleTurn(game);
+        try {
+          cellWithCityTile.citytile.handleTurn(game);
+        } catch (err) {
+          match.throw(cellWithCityTile.citytile.team, err);
+        }
       });
     });
     game.state.teamStates[0].units.forEach((unit) => {
-      unit.handleTurn(game);
+      try {
+        unit.handleTurn(game);
+      } catch (err) {
+        match.throw(unit.team, err);
+      }
     });
     game.state.teamStates[1].units.forEach((unit) => {
-      unit.handleTurn(game);
+      try {
+        unit.handleTurn(game);
+      } catch (err) {
+        match.throw(unit.team, err);
+      }
     });
 
     if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {
@@ -132,23 +263,36 @@ export class LuxDesign extends Dimension.Design {
       this.handleNight(state);
     }
 
-    // send specific agents some information
-    for (let i = 0; i < match.agents.length; i++) {
-      const agent = match.agents[i];
-      match.send('agentspecific', agent);
+    if (state.configs.debug) {
+      await this.debugViewer(game);
     }
 
-    if (this.matchOver(match.state)) {
+    if (this.matchOver(match)) {
       return Match.Status.FINISHED;
     }
+
+    /** Agent Update Section */
+    await this.sendAllAgentsGameInformation(match);
+    // tell all agents updates are done
+    await match.sendAll('D_DONE');
+    game.state.turn++;
+    match.log.detail('Beginning turn ' + game.state.turn);
+  }
+
+  async debugViewer(game: Game): Promise<void> {
+    console.clear();
+    console.log(game.map.getMapString());
+    await sleep(game.configs.debugDelay);
   }
 
   /**
    * Determine if match is over or not
    * @param state
    */
-  matchOver(state: Readonly<LuxMatchState>): boolean {
+  matchOver(match: Match): boolean {
+    const state: Readonly<LuxMatchState> = match.state;
     const game = state.game;
+
     if (game.state.turn === state.configs.parameters.MAX_DAYS) {
       return true;
     }
@@ -177,13 +321,13 @@ export class LuxDesign extends Dimension.Design {
       // if city does not have enough fuel, destroy it
       // TODO, probably add this event to replay
       if (city.fuel < city.getLightUpkeep()) {
-        //
         game.destroyCity(city.id);
       } else {
         city.fuel -= city.getLightUpkeep();
       }
       game.state.teamStates[0].units.forEach((unit) => {
-        if (game.map.getCellByPos(unit.pos).isCityTile()) {
+        // TODO: add condition for different light upkeep for units stacked on a city.
+        if (!game.map.getCellByPos(unit.pos).isCityTile()) {
           if (!unit.spendFuelToSurvive()) {
             // delete unit
             game.destroyUnit(unit.team, unit.id);
@@ -191,7 +335,7 @@ export class LuxDesign extends Dimension.Design {
         }
       });
       game.state.teamStates[1].units.forEach((unit) => {
-        if (game.map.getCellByPos(unit.pos).isCityTile()) {
+        if (!game.map.getCellByPos(unit.pos).isCityTile()) {
           if (!unit.spendFuelToSurvive()) {
             // delete unit
             game.destroyUnit(unit.team, unit.id);

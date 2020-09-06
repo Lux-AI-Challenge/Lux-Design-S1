@@ -7,9 +7,10 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
   width: 16,
   height: 16,
   seed: undefined,
+  debugDelay: 500,
   parameters: {
     DAY_LENGTH: 20,
-    MAX_DAYS: 20,
+    MAX_DAYS: 200,
     LIGHT_UPKEEP: {
       CITY: 100,
       WORKER: 20,

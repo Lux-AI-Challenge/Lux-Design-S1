@@ -1,7 +1,7 @@
 import { Game } from '../Game';
-import { Unit } from '../Unit';
 import { Resource } from '../Resource';
 import { Cell } from '../GameMap/cell';
+import { Unit } from '../Unit';
 
 /**
  * Internal representations of agent sent actions. All actions must be validated prior to construction

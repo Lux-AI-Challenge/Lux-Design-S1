@@ -57,9 +57,6 @@ export class CityTile extends Actionable {
   }
 
   turn(game: Game): void {
-    if (this.cooldown > 0) {
-      this.cooldown--;
-    }
     if (this.currentActions.length > 1) {
       throw new MatchWarn(
         'Too many commands. City can perform only one action at a time'
@@ -77,6 +74,9 @@ export class CityTile extends Actionable {
         this.resetCooldown();
         game.state.teamStates[this.team].researchPoints++;
       }
+    }
+    if (this.cooldown > 0) {
+      this.cooldown--;
     }
   }
 

@@ -8,15 +8,28 @@ const luxdim = Dimensions.create(design, {
   id: 'luxdim',
   defaultMatchConfigs: {},
   loggingLevel: Logger.LEVEL.INFO,
-  secureMode: true,
-  observe: true,
-  activateStation: true,
+  secureMode: false,
+  observe: false,
+  activateStation: false,
 });
 
-const botList = [];
+const js = './kits/js/bot.js';
+const botList = [js, js];
 luxdim
-  .runMatch(botList)
-  .then((res) => {
+  .createMatch(botList, {
+    storeErrorLogs: true,
+    storeReplay: false,
+    seed: 1,
+    debug: false,
+    debugDelay: 200,
+    engineOptions: {
+      noStdErr: false,
+    },
+    loggingLevel: Logger.LEVEL.WARN,
+  })
+  .then(async (match) => {
+    const res = await match.run();
+    console.log(match.state.game.map.getMapString());
     console.log(res);
   })
   .catch(console.error);

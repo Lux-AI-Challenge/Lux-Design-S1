@@ -3,8 +3,7 @@ import { Resource } from '../Resource';
 import { Unit } from '../Unit';
 import { City, CityTile } from './city';
 import { GameMap } from '../GameMap';
-import { Worker } from '../Unit/worker';
-import { Cart } from '../Unit/cart';
+import { Cart, Worker } from '../Unit';
 import { LuxMatchConfigs } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
 import { MatchEngine, MatchWarn } from 'dimensions-ai';
@@ -386,7 +385,7 @@ export class Game {
             city.addCityTile(cell);
           });
           city.fuel += oldcity.fuel;
-          this.destroyCity(oldcity.id);
+          this.cities.delete(oldcity.id);
         }
       });
       return cell.citytile;
@@ -476,8 +475,9 @@ export class Game {
 
       originalCell.resource.amount -= amountDistributed;
       if (originalCell.resource.amount <= 0) {
-        // remove cell from resources map
+        // remove cell from resources map and remove from cell
         this.map.resourcesMap.delete(originalCell);
+        originalCell.resource = null;
       }
     }
   }
@@ -520,14 +520,20 @@ export class Game {
     destunit.cargo[resourceType] += transferAmount;
   }
 
-  /** destroys the city with this id */
-  destroyCity(cityID: string): boolean {
-    return this.cities.delete(cityID);
+  /** destroys the city with this id and remove all city tiles */
+  destroyCity(cityID: string): void {
+    const city = this.cities.get(cityID);
+    this.cities.delete(cityID);
+    city.citycells.forEach((cell) => {
+      cell.citytile = null;
+    });
   }
 
-  /** destroys the unit with this id and team */
-  destroyUnit(team: Unit.TEAM, unitid: string): boolean {
-    return this.state.teamStates[team].units.delete(unitid);
+  /** destroys the unit with this id and team and removes from tile */
+  destroyUnit(team: Unit.TEAM, unitid: string): void {
+    const unit = this.getUnit(team, unitid);
+    this.map.getCellByPos(unit.pos).units.delete(unitid);
+    this.state.teamStates[team].units.delete(unitid);
   }
 
   /**
@@ -643,7 +649,7 @@ export namespace Game {
      */
     MOVE = 'm',
     /**
-     * Formatted as `r x, y`. (x,y) should be an owned city tile, the city tile is commanded to research for
+     * Formatted as `r x y`. (x,y) should be an owned city tile, the city tile is commanded to research for
      * the next X turns
      */
     RESEARCH = 'r',
