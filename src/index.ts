@@ -73,13 +73,12 @@ export class LuxDesign extends Dimension.Design {
       game.handleResourceRelease(cell);
     });
 
-    // give units and city tiles their actions to use
+    // give units and city tiles their validated actions to use
     actionsMap
       .get(Game.ACTIONS.BUILD_CITY)
       .forEach((action: SpawnCityAction) => {
         game.getUnit(action.team, action.unitid).giveAction(action);
       });
-
     actionsMap
       .get(Game.ACTIONS.BUILD_WORKER)
       .forEach((action: SpawnWorkerAction) => {

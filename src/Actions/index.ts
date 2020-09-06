@@ -1,6 +1,7 @@
 import { Game } from '../Game';
 import { Unit } from '../Unit';
 import { Resource } from '../Resource';
+import { Cell } from '../GameMap/cell';
 
 /**
  * Internal representations of agent sent actions. All actions must be validated prior to construction
@@ -14,7 +15,8 @@ export class MoveAction extends Action {
     action: Game.ACTIONS,
     team: Unit.TEAM,
     public unitid: string,
-    public direction: Game.DIRECTIONS
+    public direction: Game.DIRECTIONS,
+    public newcell: Cell
   ) {
     super(action, team);
   }

@@ -129,4 +129,9 @@ export class GameMap {
     return str;
   }
 }
-export namespace GameMap {}
+export namespace GameMap {
+  export enum Types {
+    EMPTY = 'empty',
+    RANDOM = 'random',
+  }
+}
