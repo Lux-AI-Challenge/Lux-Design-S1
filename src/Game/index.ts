@@ -140,8 +140,20 @@ export class Game {
               case Game.DIRECTIONS.NORTH:
               case Game.DIRECTIONS.EAST:
               case Game.DIRECTIONS.SOUTH:
-              case Game.DIRECTIONS.WEST:
+              case Game.DIRECTIONS.WEST: {
+                const newpos = unit.pos.translate(direction, 1);
+                if (!this.map.inMap(newpos)) {
+                  errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} off map`;
+                  valid = false;
+                } else if (
+                  this.map.getCellByPos(newpos).isCityTile() &&
+                  this.map.getCellByPos(newpos).citytile.team !== team
+                ) {
+                  errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} onto opponent city`;
+                  valid = false;
+                }
                 break;
+              }
               default:
                 errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} in invalid direction ${direction}`;
                 valid = false;

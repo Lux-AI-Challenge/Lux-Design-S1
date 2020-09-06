@@ -221,6 +221,8 @@ describe('Test Game', () => {
 
     it('should validate move commands', () => {
       const worker = game.spawnWorker(0, 4, 4);
+      const workerEdge = game.spawnWorker(0, 0, 0);
+      game.spawnCityTile(1, 0, 1);
       game.validateCommand({
         command: `m ${worker.id} n`,
         agentID: 0,
@@ -257,6 +259,28 @@ describe('Test Game', () => {
         // eslint-disable-next-line no-empty
       } catch (err) {}
       if (valid) fail('can not move an unit that does not exist');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: `m ${workerEdge.id} n`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not move a unit off map');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: `m ${workerEdge.id} s`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not move a unit onto enemy city');
 
       valid = false;
       worker.cooldown = 0.1;
