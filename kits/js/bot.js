@@ -1,5 +1,6 @@
 const kit = require('./kit');
-
+const GAME_CONSTANTS = require('./game_constants');
+const DIRECTIONS = GAME_CONSTANTS.DIRECTIONS;
 // create a new agent
 const agent = new kit.Agent();
 
@@ -19,7 +20,7 @@ agent.initialize().then(async () => {
 
     // make our units move south
     player.units.forEach((unit) => {
-      commands.push(`m ${unit.id} s`);
+      // commands.push(unit.move(DIRECTIONS.SOUTH));
     });
 
     /** AI Code ends here */

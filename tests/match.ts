@@ -17,11 +17,11 @@ const js = './kits/js/bot.js';
 const botList = [js, js];
 luxdim
   .createMatch(botList, {
-    storeErrorLogs: false,
+    storeErrorLogs: true,
     storeReplay: false,
     seed: 1,
-    debug: true,
-    debugDelay: 2000,
+    debug: false,
+    debugDelay: 200,
     engineOptions: {
       noStdErr: false,
     },

@@ -649,7 +649,7 @@ export namespace Game {
      */
     MOVE = 'm',
     /**
-     * Formatted as `r x, y`. (x,y) should be an owned city tile, the city tile is commanded to research for
+     * Formatted as `r x y`. (x,y) should be an owned city tile, the city tile is commanded to research for
      * the next X turns
      */
     RESEARCH = 'r',
