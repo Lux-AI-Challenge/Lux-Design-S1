@@ -2,6 +2,7 @@ import { Cell } from '../GameMap/cell';
 import { Unit } from '../Unit';
 import { Resource } from '../Resource';
 import { LuxMatchConfigs } from '../types';
+import { Position } from './position';
 
 export class GameMap {
   public height: number;
@@ -27,37 +28,39 @@ export class GameMap {
     }
   }
 
+  getCellByPos(pos: Position): Cell {
+    return this.map[pos.y][pos.x];
+  }
   getCell(x: number, y: number): Cell {
     return this.map[y][x];
   }
   getRow(y: number): Array<Cell> {
     return this.map[y];
   }
-
-  isAdjacent(x1: number, y1: number, x2: number, y2: number): boolean {
-    const dx = x1 - x2;
-    const dy = y1 - y2;
-    if (Math.abs(dx) + Math.abs(dy) > 1) {
-      return false;
-    }
-    return true;
-  }
-
   getAdjacentCells(cell: Cell): Array<Cell> {
     const cells: Array<Cell> = [];
-    if (cell.x > 0) {
-      cells.push(this.getCell(cell.x - 1, cell.y));
+    if (cell.pos.x > 0) {
+      cells.push(this.getCell(cell.pos.x - 1, cell.pos.y));
     }
-    if (cell.y > 0) {
-      cells.push(this.getCell(cell.x, cell.y - 1));
+    if (cell.pos.y > 0) {
+      cells.push(this.getCell(cell.pos.x, cell.pos.y - 1));
     }
-    if (cell.x < this.width - 1) {
-      cells.push(this.getCell(cell.x + 1, cell.y));
+    if (cell.pos.x < this.width - 1) {
+      cells.push(this.getCell(cell.pos.x + 1, cell.pos.y));
     }
-    if (cell.x < this.height - 1) {
-      cells.push(this.getCell(cell.x, cell.y + 1));
+    if (cell.pos.x < this.height - 1) {
+      cells.push(this.getCell(cell.pos.x, cell.pos.y + 1));
     }
     return cells;
+  }
+
+  inMap(pos: Position): boolean {
+    return !(
+      pos.x < 0 ||
+      pos.y < 0 ||
+      pos.x >= this.width ||
+      pos.y >= this.height
+    );
   }
 
   /**

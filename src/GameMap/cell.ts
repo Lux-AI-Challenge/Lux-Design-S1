@@ -2,6 +2,7 @@ import { Resource } from '../Resource';
 import { Unit } from '../Unit';
 import { CityTile } from '../Game/city';
 import { LuxMatchConfigs } from '../types';
+import { Position } from './position';
 
 /**
  * Cell class for map cells
@@ -15,12 +16,10 @@ export class Cell {
   public citytile: CityTile;
   /** map from unit id to the unit on this tile */
   public units: Map<string, Unit> = new Map();
-  constructor(
-    public x: number,
-    public y: number,
-    public configs: Readonly<LuxMatchConfigs>
-  ) {}
-
+  public pos: Position;
+  constructor(x: number, y: number, public configs: Readonly<LuxMatchConfigs>) {
+    this.pos = new Position(x, y);
+  }
   /**
    * Set resource at cell and the amount of it
    * @param resourceType
