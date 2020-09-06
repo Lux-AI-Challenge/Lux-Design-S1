@@ -48,10 +48,14 @@ export class LuxDesign extends Dimension.Design {
     // send all agents the current map width and height
     // `width height` - width and height of the map
     await match.sendAll(`${state.game.map.width} ${state.game.map.height}`);
+
+    await this.sendAllAgentsGameInformation(match);
   }
 
   /**
    * Sends map information formatted as so
+   *
+   * `rp t points` - the number of research points team `t` has
    *
    * `r resource_type x y amount` - the amount of resource of that type at `(x, y)`
    * ...
@@ -71,13 +75,21 @@ export class LuxDesign extends Dimension.Design {
    *
    *
    */
-  async sendAllAgentsMapInformation(match: Match): Promise<void> {
+  async sendAllAgentsGameInformation(match: Match): Promise<void> {
     const game: Game = match.state.game;
     const map = game.map;
 
     let promises: Array<Promise<boolean>> = [];
     const teams = [Unit.TEAM.A, Unit.TEAM.B];
+
+    teams.forEach((team) => {
+      const pts = game.state.teamStates[team].researchPoints;
+      promises.push(match.sendAll(`rp ${team} ${pts}`));
+    });
+    await Promise.all(promises);
+
     // send resource information
+    promises = [];
     map.resourcesMap.forEach((cell) => {
       promises.push(
         match.sendAll(
@@ -242,11 +254,7 @@ export class LuxDesign extends Dimension.Design {
 
     /** Agent Update Section */
 
-    // send specific agents some information
-    for (let i = 0; i < match.agents.length; i++) {
-      const agent = match.agents[i];
-      await match.send('agentspecific', agent);
-    }
+    await this.sendAllAgentsGameInformation(match);
   }
 
   async debugViewer(game: Game): Promise<void> {
