@@ -9,7 +9,8 @@ import { Actionable } from '../Actionable';
 /**
  * A city is composed of adjacent city tiles of the same team
  */
-export class City extends Actionable {
+export class City {
+  static globalIdCount = 0;
   /**
    * fuel stored in city
    */
@@ -20,12 +21,12 @@ export class City extends Actionable {
   public citycells: Array<Cell> = [];
   public id: string;
 
-  /** turns before this city is allowed to build or research */
-  public actionCooldown = 0;
-
-  constructor(public team: Unit.TEAM, configs: LuxMatchConfigs) {
-    super(configs);
-    this.id = 'city_' + genID();
+  constructor(
+    public team: Unit.TEAM,
+    public configs: Readonly<LuxMatchConfigs>
+  ) {
+    this.id = 'c_' + City.globalIdCount;
+    City.globalIdCount++;
   }
 
   // TODO: Add adjacency bonuses
@@ -36,18 +37,28 @@ export class City extends Actionable {
   addCityTile(cell: Cell): void {
     this.citycells.push(cell);
   }
+}
+
+export class CityTile extends Actionable {
+  /** the id of the city this tile is a part of */
+  public cityid: string;
+  /** cooldown for this city tile before it can build or research */
+  public cooldown = 0;
+  constructor(public team: Unit.TEAM, configs: LuxMatchConfigs) {
+    super(configs);
+  }
 
   canBuildUnit(): boolean {
-    return this.actionCooldown === 0;
+    return this.cooldown === 0;
   }
 
   canResearch(): boolean {
-    return this.actionCooldown === 0;
+    return this.cooldown === 0;
   }
 
   turn(state: Game.State, commands: Array<string>): void {
-    if (this.actionCooldown > 0) {
-      this.actionCooldown--;
+    if (this.cooldown > 0) {
+      this.cooldown--;
     }
     if (commands.length > 1) {
       throw new MatchWarn(
@@ -55,45 +66,22 @@ export class City extends Actionable {
       );
     } else if (commands.length === 1) {
       const info = commands[0].split(' ');
-      const cmd = info[0];
-      if (cmd === Game.ACTIONS.BUILD_CART) {
-        if (this.canBuildUnit()) {
-          // TODO
-          this.resetCooldown();
-        } else {
-          throw new MatchWarn(
-            `City ${this.id} is still has cooldown: ${this.actionCooldown} and can't build cart`
-          );
-        }
-      } else if (cmd === Game.ACTIONS.BUILD_WORKER) {
-        if (this.canBuildUnit()) {
-          // TODO
-          this.resetCooldown();
-        } else {
-          throw new MatchWarn(
-            `City ${this.id} is still has cooldown: ${this.actionCooldown} and can't build worker`
-          );
-        }
-      } else if (cmd === Game.ACTIONS.RESEARCH) {
-        if (this.canResearch()) {
-          this.resetCooldown();
-          state.teamStates[this.team].researchPoints++;
-        } else {
-          throw new MatchWarn(
-            `City ${this.id} is still has cooldown: ${this.actionCooldown} and can't research`
-          );
-        }
+      const action = info[0];
+      if (action === Game.ACTIONS.BUILD_CART) {
+        // TODO
+        this.resetCooldown();
+      } else if (action === Game.ACTIONS.BUILD_WORKER) {
+        // TODO
+        this.resetCooldown();
+      } else if (action === Game.ACTIONS.RESEARCH) {
+        // TODO
+        this.resetCooldown();
+        state.teamStates[this.team].researchPoints++;
       }
     }
   }
 
   resetCooldown(): void {
-    this.actionCooldown = this.configs.parameters.CITY_ACTION_COOLDOWN;
+    this.cooldown = this.configs.parameters.CITY_ACTION_COOLDOWN;
   }
-}
-
-export class CityTile {
-  /** the id of the city this tile is a part of */
-  public cityid: string;
-  constructor(public team: Unit.TEAM) {}
 }
