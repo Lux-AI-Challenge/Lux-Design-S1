@@ -67,6 +67,18 @@ describe('Test Game', () => {
       game.spawnCityTile(0, 2, 2);
       citytile23 = game.spawnCityTile(0, 2, 3);
     });
+    it('should invalidate invalid command', () => {
+      let valid = false;
+      try {
+        game.validateCommand({
+          command: `imnotacommand`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('cannot send invalid commands');
+    });
     it('should validate build cities', () => {
       const worker = game.spawnWorker(0, 4, 5);
       game.spawnCityTile(0, 1, 5);
@@ -80,7 +92,7 @@ describe('Test Game', () => {
       let valid = false;
       try {
         game.validateCommand({
-          command: 'bc invalid',
+          command: 'bcity invalid',
           agentID: 0,
         });
         valid = true;
@@ -91,7 +103,7 @@ describe('Test Game', () => {
       valid = false;
       try {
         game.validateCommand({
-          command: `bc ${workerOnResource.id}`,
+          command: `bcity ${workerOnResource.id}`,
           agentID: 0,
         });
         valid = true;
@@ -102,7 +114,7 @@ describe('Test Game', () => {
       valid = false;
       try {
         game.validateCommand({
-          command: `bc ${workerOnCity.id}`,
+          command: `bcity ${workerOnCity.id}`,
           agentID: 0,
         });
         valid = true;
@@ -136,6 +148,17 @@ describe('Test Game', () => {
         // eslint-disable-next-line no-empty
       } catch (err) {}
       if (valid) fail('can not build on opponents city');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: 'bc a c',
+          agentID: 1,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('tried to build using nan coords');
 
       valid = false;
       try {
@@ -254,13 +277,13 @@ describe('Test Game', () => {
       valid = false;
       try {
         game.validateCommand({
-          command: 'bw 2 3',
+          command: 'r 2 3',
           agentID: 0,
         });
         valid = true;
         // eslint-disable-next-line no-empty
       } catch (err) {}
-      if (valid) fail('cannot act during cooldown');
+      if (valid) fail('cannot research more during cooldown');
     });
 
     it('should validate move commands', () => {

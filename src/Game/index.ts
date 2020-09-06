@@ -250,7 +250,7 @@ export class Game {
             const citytile = cell.citytile;
             if (!citytile.canResearch()) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
+              errormsg = `Agent ${cmd.agentID} tried to run research at tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
               break;
             }
             if (valid) {
