@@ -19,7 +19,9 @@ import {
 } from '../Actions';
 
 /**
- * Holds basically all game data, including the map
+ * Holds basically all game data, including the map.
+ *
+ * Has the main functions for manipulating game state e.g. moving units, spawning units
  *
  * All entities that require light are any Units or Cities
  */
@@ -370,7 +372,7 @@ export class Game {
             city.addCityTile(cell);
           });
           city.fuel += oldcity.fuel;
-          this.cities.delete(id);
+          this.destroyCity(oldcity.id);
         }
       });
       return cell.citytile;
@@ -378,8 +380,8 @@ export class Game {
   }
 
   /** destroys the city with this id */
-  destroyCity(cityId: string): boolean {
-    return this.cities.delete(cityId);
+  destroyCity(cityID: string): boolean {
+    return this.cities.delete(cityID);
   }
 }
 export namespace Game {
