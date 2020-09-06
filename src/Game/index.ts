@@ -379,6 +379,37 @@ export class Game {
     }
   }
 
+  moveUnit(team: Unit.TEAM, unitid: string, direction: Game.DIRECTIONS): void {
+    const unit = this.state.teamStates[team].units.get(unitid);
+    unit.pos = unit.pos.translate(direction, 1);
+  }
+
+  transferResources(
+    team: Unit.TEAM,
+    srcID: string,
+    destID: string,
+    resourceType: Resource.Types,
+    amount: number
+  ): void {
+    const srcunit = this.state.teamStates[team].units.get(srcID);
+    const destunit = this.state.teamStates[team].units.get(destID);
+    // the amount to actually transfer
+    let transferAmount = amount;
+    if (srcunit.cargo[resourceType] >= amount) {
+      transferAmount = amount;
+    } else {
+      // when resources is below specified amount, we can only transfer as much as we can hold
+      transferAmount = srcunit.cargo[resourceType];
+    }
+    const spaceLeft = destunit.getCargoSpaceLeft();
+    // if we want to transferr more than there is space, we can only transfer what space is left
+    if (transferAmount > spaceLeft) {
+      transferAmount = spaceLeft;
+    }
+    srcunit.cargo[resourceType] -= transferAmount;
+    destunit.cargo[resourceType] += transferAmount;
+  }
+
   /** destroys the city with this id */
   destroyCity(cityID: string): boolean {
     return this.cities.delete(cityID);
@@ -413,14 +444,23 @@ export namespace Game {
     units: Map<string, Unit>;
   }
 
+  /**
+   * All the available agent actions with specifications as to what they do and restrictions.
+   */
   export enum ACTIONS {
-    /** Formatted as `m unitid direction`. unitid should be valid and should have empty space in that direction */
+    /**
+     * Formatted as `m unitid direction`. unitid should be valid and should have empty space in that direction. moves
+     * unit with id unitid in the direction
+     */
     MOVE = 'm',
-    /** Formatted as `r x, y`. (x,y) should be an owned city tile */
+    /**
+     * Formatted as `r x, y`. (x,y) should be an owned city tile, the city tile is commanded to research for
+     * the next X turns
+     */
     RESEARCH = 'r',
-    /** Formatted as `bw x y`. (x,y) should be an owned city tile */
+    /** Formatted as `bw x y`. (x,y) should be an owned city tile, where worker is to be built */
     BUILD_WORKER = 'bw',
-    /** Formatted as `bc x y`. (x,y) should be an owned city tile */
+    /** Formatted as `bc x y`. (x,y) should be an owned city tile, where the cart is to be built */
     BUILD_CART = 'bc',
     /**
      * Formatted as `bcity unitid`. builds city at unitids pos, unitid should be
@@ -429,7 +469,7 @@ export namespace Game {
     BUILD_CITY = 'bcity',
     /**
      * Formatted as `t source_unitid destination_unitid resource_type amount`. Both units in transfer should be
-     * adjacent
+     * adjacent. If command valid, it will transfer as much as possible with a max of the amount specified
      */
     TRANSFER = 't',
   }

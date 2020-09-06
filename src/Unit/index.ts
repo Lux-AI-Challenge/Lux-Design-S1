@@ -1,12 +1,13 @@
 import { LuxMatchConfigs } from '../types';
 import { Actionable } from '../Actionable';
 import { Position } from '../GameMap/position';
+import { Resource } from '../Resource';
 
 export abstract class Unit extends Actionable {
   public id: string;
   static globalIdCount = 0;
   public cooldown = 0;
-  public cargo = {
+  public cargo: Unit.Cargo = {
     wood: 0,
     coal: 0,
     uranium: 0,
@@ -24,6 +25,13 @@ export abstract class Unit extends Actionable {
     Unit.globalIdCount++;
     this.pos = new Position(x, y);
   }
+  public getCargoSpaceLeft(): number {
+    let capacity = this.configs.parameters.RESOURCE_CAPACITY.CART;
+    if (this.type === Unit.Type.WORKER) {
+      capacity = this.configs.parameters.RESOURCE_CAPACITY.WORKER;
+    }
+    return capacity - this.cargo.wood - this.cargo.coal - this.cargo.uranium;
+  }
   abstract getLightUpkeep(): number;
   abstract canMove(): boolean;
 }
@@ -40,4 +48,7 @@ export namespace Unit {
     A = 0,
     B = 1,
   }
+  export type Cargo = {
+    [x in Resource.Types]: number;
+  };
 }
