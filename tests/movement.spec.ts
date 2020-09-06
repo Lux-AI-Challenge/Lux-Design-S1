@@ -4,7 +4,7 @@ const expect = chai.expect;
 import { Game } from '../src/Game';
 import { GameMap } from '../src/GameMap';
 
-describe('test movement handling', () => {
+describe('Test movement handling', () => {
   let game: Game;
   beforeEach(() => {
     game = new Game({
@@ -12,6 +12,19 @@ describe('test movement handling', () => {
       height: 8,
       mapType: GameMap.Types.EMPTY,
     });
+  });
+  it('should move units given a move action', () => {
+    const w1 = game.spawnWorker(0, 4, 4);
+    const action = game.validateCommand({
+      agentID: 0,
+      command: `m ${w1.id} s`,
+    });
+    w1.giveAction(action);
+    w1.turn(game);
+    expect(w1.pos.y).to.equal(5);
+    expect(w1.pos.x).to.equal(4);
+    expect(game.map.getCell(4, 4).units.size).to.equal(0);
+    expect(game.map.getCell(4, 5).units.get(w1.id)).to.equal(w1);
   });
   describe('collison testing', () => {
     it('should remove all actions if all go to the same place', () => {

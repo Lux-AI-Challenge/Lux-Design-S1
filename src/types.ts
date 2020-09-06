@@ -43,5 +43,9 @@ export interface LuxMatchConfigs {
       URANIUM: number;
     };
     CITY_ACTION_COOLDOWN: number;
+    UNIT_ACTION_COOLDOWN: {
+      CART: number;
+      WORKER: number;
+    };
   };
 }

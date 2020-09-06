@@ -32,5 +32,9 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
       URANIUM: 60,
     },
     CITY_ACTION_COOLDOWN: 10,
+    UNIT_ACTION_COOLDOWN: {
+      CART: 3,
+      WORKER: 1,
+    },
   },
 };
