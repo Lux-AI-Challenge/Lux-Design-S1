@@ -243,22 +243,28 @@ export class LuxDesign extends Dimension.Design {
         }
       });
     });
-    game.state.teamStates[0].units.forEach((unit) => {
-      try {
-        unit.handleTurn(game);
-      } catch (err) {
-        match.throw(unit.team, err);
-      }
-    });
-    game.state.teamStates[1].units.forEach((unit) => {
-      try {
-        unit.handleTurn(game);
-      } catch (err) {
-        match.throw(unit.team, err);
-      }
-    });
+    const teams = [Unit.TEAM.A, Unit.TEAM.B];
+    for (const team of teams) {
+      game.state.teamStates[team].units.forEach((unit) => {
+        try {
+          unit.handleTurn(game);
+        } catch (err) {
+          match.throw(unit.team, err);
+        }
+      });
+    }
 
-    if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {
+    // now we make all units with cargo drop all resources on the city they are standing on
+    for (const team of teams) {
+      game.state.teamStates[team].units.forEach((unit) => {
+        game.handleResourceDeposit(unit);
+      });
+    }
+
+    if (
+      game.state.turn !== 0 &&
+      game.state.turn % state.configs.parameters.DAY_LENGTH === 0
+    ) {
       // do something at night
       this.handleNight(state);
     }
