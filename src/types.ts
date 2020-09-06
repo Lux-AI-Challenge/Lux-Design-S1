@@ -8,6 +8,7 @@ export interface LuxMatchResults {
 export interface LuxMatchState {
   configs: LuxMatchConfigs;
   game: Game;
+  rng: () => number;
 }
 
 /**
@@ -17,6 +18,8 @@ export interface LuxMatchConfigs {
   mapType: GameMap.Types;
   width: number;
   height: number;
+
+  seed: number | undefined;
   parameters: {
     DAY_LENGTH: number;
     MAX_DAYS: number;

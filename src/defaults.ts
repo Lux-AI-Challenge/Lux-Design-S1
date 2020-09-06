@@ -6,6 +6,7 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
   mapType: GameMap.Types.RANDOM,
   width: 16,
   height: 16,
+  seed: undefined,
   parameters: {
     DAY_LENGTH: 20,
     MAX_DAYS: 20,

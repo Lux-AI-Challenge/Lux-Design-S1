@@ -482,6 +482,10 @@ export class Game {
     }
   }
 
+  getTeamsUnits(team: Unit.TEAM): Map<string, Unit> {
+    return this.state.teamStates[team].units;
+  }
+
   getUnit(team: Unit.TEAM, unitid: string): Unit {
     return this.state.teamStates[team].units.get(unitid);
   }
