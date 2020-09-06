@@ -5,7 +5,7 @@ import { LuxMatchConfigs } from '../types';
 import { Position } from './position';
 
 export class GameMap {
-  public resourcesMap: Set<Cell>;
+  public resourcesMap: Set<Cell> = new Set();
   public height: number;
   public width: number;
   /**
