@@ -7,10 +7,21 @@ import { Worker } from '../Unit/worker';
 import { Cart } from '../Unit/cart';
 import { LuxMatchConfigs } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
-import { MatchError, MatchEngine, MatchWarn } from 'dimensions-ai';
+import { MatchEngine, MatchWarn } from 'dimensions-ai';
+import {
+  Action,
+  SpawnCartAction,
+  SpawnWorkerAction,
+  MoveAction,
+  ResearchAction,
+  TransferAction,
+  SpawnCityAction,
+} from '../Actions';
 
 /**
- * Holds basically all game data, including the map
+ * Holds basically all game data, including the map.
+ *
+ * Has the main functions for manipulating game state e.g. moving units, spawning units
  *
  * All entities that require light are any Units or Cities
  */
@@ -76,9 +87,9 @@ export class Game {
   }
 
   /**
-   * throws error if command is valid
+   * Returns an Action object if validated. If invalid, throws MatchWarn
    */
-  validateCommand(cmd: MatchEngine.Command): void {
+  validateCommand(cmd: MatchEngine.Command): Action {
     const strs = cmd.command.split(' ');
     if (strs.length === 0) {
       throw new MatchWarn(
@@ -90,6 +101,33 @@ export class Game {
       const team: Unit.TEAM = cmd.agentID;
       let errormsg = `Agent ${cmd.agentID} sent invalid command`;
       switch (action) {
+        case Game.ACTIONS.BUILD_CITY:
+          if (strs.length === 2) {
+            const unitid = strs[1];
+            const unit = this.state.teamStates[team].units.get(unitid);
+            if (!unit) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build city with invalid/unowned unit id: ${unitid}`;
+              break;
+            }
+            const cell = this.map.getCellByPos(unit.pos);
+            if (cell.isCityTile()) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build city on existing city`;
+              break;
+            }
+            if (cell.hasResource()) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build city on non-empty resource tile`;
+              break;
+            }
+            if (valid) {
+              return new SpawnCityAction(action, team, unitid);
+            }
+          } else {
+            valid = false;
+          }
+          break;
         case Game.ACTIONS.BUILD_CART:
         case Game.ACTIONS.BUILD_WORKER:
           if (strs.length === 3) {
@@ -97,7 +135,7 @@ export class Game {
             const y = parseInt(strs[2]);
             if (isNaN(x) || isNaN(y)) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build with invalid coordinates`;
+              errormsg = `Agent ${cmd.agentID} tried to build unit with invalid coordinates`;
               break;
             }
             // check if being built on owned city tile
@@ -114,6 +152,13 @@ export class Game {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
               break;
+            }
+            if (valid) {
+              if (action === Game.ACTIONS.BUILD_CART) {
+                return new SpawnCartAction(action, team, x, y);
+              } else if (action === Game.ACTIONS.BUILD_WORKER) {
+                return new SpawnWorkerAction(action, team, x, y);
+              }
             }
           } else {
             valid = false;
@@ -159,6 +204,14 @@ export class Game {
                 valid = false;
                 break;
             }
+            if (valid) {
+              return new MoveAction(
+                action,
+                team,
+                unitid,
+                direction as Game.DIRECTIONS
+              );
+            }
           } else {
             valid = false;
           }
@@ -185,6 +238,9 @@ export class Game {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
               break;
+            }
+            if (valid) {
+              return new ResearchAction(action, team, x, y);
             }
           } else {
             valid = false;
@@ -220,7 +276,7 @@ export class Game {
               break;
             }
 
-            if (isNaN(amount)) {
+            if (isNaN(amount) || amount < 0) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to transfer invalid amount: ${strs[3]}`;
               break;
@@ -234,6 +290,16 @@ export class Game {
                 valid = false;
                 errormsg = `Agent ${cmd.agentID} tried to transfer invalid resource: ${resourceType}`;
                 break;
+            }
+            if (valid) {
+              return new TransferAction(
+                action,
+                team,
+                srcID,
+                destID,
+                resourceType as Resource.Types,
+                amount
+              );
             }
           } else {
             valid = false;
@@ -306,7 +372,7 @@ export class Game {
             city.addCityTile(cell);
           });
           city.fuel += oldcity.fuel;
-          this.cities.delete(id);
+          this.destroyCity(oldcity.id);
         }
       });
       return cell.citytile;
@@ -314,8 +380,8 @@ export class Game {
   }
 
   /** destroys the city with this id */
-  destroyCity(cityId: string): boolean {
-    return this.cities.delete(cityId);
+  destroyCity(cityID: string): boolean {
+    return this.cities.delete(cityID);
   }
 }
 export namespace Game {
@@ -356,6 +422,11 @@ export namespace Game {
     BUILD_WORKER = 'bw',
     /** Formatted as `bc x y`. (x,y) should be an owned city tile */
     BUILD_CART = 'bc',
+    /**
+     * Formatted as `bcity unitid`. builds city at unitids pos, unitid should be
+     * friendly owned unit that is a worker
+     */
+    BUILD_CITY = 'bcity',
     /**
      * Formatted as `t source_unitid destination_unitid resource_type amount`. Both units in transfer should be
      * adjacent

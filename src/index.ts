@@ -4,6 +4,7 @@ import Tournament = Dimension.Tournament;
 import { LuxMatchResults, LuxMatchState } from './types';
 import { DEFAULT_CONFIGS } from './defaults';
 import { generateGame } from './Game/gen';
+import { Action } from './Actions';
 
 export class LuxDesign extends Dimension.Design {
   constructor(name: string) {
@@ -41,11 +42,17 @@ export class LuxDesign extends Dimension.Design {
     const game = state.game;
     game.state.turn++;
 
-    // loop over commands and handle them
+    // loop over commands and validate and map into internal action representations
+    const actions: Array<Action> = [];
     for (let i = 0; i < commands.length; i++) {
       // get the command and the agent that issued it and handle appropriately
-      const command = commands[i].command;
       const agentID = commands[i].agentID;
+      try {
+        const action = game.validateCommand(commands[i]);
+        actions.push(action);
+      } catch (err) {
+        match.throw(agentID, err);
+      }
     }
 
     if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {

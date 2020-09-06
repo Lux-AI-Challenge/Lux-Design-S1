@@ -14,7 +14,7 @@ export class Cart extends Unit {
     return this.cooldown === 0;
   }
 
-  turn(state: Game.State, commands: Array<string>): void {
+  turn(game: Game, commands: Array<string>): void {
     if (this.cooldown > 0) {
       this.cooldown--;
     }
