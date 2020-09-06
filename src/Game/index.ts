@@ -461,10 +461,11 @@ export class Game {
         const spaceLeft = worker.getCargoSpaceLeft();
         const maxReceivable =
           amountToDistribute / (workersToReceiveResources.length - i);
-        const distributeAmount = Math.floor(
-          Math.min(spaceLeft, maxReceivable, rate)
-        );
-        worker.cargo[type] += distributeAmount;
+
+        const distributeAmount = Math.min(spaceLeft, maxReceivable, rate);
+
+        // we give workers a floored amount for sake of integers and effectiely waste the remainder
+        worker.cargo[type] += Math.floor(distributeAmount);
         amountDistributed += distributeAmount;
         // subtract how much was given.
         amountToDistribute -= distributeAmount;
