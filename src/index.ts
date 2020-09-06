@@ -57,6 +57,31 @@ export class LuxDesign extends Dimension.Design {
     const state: LuxMatchState = match.state;
     const game = state.game;
 
+    // check if any agents are terminated and finish game if so
+    const agentsTerminated = [false, false];
+    match.agents.forEach((agent) => {
+      if (agent.isTerminated()) {
+        agentsTerminated[agent.id] = true;
+      }
+    });
+
+    if (agentsTerminated[0] || agentsTerminated[1]) {
+      // if at least 1 agent was terminated, destroy the terminated agents' cities and units
+      game.cities.forEach((city) => {
+        if (agentsTerminated[city.team]) {
+          game.destroyCity(city.id);
+        }
+      });
+      const teams = [Unit.TEAM.A, Unit.TEAM.B];
+      for (const team of teams) {
+        if (agentsTerminated[team]) {
+          game.state.teamStates[team].units.clear();
+        }
+      }
+      await this.debugViewer(game);
+      return Match.Status.FINISHED;
+    }
+
     game.state.turn++;
 
     // loop over commands and validate and map into internal action representations
@@ -162,28 +187,6 @@ export class LuxDesign extends Dimension.Design {
   matchOver(match: Match): boolean {
     const state: Readonly<LuxMatchState> = match.state;
     const game = state.game;
-    const agentsTerminated = [false, false];
-    match.agents.forEach((agent) => {
-      if (agent.isTerminated()) {
-        agentsTerminated[agent.id] = true;
-      }
-    });
-
-    if (agentsTerminated[0] || agentsTerminated[1]) {
-      // if at least 1 agent was terminated, destroy the terminated agents' cities and units
-      game.cities.forEach((city) => {
-        if (agentsTerminated[city.team]) {
-          game.destroyCity(city.id);
-        }
-      });
-      const teams = [Unit.TEAM.A, Unit.TEAM.B];
-      for (const team of teams) {
-        if (agentsTerminated[team]) {
-          game.state.teamStates[team].units.clear();
-        }
-      }
-      return true;
-    }
 
     if (game.state.turn === state.configs.parameters.MAX_DAYS) {
       return true;

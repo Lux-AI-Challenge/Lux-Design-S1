@@ -19,7 +19,7 @@ agent.initialize().then(async () => {
     console.log(commands.join(','));
 
     // now we end our turn
-    agent.endTurn();
+    // agent.endTurn();
 
   }
 });

@@ -385,7 +385,7 @@ export class Game {
             city.addCityTile(cell);
           });
           city.fuel += oldcity.fuel;
-          this.destroyCity(oldcity.id);
+          this.cities.delete(oldcity.id);
         }
       });
       return cell.citytile;
@@ -519,14 +519,20 @@ export class Game {
     destunit.cargo[resourceType] += transferAmount;
   }
 
-  /** destroys the city with this id */
-  destroyCity(cityID: string): boolean {
-    return this.cities.delete(cityID);
+  /** destroys the city with this id and remove all city tiles */
+  destroyCity(cityID: string): void {
+    const city = this.cities.get(cityID);
+    this.cities.delete(cityID);
+    city.citycells.forEach((cell) => {
+      cell.citytile = null;
+    });
   }
 
-  /** destroys the unit with this id and team */
-  destroyUnit(team: Unit.TEAM, unitid: string): boolean {
-    return this.state.teamStates[team].units.delete(unitid);
+  /** destroys the unit with this id and team and removes from tile */
+  destroyUnit(team: Unit.TEAM, unitid: string): void {
+    const unit = this.getUnit(team, unitid);
+    this.map.getCellByPos(unit.pos).units.delete(unitid);
+    this.state.teamStates[team].units.delete(unitid);
   }
 
   /**

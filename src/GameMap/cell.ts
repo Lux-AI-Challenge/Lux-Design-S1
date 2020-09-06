@@ -12,8 +12,8 @@ import { Position } from './position';
  * There may be multiple units but this is only allowed on city tiles
  */
 export class Cell {
-  public resource: Resource;
-  public citytile: CityTile;
+  public resource: Resource = null;
+  public citytile: CityTile = null;
   /** map from unit id to the unit on this tile */
   public units: Map<string, Unit> = new Map();
   public pos: Position;
@@ -30,7 +30,7 @@ export class Cell {
     return this.resource;
   }
   hasResource(): boolean {
-    return this.resource !== undefined && this.resource.amount > 0;
+    return this.resource !== null && this.resource.amount > 0;
   }
 
   /** Marks this as a city tile with the specified team */
@@ -40,7 +40,7 @@ export class Cell {
   }
 
   isCityTile(): boolean {
-    return this.citytile !== undefined;
+    return this.citytile !== null;
   }
 
   hasUnits(): boolean {
