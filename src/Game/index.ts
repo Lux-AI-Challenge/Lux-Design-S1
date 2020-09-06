@@ -442,6 +442,7 @@ export class Game {
       }
       // find out how many resources to distribute and release
       let amountToDistribute = rate * workersToReceiveResources.length;
+      let amountDistributed = 0;
       // distribute only as much as the cell contains
       amountToDistribute = Math.min(
         amountToDistribute,
@@ -449,16 +450,25 @@ export class Game {
       );
 
       // distribute resources as evenly as possible
+
+      // sort from least space to most so those with more capacity will have the correct distribution of resources before we cargo caps
+      workersToReceiveResources.sort(
+        (a, b) => a.getCargoSpaceLeft() - b.getCargoSpaceLeft()
+      );
       workersToReceiveResources.forEach((worker, i) => {
         const spaceLeft = worker.getCargoSpaceLeft();
         const maxReceivable =
           amountToDistribute / (workersToReceiveResources.length - i);
-        const distributeAmount = Math.floor(Math.min(spaceLeft, maxReceivable));
+        const distributeAmount = Math.floor(
+          Math.min(spaceLeft, maxReceivable, rate)
+        );
         worker.cargo[type] += distributeAmount;
-
+        amountDistributed += distributeAmount;
         // subtract how much was given.
         amountToDistribute -= distributeAmount;
       });
+
+      originalCell.resource.amount -= amountDistributed;
     }
   }
 

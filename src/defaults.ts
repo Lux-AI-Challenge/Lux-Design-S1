@@ -14,12 +14,12 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
       CART: 80,
     },
     RESOURCE_CAPACITY: {
-      WORKER: 50,
-      CART: 200,
+      WORKER: 100,
+      CART: 400,
     },
     WORKER_COLLECTION_RATE: {
-      WOOD: 10,
-      COAL: 5,
+      WOOD: 20,
+      COAL: 10,
       URANIUM: 1,
     },
     BUILD_TIME: {
