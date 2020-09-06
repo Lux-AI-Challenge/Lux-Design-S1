@@ -2,6 +2,7 @@ import chai from 'chai';
 import 'mocha';
 import { Game } from '../src/Game';
 import { fail } from 'assert';
+import { Resource } from '../src/Resource';
 const expect = chai.expect;
 describe('Test Game', () => {
   it('should initialize game map properly', () => {
@@ -65,6 +66,49 @@ describe('Test Game', () => {
       });
       game.spawnCityTile(0, 2, 2);
       citytile23 = game.spawnCityTile(0, 2, 3);
+    });
+    it('should validate build cities', () => {
+      const worker = game.spawnWorker(0, 4, 5);
+      game.spawnCityTile(0, 1, 5);
+      const workerOnCity = game.spawnWorker(0, 1, 5);
+      game.map.getCell(6, 6).setResource(Resource.Types.COAL, 100);
+      const workerOnResource = game.spawnWorker(0, 6, 6);
+      game.validateCommand({
+        command: `bcity ${worker.id}`,
+        agentID: 0,
+      });
+      let valid = false;
+      try {
+        game.validateCommand({
+          command: 'bc invalid',
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not build with invalid unit id');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: `bc ${workerOnResource.id}`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not build on non empty resource tile');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: `bc ${workerOnCity.id}`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not build city on existing city');
     });
     it('should validate build carts', () => {
       game.validateCommand({
@@ -358,6 +402,28 @@ describe('Test Game', () => {
         // eslint-disable-next-line no-empty
       } catch (err) {}
       if (valid) fail('can not transfer to same unit');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: `t ${worker1.id} ${worker2.id} wood a`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not transfer nan amount');
+
+      valid = false;
+      try {
+        game.validateCommand({
+          command: `t ${worker1.id} ${worker2.id} wood -1`,
+          agentID: 0,
+        });
+        valid = true;
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
+      if (valid) fail('can not transfer invalid amount');
     });
   });
 });

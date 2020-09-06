@@ -30,7 +30,7 @@ export class Cell {
     return this.resource;
   }
   hasResource(): boolean {
-    return this.resource !== undefined;
+    return this.resource !== undefined && this.resource.amount > 0;
   }
 
   /** Marks this as a city tile with the specified team */
