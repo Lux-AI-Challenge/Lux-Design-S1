@@ -236,17 +236,28 @@ export class LuxDesign extends Dimension.Design {
     // now we go through every actionable entity and execute actions
     game.cities.forEach((city) => {
       city.citycells.forEach((cellWithCityTile) => {
-        cellWithCityTile.citytile.handleTurn(game);
+        try {
+          cellWithCityTile.citytile.handleTurn(game);
+        } catch (err) {
+          match.throw(cellWithCityTile.citytile.team, err);
+        }
       });
     });
     game.state.teamStates[0].units.forEach((unit) => {
-      unit.handleTurn(game);
+      try {
+        unit.handleTurn(game);
+      } catch (err) {
+        match.throw(unit.team, err);
+      }
     });
     game.state.teamStates[1].units.forEach((unit) => {
-      unit.handleTurn(game);
+      try {
+        unit.handleTurn(game);
+      } catch (err) {
+        match.throw(unit.team, err);
+      }
     });
 
-    console.log(game.state.turn);
     if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {
       // do something at night
       this.handleNight(state);

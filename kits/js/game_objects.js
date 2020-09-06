@@ -14,8 +14,8 @@ class Player {
     this.team = teamid;
     this.researchPoints = 0;
     // map unit id to the unit
-    this.units = {};
-    this.cities = {};
+    this.units = [];
+    this.cities = new Map();
   }
 }
 
@@ -45,9 +45,10 @@ class CityTile {
 }
 
 class Unit {
-  constructor(teamid, type, x, y, cooldown, wood, coal, uranium) {
+  constructor(teamid, type, unitid, x, y, cooldown, wood, coal, uranium) {
     this.pos = new Position(x, y);
     this.team = teamid;
+    this.id = unitid;
     this.type = type;
     this.cooldown = cooldown;
     this.cargo = {

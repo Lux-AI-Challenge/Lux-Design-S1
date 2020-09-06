@@ -8,15 +8,23 @@ agent.initialize().then(async () => {
   while (true) {
     // wait for update from match engine
     await agent.update();
-    console.error(agent.turn);
+
+    // player is your player, opponent is the opposing player
+    const player = agent.players[agent.id];
+    const opponent = agent.players[(agent.id + 1) % 2];
+
     /** AI Code goes here */
 
     let commands = [];
 
-    // push some commands in to be processed by the `MatchEngine` working under a `Design`
-    commands.push('m u_0 s');
+    // make our units move south
+    player.units.forEach((unit) => {
+      commands.push(`m ${unit.id} s`);
+    });
 
-    // submit commands to the `MatchEngine` and the `Match`, using ',' as the delimiter
+    /** AI Code ends here */
+
+    // submit commands to the engine
     console.log(commands.join(','));
 
     // now we end our turn

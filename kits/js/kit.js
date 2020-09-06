@@ -97,7 +97,14 @@ class Agent {
     await this.retrieveUpdates();
   }
 
+  resetPlayerStates() {
+    this.players[0].units = [];
+    this.players[0].cities = new Map();
+    this.players[1].units = [];
+    this.players[1].cities = new Map();
+  }
   async retrieveUpdates() {
+    this.resetPlayerStates();
     while (true) {
       let update = (await this.getLine());
       if (update.str === INPUT_CONSTANTS.DONE) {
@@ -128,14 +135,14 @@ class Agent {
           const wood = update.nextInt();
           const coal = update.nextInt();
           const uranium = update.nextInt();
-          this.players[team].units[unitid] = new Unit(team, unittype, x, y, cooldown, wood, coal, uranium);
+          this.players[team].units.push(new Unit(team, unittype, unitid, x, y, cooldown, wood, coal, uranium));
           break;
         }
         case INPUT_CONSTANTS.CITY: {
           const team = update.nextInt();
           const cityid = update.nextStr();
           const fuel = update.nextInt();
-          this.players[team].cities[cityid] = new City(team, cityid, fuel);
+          this.players[team].cities.set(cityid, new City(team, cityid, fuel));
           break;
         }
         case INPUT_CONSTANTS.CITY_TILES: {
@@ -144,7 +151,7 @@ class Agent {
           const x = update.nextInt();
           const y = update.nextInt();
           const cooldown = update.nextInt();
-          const city = this.players[team].cities[cityid];
+          const city = this.players[team].cities.get(cityid);
           const citytile = city.addCityTile(x, y, cooldown);
           this.map.getCell(x, y).citytile = citytile;
           break;

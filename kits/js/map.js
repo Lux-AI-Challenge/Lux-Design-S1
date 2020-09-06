@@ -1,3 +1,5 @@
+const GAME_CONSTANTS = require('./game_constants');
+const DIRECTIONS = GAME_CONSTANTS.DIRECTIONS;
 class GameMap {
   constructor(width, height) {
     this.height = width;
@@ -38,6 +40,27 @@ class Position {
   constructor(x, y) {
     this.x = x;
     this.y = y;
+  }
+  isAdjacent() {
+    const dx = this.x - pos.x;
+    const dy = this.y - pos.y;
+    if (Math.abs(dx) + Math.abs(dy) > 1) {
+      return false;
+    }
+    return true;
+  }
+
+  translate(direction, units) {
+    switch (direction) {
+      case DIRECTIONS.NORTH:
+        return new Position(this.x, this.y - units);
+      case DIRECTIONS.EAST:
+        return new Position(this.x + units, this.y);
+      case DIRECTIONS.SOUTH:
+        return new Position(this.x, this.y + units);
+      case DIRECTIONS.WEST:
+        return new Position(this.x - units, this.y);
+    }
   }
 }
 

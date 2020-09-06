@@ -11,6 +11,12 @@ const GAME_CONSTANTS = {
     COAL: 'coal',
     URANIUM: 'uranium',
   },
+  DIRECTIONS: {
+    NORTH: 'n',
+    WEST: 'w',
+    EAST: 'e',
+    SOUTH: 's,'
+  },
   PARAMETERS: {
 
   }

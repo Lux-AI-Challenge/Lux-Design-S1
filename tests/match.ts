@@ -20,7 +20,7 @@ luxdim
     storeErrorLogs: false,
     storeReplay: false,
     seed: 1,
-    debug: false,
+    debug: true,
     debugDelay: 2000,
     engineOptions: {
       noStdErr: false,
