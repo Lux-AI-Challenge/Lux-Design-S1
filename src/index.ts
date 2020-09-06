@@ -57,8 +57,6 @@ export class LuxDesign extends Dimension.Design {
     const state: LuxMatchState = match.state;
     const game = state.game;
 
-    await this.debugViewer(game);
-
     game.state.turn++;
 
     // loop over commands and validate and map into internal action representations
@@ -136,14 +134,18 @@ export class LuxDesign extends Dimension.Design {
       this.handleNight(state);
     }
 
+    await this.debugViewer(game);
+
+    if (this.matchOver(match)) {
+      return Match.Status.FINISHED;
+    }
+
+    /** Agent Update Section */
+
     // send specific agents some information
     for (let i = 0; i < match.agents.length; i++) {
       const agent = match.agents[i];
       await match.send('agentspecific', agent);
-    }
-
-    if (this.matchOver(match.state)) {
-      return Match.Status.FINISHED;
     }
   }
 
@@ -157,8 +159,32 @@ export class LuxDesign extends Dimension.Design {
    * Determine if match is over or not
    * @param state
    */
-  matchOver(state: Readonly<LuxMatchState>): boolean {
+  matchOver(match: Match): boolean {
+    const state: Readonly<LuxMatchState> = match.state;
     const game = state.game;
+    const agentsTerminated = [false, false];
+    match.agents.forEach((agent) => {
+      if (agent.isTerminated()) {
+        agentsTerminated[agent.id] = true;
+      }
+    });
+
+    if (agentsTerminated[0] || agentsTerminated[1]) {
+      // if at least 1 agent was terminated, destroy the terminated agents' cities and units
+      game.cities.forEach((city) => {
+        if (agentsTerminated[city.team]) {
+          game.destroyCity(city.id);
+        }
+      });
+      const teams = [Unit.TEAM.A, Unit.TEAM.B];
+      for (const team of teams) {
+        if (agentsTerminated[team]) {
+          game.state.teamStates[team].units.clear();
+        }
+      }
+      return true;
+    }
+
     if (game.state.turn === state.configs.parameters.MAX_DAYS) {
       return true;
     }
@@ -187,7 +213,6 @@ export class LuxDesign extends Dimension.Design {
       // if city does not have enough fuel, destroy it
       // TODO, probably add this event to replay
       if (city.fuel < city.getLightUpkeep()) {
-        //
         game.destroyCity(city.id);
       } else {
         city.fuel -= city.getLightUpkeep();
