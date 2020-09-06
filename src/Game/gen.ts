@@ -21,21 +21,19 @@ export const generateGame = (
   const map = game.map;
 
   // for testing, hardcode wood and coal
-  map.getCell(3, 3).setResource(Resource.Types.WOOD, 1000);
-  map.getCell(3, 4).setResource(Resource.Types.WOOD, 1000);
-  map.getCell(4, 3).setResource(Resource.Types.WOOD, 1000);
-  map.getCell(12, 3).setResource(Resource.Types.WOOD, 1000);
-  map.getCell(12, 4).setResource(Resource.Types.WOOD, 1000);
-  map.getCell(11, 3).setResource(Resource.Types.WOOD, 1000);
-  map.getCell(12, 12).setResource(Resource.Types.WOOD, 1000);
-  map.getCell(12, 3).setResource(Resource.Types.WOOD, 1000);
-  map.getCell(3, 12).setResource(Resource.Types.WOOD, 1000);
+  map.addResource(3, 3, Resource.Types.WOOD, 1000);
+  map.addResource(3, 4, Resource.Types.WOOD, 1000);
+  map.addResource(4, 3, Resource.Types.WOOD, 1000);
+  map.addResource(12, 3, Resource.Types.WOOD, 1000);
+  map.addResource(12, 4, Resource.Types.WOOD, 1000);
+  map.addResource(11, 3, Resource.Types.WOOD, 1000);
+  map.addResource(12, 12, Resource.Types.WOOD, 1000);
+  map.addResource(3, 12, Resource.Types.WOOD, 1000);
 
-  map.getCell(5, 5).setResource(Resource.Types.COAL, 1000);
-  map.getCell(10, 5).setResource(Resource.Types.COAL, 1000);
-
-  map.getCell(7, 8).setResource(Resource.Types.URANIUM, 1000);
-  map.getCell(8, 8).setResource(Resource.Types.URANIUM, 1000);
+  map.addResource(5, 5, Resource.Types.COAL, 200);
+  map.addResource(10, 5, Resource.Types.COAL, 200);
+  map.addResource(7, 8, Resource.Types.URANIUM, 20);
+  map.addResource(8, 8, Resource.Types.URANIUM, 20);
 
   // hardcode initial city tiles
   game.spawnCityTile(Unit.TEAM.A, 1, 1);

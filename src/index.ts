@@ -4,7 +4,15 @@ import Tournament = Dimension.Tournament;
 import { LuxMatchResults, LuxMatchState } from './types';
 import { DEFAULT_CONFIGS } from './defaults';
 import { generateGame } from './Game/gen';
-import { Action } from './Actions';
+import {
+  Action,
+  SpawnWorkerAction,
+  SpawnCityAction,
+  SpawnCartAction,
+  ResearchAction,
+  TransferAction,
+} from './Actions';
+import { Game } from './Game';
 
 export class LuxDesign extends Dimension.Design {
   constructor(name: string) {
@@ -43,17 +51,54 @@ export class LuxDesign extends Dimension.Design {
     game.state.turn++;
 
     // loop over commands and validate and map into internal action representations
-    const actions: Array<Action> = [];
+    const actionsMap: Map<Game.ACTIONS, Array<Action>> = new Map();
+    Object.values(Game.ACTIONS).forEach((val) => {
+      actionsMap.set(val, []);
+    });
     for (let i = 0; i < commands.length; i++) {
       // get the command and the agent that issued it and handle appropriately
       const agentID = commands[i].agentID;
       try {
         const action = game.validateCommand(commands[i]);
-        actions.push(action);
+        // TODO: this might be slow, depends on its optimized and compiled
+        const newactionArray = [...actionsMap.get(action.action), action];
+        actionsMap.set(action.action, newactionArray);
       } catch (err) {
         match.throw(agentID, err);
       }
     }
+
+    // first distribute all resources
+    game.map.resourcesMap.forEach((cell) => {
+      game.handleResourceRelease(cell);
+    });
+
+    // give units and city tiles their actions to use
+    actionsMap
+      .get(Game.ACTIONS.BUILD_CITY)
+      .forEach((action: SpawnCityAction) => {
+        game.getUnit(action.team, action.unitid).giveAction(action);
+      });
+
+    actionsMap
+      .get(Game.ACTIONS.BUILD_WORKER)
+      .forEach((action: SpawnWorkerAction) => {
+        const citytile = game.map.getCell(action.x, action.y).citytile;
+        citytile.giveAction(action);
+      });
+    actionsMap
+      .get(Game.ACTIONS.BUILD_CART)
+      .forEach((action: SpawnCartAction) => {
+        const citytile = game.map.getCell(action.x, action.y).citytile;
+        citytile.giveAction(action);
+      });
+    actionsMap.get(Game.ACTIONS.RESEARCH).forEach((action: ResearchAction) => {
+      const citytile = game.map.getCell(action.x, action.y).citytile;
+      citytile.giveAction(action);
+    });
+    actionsMap.get(Game.ACTIONS.TRANSFER).forEach((action: TransferAction) => {
+      game.getUnit(action.team, action.srcID).giveAction(action);
+    });
 
     if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {
       // do something at night
@@ -85,11 +130,14 @@ export class LuxDesign extends Dimension.Design {
    * Handle nightfall and update state accordingly
    * @param state
    */
-  handleNight(state: LuxMatchState): void {}
+  handleNight(state: LuxMatchState): void {
+    state;
+  }
 
   // Result calculation of concluded match. Should return the results of a match after it finishes
   async getResults(match: Match): Promise<LuxMatchResults> {
     // calculate results
+    match;
     const results = {
       ranks: [
         { rank: 1, agentID: 0 },

@@ -5,6 +5,7 @@ import { LuxMatchConfigs } from '../types';
 import { Position } from './position';
 
 export class GameMap {
+  public resourcesMap: Set<Cell> = new Set();
   public height: number;
   public width: number;
   /**
@@ -23,11 +24,23 @@ export class GameMap {
     for (let y = 0; y < this.height; y++) {
       this.map[y] = new Array(this.width);
       for (let x = 0; x < this.width; x++) {
+        // this should be the only time we ever call new Cell(...)
         this.map[y][x] = new Cell(x, y, this.configs);
       }
     }
   }
 
+  addResource(
+    x: number,
+    y: number,
+    resourceType: Resource.Types,
+    amount: number
+  ): Cell {
+    const cell = this.getCell(x, y);
+    cell.setResource(resourceType, amount);
+    this.resourcesMap.add(cell);
+    return cell;
+  }
   getCellByPos(pos: Position): Cell {
     return this.map[pos.y][pos.x];
   }
@@ -39,17 +52,22 @@ export class GameMap {
   }
   getAdjacentCells(cell: Cell): Array<Cell> {
     const cells: Array<Cell> = [];
-    if (cell.pos.x > 0) {
-      cells.push(this.getCell(cell.pos.x - 1, cell.pos.y));
-    }
+
+    // NORTH
     if (cell.pos.y > 0) {
       cells.push(this.getCell(cell.pos.x, cell.pos.y - 1));
     }
+    // EAST
     if (cell.pos.x < this.width - 1) {
       cells.push(this.getCell(cell.pos.x + 1, cell.pos.y));
     }
+    // SOUTH
     if (cell.pos.x < this.height - 1) {
       cells.push(this.getCell(cell.pos.x, cell.pos.y + 1));
+    }
+    // WEST
+    if (cell.pos.x > 0) {
+      cells.push(this.getCell(cell.pos.x - 1, cell.pos.y));
     }
     return cells;
   }
