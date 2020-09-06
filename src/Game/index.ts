@@ -163,6 +163,11 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
               break;
             }
+            if (this.unitCapReached(team)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but unit cap reached. Build more cities!`;
+              break;
+            }
             if (valid) {
               if (action === Game.ACTIONS.BUILD_CART) {
                 return new SpawnCartAction(action, team, x, y);
@@ -325,6 +330,16 @@ export class Game {
         throw new MatchWarn(errormsg + `; cmd: ${cmd.command}`);
       }
     }
+  }
+
+  unitCapReached(team: Unit.TEAM): boolean {
+    let teamCityTilesCount = 0;
+    this.cities.forEach((city) => {
+      if (city.team === team) {
+        teamCityTilesCount += city.citycells.length;
+      }
+    });
+    return this.state.teamStates[team].units.size >= teamCityTilesCount;
   }
 
   spawnWorker(team: Unit.TEAM, x: number, y: number): Worker {
