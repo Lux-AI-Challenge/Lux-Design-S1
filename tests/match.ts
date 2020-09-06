@@ -8,9 +8,9 @@ const luxdim = Dimensions.create(design, {
   id: 'luxdim',
   defaultMatchConfigs: {},
   loggingLevel: Logger.LEVEL.INFO,
-  secureMode: true,
-  observe: true,
-  activateStation: true,
+  secureMode: false,
+  observe: false,
+  activateStation: false,
 });
 
 const js = './kits/js/bot.js';
@@ -20,6 +20,7 @@ luxdim
     storeErrorLogs: false,
     storeReplay: false,
     seed: 1,
+    loggingLevel: Logger.LEVEL.ERROR,
   })
   .then((res) => {
     console.log(res);

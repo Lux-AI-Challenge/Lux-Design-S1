@@ -111,9 +111,6 @@ export class Cart extends Unit {
   }
 
   turn(game: Game): void {
-    if (this.cooldown > 0) {
-      this.cooldown--;
-    }
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       if (action instanceof MoveAction) {
@@ -132,6 +129,9 @@ export class Cart extends Unit {
       throw new MatchWarn(
         `Agent ${this.team} tried to run more than 1 action for cart: ${this.id}`
       );
+    }
+    if (this.cooldown > 0) {
+      this.cooldown--;
     }
   }
 }
@@ -173,6 +173,9 @@ export class Worker extends Unit {
       throw new MatchWarn(
         `Agent ${this.team} tried to run more than 1 action for worker: ${this.id}`
       );
+    }
+    if (this.cooldown > 0) {
+      this.cooldown--;
     }
   }
 }

@@ -19,7 +19,7 @@ class Agent {
 
     let buffer = [];
     let currentResolve;
-    const makePromise = function() {
+    const makePromise = function () {
       return new Promise((resolve) => {
         currentResolve = resolve;
       });
@@ -33,7 +33,7 @@ class Agent {
 
     // The current promise for retrieving the next line
     let currentPromise = makePromise();
-    
+
     // with await, we pause process until there is input
     const getLine = async () => {
       return new Promise(async (resolve) => {
@@ -62,9 +62,6 @@ class Agent {
    */
   async initialize() {
 
-    // use (await this.getLine()) to get a parsed line of commands from the match engine
-    // This parsed line is an object from which you can get the nextInt, nextFloat, nextIntArr etc..
-    
     // get agent ID
     this.id = (await this.getLine()).nextInt();
     // get some other necessary initial input
@@ -78,8 +75,8 @@ class Agent {
 
     // wait for the engine to send any updates
     let updates = (await this.getLine());
-    let theNextInt = updates.nextInt();
-    let theNextString = updates.nextStr();
+    // let theNextInt = updates.nextInt();
+    // let theNextString = updates.nextStr();
   }
 
   /**
@@ -90,4 +87,6 @@ class Agent {
   }
 }
 
-module.exports = { Agent };
+module.exports = {
+  Agent
+};

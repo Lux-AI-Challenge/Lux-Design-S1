@@ -6,10 +6,8 @@ const agent = new kit.Agent();
 // first initialize the agent, and then proceed to go in a loop waiting for updates and running the AI
 agent.initialize().then(async () => {
   while (true) {
-
     // wait for update from match engine
     await agent.update();
-
     /** AI Code goes here */
 
     let commands = [];

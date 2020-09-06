@@ -16,6 +16,7 @@ import {
 import { Game } from './Game';
 import { Unit } from './Unit';
 import seedrandom from 'seedrandom';
+import { sleep } from './utils';
 
 export class LuxDesign extends Dimension.Design {
   constructor(name: string) {
@@ -45,7 +46,7 @@ export class LuxDesign extends Dimension.Design {
       match.send(`${agentID}`, agentID);
     }
     // send all agents some global configs / parameters
-    match.sendAll('');
+    match.sendAll('globals');
   }
 
   // Update step of each match, called whenever the match moves forward by a single unit in time (1 timeStep)
@@ -55,6 +56,9 @@ export class LuxDesign extends Dimension.Design {
   ): Promise<Match.Status> {
     const state: LuxMatchState = match.state;
     const game = state.game;
+
+    await this.debugViewer(game);
+
     game.state.turn++;
 
     // loop over commands and validate and map into internal action representations
@@ -135,12 +139,18 @@ export class LuxDesign extends Dimension.Design {
     // send specific agents some information
     for (let i = 0; i < match.agents.length; i++) {
       const agent = match.agents[i];
-      match.send('agentspecific', agent);
+      await match.send('agentspecific', agent);
     }
 
     if (this.matchOver(match.state)) {
       return Match.Status.FINISHED;
     }
+  }
+
+  async debugViewer(game: Game): Promise<void> {
+    console.clear();
+    console.log(game.map.getMapString());
+    await sleep(200);
   }
 
   /**
