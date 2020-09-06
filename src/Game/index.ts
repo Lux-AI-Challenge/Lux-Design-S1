@@ -202,9 +202,7 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} tried to transfer between the same unit ${srcID}`;
               break;
             }
-            if (
-              !this.map.isAdjacent(srcUnit.x, srcUnit.y, destUnit.x, destUnit.y)
-            ) {
+            if (!srcUnit.pos.isAdjacent(destUnit.pos)) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to transfer between non-adjacent units: ${srcID}, ${destID}`;
               break;

@@ -1,5 +1,6 @@
 import { LuxMatchConfigs } from '../types';
 import { Actionable } from '../Actionable';
+import { Position } from '../GameMap/position';
 
 export abstract class Unit extends Actionable {
   public id: string;
@@ -10,9 +11,10 @@ export abstract class Unit extends Actionable {
     coal: 0,
     uranium: 0,
   };
+  public pos: Position;
   constructor(
-    public x: number,
-    public y: number,
+    x: number,
+    y: number,
     public type: Unit.Type,
     public team: Unit.TEAM,
     configs: LuxMatchConfigs
@@ -20,6 +22,7 @@ export abstract class Unit extends Actionable {
     super(configs);
     this.id = 'u_' + Unit.globalIdCount;
     Unit.globalIdCount++;
+    this.pos = new Position(x, y);
   }
   abstract getLightUpkeep(): number;
   abstract canMove(): boolean;
