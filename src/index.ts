@@ -326,7 +326,8 @@ export class LuxDesign extends Dimension.Design {
         city.fuel -= city.getLightUpkeep();
       }
       game.state.teamStates[0].units.forEach((unit) => {
-        if (game.map.getCellByPos(unit.pos).isCityTile()) {
+        // TODO: add condition for different light upkeep for units stacked on a city.
+        if (!game.map.getCellByPos(unit.pos).isCityTile()) {
           if (!unit.spendFuelToSurvive()) {
             // delete unit
             game.destroyUnit(unit.team, unit.id);
@@ -334,7 +335,7 @@ export class LuxDesign extends Dimension.Design {
         }
       });
       game.state.teamStates[1].units.forEach((unit) => {
-        if (game.map.getCellByPos(unit.pos).isCityTile()) {
+        if (!game.map.getCellByPos(unit.pos).isCityTile()) {
           if (!unit.spendFuelToSurvive()) {
             // delete unit
             game.destroyUnit(unit.team, unit.id);
