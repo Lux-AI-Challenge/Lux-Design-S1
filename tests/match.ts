@@ -25,7 +25,7 @@ luxdim
     engineOptions: {
       noStdErr: false,
     },
-    loggingLevel: Logger.LEVEL.ERROR,
+    loggingLevel: Logger.LEVEL.DETAIL,
   })
   .then(async (match) => {
     const res = await match.run();

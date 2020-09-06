@@ -76,6 +76,7 @@ class Agent {
 
     // get agent ID
     this.id = (await this.getLine()).nextInt();
+    this.turn = 0;
     // get some other necessary initial input
     let mapInfo = (await this.getLine());
     let width = mapInfo.nextInt();
@@ -91,7 +92,7 @@ class Agent {
    * User should edit this according to their `Design`.
    */
   async update() {
-
+    this.turn++;
     // wait for the engine to send any updates
     await this.retrieveUpdates();
   }
@@ -114,7 +115,7 @@ class Agent {
           const x = update.nextInt();
           const y = update.nextInt();
           const amt = update.nextInt();
-          this.map.setResource(type, x, y, amt);
+          this.map._setResource(type, x, y, amt);
           break;
         }
         case INPUT_CONSTANTS.UNITS: {
@@ -144,7 +145,8 @@ class Agent {
           const y = update.nextInt();
           const cooldown = update.nextInt();
           const city = this.players[team].cities[cityid];
-          city.addCityTile(x, y, cooldown);
+          const citytile = city.addCityTile(x, y, cooldown);
+          this.map.getCell(x, y).citytile = citytile;
           break;
         }
       }

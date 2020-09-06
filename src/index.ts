@@ -146,6 +146,7 @@ export class LuxDesign extends Dimension.Design {
     const state: LuxMatchState = match.state;
     const game = state.game;
 
+    match.log.detail('Processing turn ' + game.state.turn);
     // check if any agents are terminated and finish game if so
     const agentsTerminated = [false, false];
     match.agents.forEach((agent) => {
@@ -175,8 +176,6 @@ export class LuxDesign extends Dimension.Design {
       return Match.Status.FINISHED;
     }
 
-    game.state.turn++;
-    match.log.detail('On turn ' + game.state.turn);
     // loop over commands and validate and map into internal action representations
     const actionsMap: Map<Game.ACTIONS, Array<Action>> = new Map();
     Object.values(Game.ACTIONS).forEach((val) => {
@@ -247,6 +246,7 @@ export class LuxDesign extends Dimension.Design {
       unit.handleTurn(game);
     });
 
+    console.log(game.state.turn);
     if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {
       // do something at night
       this.handleNight(state);
@@ -264,6 +264,8 @@ export class LuxDesign extends Dimension.Design {
     await this.sendAllAgentsGameInformation(match);
     // tell all agents updates are done
     await match.sendAll('D_DONE');
+    game.state.turn++;
+    match.log.detail('Beginning turn ' + game.state.turn);
   }
 
   async debugViewer(game: Game): Promise<void> {

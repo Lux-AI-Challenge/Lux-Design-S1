@@ -8,7 +8,7 @@ agent.initialize().then(async () => {
   while (true) {
     // wait for update from match engine
     await agent.update();
-    console.error(agent.players[agent.id]);
+    console.error(agent.turn);
     /** AI Code goes here */
 
     let commands = [];

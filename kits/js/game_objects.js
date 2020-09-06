@@ -1,3 +1,6 @@
+/**
+ * All game objects for access by user
+ */
 const {
   Position
 } = require("./map");
@@ -25,7 +28,9 @@ class City {
     this.citytiles = [];
   }
   addCityTile(x, y, cooldown) {
-    this.citytiles.push(new CityTile(this.team, this.cityid, x, y, cooldown))
+    const ct = new CityTile(this.team, this.cityid, x, y, cooldown)
+    this.citytiles.push(ct);
+    return ct;
   }
 }
 

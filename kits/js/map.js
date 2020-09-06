@@ -17,19 +17,12 @@ class GameMap {
   getCell(x, y) {
     return this.map[y][x];
   }
-  setResource(type, x, y, amount) {
+  _setResource(type, x, y, amount) {
     const cell = this.getCell(x, y);
     cell.resource = {
       type: type,
       amount: amount
     }
-  }
-  setCityTile(x, y, cityid) {
-    const cell = this.getCell(x, y);
-    cell.citytile = {
-      pos: new Position(x, y),
-      cityid: cityid
-    };
   }
 }
 

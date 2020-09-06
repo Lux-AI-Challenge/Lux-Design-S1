@@ -1,3 +1,6 @@
+/**
+ * All game constants
+ */
 const GAME_CONSTANTS = {
   UNIT_TYPES: {
     WORKER: 0,
@@ -7,6 +10,9 @@ const GAME_CONSTANTS = {
     WOOD: 'wood',
     COAL: 'coal',
     URANIUM: 'uranium',
+  },
+  PARAMETERS: {
+
   }
 }
 
