@@ -472,6 +472,10 @@ export class Game {
       });
 
       originalCell.resource.amount -= amountDistributed;
+      if (originalCell.resource.amount <= 0) {
+        // remove cell from resources map
+        this.map.resourcesMap.delete(originalCell);
+      }
     }
   }
 

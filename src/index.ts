@@ -54,6 +54,10 @@ export class LuxDesign extends Dimension.Design {
         match.throw(agentID, err);
       }
     }
+    // first distribute all resources
+    game.map.resourcesMap.forEach((cell) => {
+      game.handleResourceRelease(cell);
+    });
 
     if (game.state.turn % state.configs.parameters.DAY_LENGTH === 0) {
       // do something at night

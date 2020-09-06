@@ -5,6 +5,7 @@ import { LuxMatchConfigs } from '../types';
 import { Position } from './position';
 
 export class GameMap {
+  public resourcesMap: Set<Cell>;
   public height: number;
   public width: number;
   /**
@@ -23,11 +24,23 @@ export class GameMap {
     for (let y = 0; y < this.height; y++) {
       this.map[y] = new Array(this.width);
       for (let x = 0; x < this.width; x++) {
+        // this should be the only time we ever call new Cell(...)
         this.map[y][x] = new Cell(x, y, this.configs);
       }
     }
   }
 
+  addResource(
+    x: number,
+    y: number,
+    resourceType: Resource.Types,
+    amount: number
+  ): Cell {
+    const cell = this.getCell(x, y);
+    cell.setResource(resourceType, amount);
+    this.resourcesMap.add(cell);
+    return cell;
+  }
   getCellByPos(pos: Position): Cell {
     return this.map[pos.y][pos.x];
   }
