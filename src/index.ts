@@ -43,10 +43,83 @@ export class LuxDesign extends Dimension.Design {
     // send each agent their id
     for (let i = 0; i < match.agents.length; i++) {
       const agentID = match.agents[i].id;
-      match.send(`${agentID}`, agentID);
+      await match.send(`${agentID}`, agentID);
     }
-    // send all agents some global configs / parameters
-    match.sendAll('globals');
+    // send all agents the current map width and height
+    // `width height` - width and height of the map
+    await match.sendAll(`${state.game.map.width} ${state.game.map.height}`);
+  }
+
+  /**
+   * Sends map information formatted as so
+   *
+   * `r resource_type x y amount` - the amount of resource of that type at `(x, y)`
+   * ...
+   *
+   * `u unit_type t unit_id x y cd w c u` - the unit on team `t` with id unit_id of type unit_type at `(x, y)` with cooldown `cd`,
+   * and `w` `c` `u` units of wood, coal, uranium
+   * ...
+   *
+   * `c t city_id f` - citeam `t`'s city with id city_id and fuel `f`
+   * ...
+   *
+   * `ct t city_id x y cd` - team `t`'s city tile part of city with id city_id at `(x, y)` with cooldown `cd`
+   * ...
+   *
+   *
+   *
+   *
+   *
+   */
+  async sendAllAgentsMapInformation(match: Match): Promise<void> {
+    const game: Game = match.state.game;
+    const map = game.map;
+
+    let promises: Array<Promise<boolean>> = [];
+    const teams = [Unit.TEAM.A, Unit.TEAM.B];
+    // send resource information
+    map.resourcesMap.forEach((cell) => {
+      promises.push(
+        match.sendAll(
+          `r ${cell.resource.type} ${cell.pos.x} ${cell.pos.y} ${cell.resource.amount}`
+        )
+      );
+    });
+    await Promise.all(promises);
+
+    // send unit information
+    promises = [];
+    teams.forEach((team) => {
+      const units = game.getTeamsUnits(team);
+      units.forEach((unit) => {
+        promises.push(
+          match.sendAll(
+            `u ${unit.type} ${team} ${unit.id} ${unit.pos.x} ${unit.pos.y} ${unit.cooldown} ${unit.cargo.wood} ${unit.cargo.coal} ${unit.cargo.uranium}`
+          )
+        );
+      });
+    });
+
+    await Promise.all(promises);
+
+    // send city information
+    promises = [];
+    game.cities.forEach((city) => {
+      promises.push(match.sendAll(`c ${city.team} ${city.id} ${city.fuel}`));
+    });
+    await Promise.all(promises);
+
+    promises = [];
+    game.cities.forEach((city) => {
+      city.citycells.forEach((cell) => {
+        promises.push(
+          match.sendAll(
+            `ct ${city.team} ${city.id} ${cell.pos.x} ${cell.pos.y} ${cell.citytile.cooldown}`
+          )
+        );
+      });
+    });
+    await Promise.all(promises);
   }
 
   // Update step of each match, called whenever the match moves forward by a single unit in time (1 timeStep)
