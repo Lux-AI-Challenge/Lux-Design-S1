@@ -14,7 +14,7 @@ export class Worker extends Unit {
     return this.cooldown === 0;
   }
 
-  turn(game: Game, commands: Array<string>): void {
+  turn(game: Game): void {
     if (this.cooldown > 0) {
       this.cooldown--;
     }

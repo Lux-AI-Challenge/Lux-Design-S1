@@ -4,6 +4,7 @@ import { LuxMatchConfigs } from '../types';
 import { Game } from '.';
 import { MatchWarn } from 'dimensions-ai';
 import { Actionable } from '../Actionable';
+import { SpawnCartAction, SpawnWorkerAction, ResearchAction } from '../Actions';
 
 /**
  * A city is composed of adjacent city tiles of the same team
@@ -55,24 +56,23 @@ export class CityTile extends Actionable {
     return this.cooldown === 0;
   }
 
-  turn(game: Game, commands: Array<string>): void {
+  turn(game: Game): void {
     if (this.cooldown > 0) {
       this.cooldown--;
     }
-    if (commands.length > 1) {
+    if (this.currentActions.length > 1) {
       throw new MatchWarn(
         'Too many commands. City can perform only one action at a time'
       );
-    } else if (commands.length === 1) {
-      const info = commands[0].split(' ');
-      const action = info[0];
-      if (action === Game.ACTIONS.BUILD_CART) {
+    } else if (this.currentActions.length === 1) {
+      const action = this.currentActions[0];
+      if (action instanceof SpawnCartAction) {
         // TODO
         this.resetCooldown();
-      } else if (action === Game.ACTIONS.BUILD_WORKER) {
+      } else if (action instanceof SpawnWorkerAction) {
         // TODO
         this.resetCooldown();
-      } else if (action === Game.ACTIONS.RESEARCH) {
+      } else if (action instanceof ResearchAction) {
         // TODO
         this.resetCooldown();
         game.state.teamStates[this.team].researchPoints++;
