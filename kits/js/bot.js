@@ -8,6 +8,7 @@ agent.initialize().then(async () => {
   while (true) {
     // wait for update from match engine
     await agent.update();
+    console.error(agent.players[agent.id]);
     /** AI Code goes here */
 
     let commands = [];
@@ -19,7 +20,7 @@ agent.initialize().then(async () => {
     console.log(commands.join(','));
 
     // now we end our turn
-    // agent.endTurn();
+    agent.endTurn();
 
   }
 });

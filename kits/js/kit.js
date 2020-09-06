@@ -3,7 +3,19 @@ const readline = require('readline');
 
 // Create parser and use ',' as the delimiter between commands being sent by the `Match` and `MatchEngine`
 const Parser = require('./parser');
-const parse = new Parser(',');
+const {
+  GameMap
+} = require('./map');
+const {
+  INPUT_CONSTANTS
+} = require('./io');
+const {
+  Player,
+  City,
+  Unit,
+} = require('./game_objects');
+const GAME_CONSTANTS = require('./game_constants');
+const parse = new Parser(' ');
 
 /**
  * Agent for sequential `Designs`
@@ -65,7 +77,14 @@ class Agent {
     // get agent ID
     this.id = (await this.getLine()).nextInt();
     // get some other necessary initial input
-    let input = (await this.getLine()).nextStr();
+    let mapInfo = (await this.getLine());
+    let width = mapInfo.nextInt();
+    let height = mapInfo.nextInt();
+    this.mapWidth = width;
+    this.mapHeight = height;
+    this.map = new GameMap(width, height);
+    this.players = [new Player(0), new Player(1)];
+    await this.retrieveUpdates();
   }
   /**
    * Updates agent's own known state of `Match`
@@ -74,9 +93,62 @@ class Agent {
   async update() {
 
     // wait for the engine to send any updates
-    let updates = (await this.getLine());
-    // let theNextInt = updates.nextInt();
-    // let theNextString = updates.nextStr();
+    await this.retrieveUpdates();
+  }
+
+  async retrieveUpdates() {
+    while (true) {
+      let update = (await this.getLine());
+      if (update.str === INPUT_CONSTANTS.DONE) {
+        break;
+      }
+      const inputIdentifier = update.nextStr();
+      switch (inputIdentifier) {
+        case INPUT_CONSTANTS.RESEARCH_POINTS: {
+          const team = update.nextInt();
+          this.players[team].researchPoints = update.nextInt();
+          break;
+        }
+        case INPUT_CONSTANTS.RESOURCES: {
+          const type = update.nextStr();
+          const x = update.nextInt();
+          const y = update.nextInt();
+          const amt = update.nextInt();
+          this.map.setResource(type, x, y, amt);
+          break;
+        }
+        case INPUT_CONSTANTS.UNITS: {
+          const unittype = update.nextInt();
+          const team = update.nextInt();
+          const unitid = update.nextStr();
+          const x = update.nextInt();
+          const y = update.nextInt();
+          const cooldown = update.nextInt();
+          const wood = update.nextInt();
+          const coal = update.nextInt();
+          const uranium = update.nextInt();
+          this.players[team].units[unitid] = new Unit(team, unittype, x, y, cooldown, wood, coal, uranium);
+          break;
+        }
+        case INPUT_CONSTANTS.CITY: {
+          const team = update.nextInt();
+          const cityid = update.nextStr();
+          const fuel = update.nextInt();
+          this.players[team].cities[cityid] = new City(team, cityid, fuel);
+          break;
+        }
+        case INPUT_CONSTANTS.CITY_TILES: {
+          const team = update.nextInt();
+          const cityid = update.nextStr();
+          const x = update.nextInt();
+          const y = update.nextInt();
+          const cooldown = update.nextInt();
+          const city = this.players[team].cities[cityid];
+          city.addCityTile(x, y, cooldown);
+          break;
+        }
+      }
+    }
   }
 
   /**

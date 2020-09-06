@@ -18,7 +18,8 @@ export interface LuxMatchConfigs {
   mapType: GameMap.Types;
   width: number;
   height: number;
-
+  debug?: boolean;
+  debugDelay: number;
   seed: number | undefined;
   parameters: {
     DAY_LENGTH: number;

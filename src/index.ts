@@ -28,7 +28,7 @@ export class LuxDesign extends Dimension.Design {
     // initialize with default state and configurations and default RNG
     const state: LuxMatchState = {
       configs: { ...DEFAULT_CONFIGS },
-      game: generateGame(),
+      game: null,
       rng: seedrandom(`${Math.random()}`),
     };
     state.configs = { ...state.configs, ...match.configs };
@@ -36,7 +36,9 @@ export class LuxDesign extends Dimension.Design {
     if (state.configs.seed !== undefined) {
       state.rng = seedrandom(`${state.configs.seed}`);
     }
+    state.game = generateGame(state.configs);
 
+    match.log.info(state.configs);
     // store the state into the match so it can be used again in `update` and `getResults`
     match.state = state;
 
@@ -50,6 +52,7 @@ export class LuxDesign extends Dimension.Design {
     await match.sendAll(`${state.game.map.width} ${state.game.map.height}`);
 
     await this.sendAllAgentsGameInformation(match);
+    await match.sendAll('D_DONE');
   }
 
   /**
@@ -82,6 +85,7 @@ export class LuxDesign extends Dimension.Design {
     let promises: Array<Promise<boolean>> = [];
     const teams = [Unit.TEAM.A, Unit.TEAM.B];
 
+    // send research points
     teams.forEach((team) => {
       const pts = game.state.teamStates[team].researchPoints;
       promises.push(match.sendAll(`rp ${team} ${pts}`));
@@ -165,12 +169,14 @@ export class LuxDesign extends Dimension.Design {
           });
         }
       }
-      await this.debugViewer(game);
+      if (state.configs.debug) {
+        await this.debugViewer(game);
+      }
       return Match.Status.FINISHED;
     }
 
     game.state.turn++;
-
+    match.log.detail('On turn ' + game.state.turn);
     // loop over commands and validate and map into internal action representations
     const actionsMap: Map<Game.ACTIONS, Array<Action>> = new Map();
     Object.values(Game.ACTIONS).forEach((val) => {
@@ -246,21 +252,24 @@ export class LuxDesign extends Dimension.Design {
       this.handleNight(state);
     }
 
-    await this.debugViewer(game);
+    if (state.configs.debug) {
+      await this.debugViewer(game);
+    }
 
     if (this.matchOver(match)) {
       return Match.Status.FINISHED;
     }
 
     /** Agent Update Section */
-
     await this.sendAllAgentsGameInformation(match);
+    // tell all agents updates are done
+    await match.sendAll('D_DONE');
   }
 
   async debugViewer(game: Game): Promise<void> {
     console.clear();
     console.log(game.map.getMapString());
-    await sleep(200);
+    await sleep(game.configs.debugDelay);
   }
 
   /**

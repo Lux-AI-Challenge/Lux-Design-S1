@@ -1,6 +1,7 @@
 import { Game } from '.';
 import { Resource } from '../Resource';
 import { Unit } from '../Unit';
+import { LuxMatchConfigs } from '../types';
 
 const defaultGenerationConfigs = {
   width: 16,
@@ -8,16 +9,13 @@ const defaultGenerationConfigs = {
   seed: 0,
 };
 export const generateGame = (
-  mapconfigs: Partial<GenerationConfigs> = {}
+  matchconfigs: Partial<LuxMatchConfigs> = {}
 ): Game => {
   const configs = {
     ...defaultGenerationConfigs,
-    ...mapconfigs,
+    ...matchconfigs,
   };
-  const game = new Game({
-    width: configs.width,
-    height: configs.height,
-  });
+  const game = new Game(configs);
   const map = game.map;
 
   // for testing, hardcode wood and coal
