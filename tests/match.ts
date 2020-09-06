@@ -25,11 +25,12 @@ luxdim
     engineOptions: {
       noStdErr: false,
     },
+    mapType: 'debug',
     loggingLevel: Logger.LEVEL.WARN,
   })
   .then(async (match) => {
     const res = await match.run();
-    console.log(match.state.game.map.getMapString());
+    // console.log(match.state.game.map.getMapString());
     console.log(res);
   })
   .catch(console.error);

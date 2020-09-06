@@ -133,5 +133,6 @@ export namespace GameMap {
   export enum Types {
     EMPTY = 'empty',
     RANDOM = 'random',
+    DEBUG = 'debug',
   }
 }
