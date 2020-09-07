@@ -31,6 +31,9 @@ export const generateGame = (
 
     map.addResource(5, 5, Resource.Types.COAL, 200);
     map.addResource(10, 5, Resource.Types.COAL, 200);
+    map.addResource(0, 0, Resource.Types.COAL, 200);
+    map.addResource(15, 0, Resource.Types.COAL, 200);
+
     map.addResource(7, 8, Resource.Types.URANIUM, 20);
     map.addResource(8, 8, Resource.Types.URANIUM, 20);
 
