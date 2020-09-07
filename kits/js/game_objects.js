@@ -81,6 +81,15 @@ class Unit {
     return this.type === GAME_CONSTANTS.UNIT_TYPES.CART;
   }
 
+  getCargoSpaceLeft() {
+    const spaceused = this.cargo.wood + this.cargo.coal + this.cargo.uranium;
+    if (this.type === GAME_CONSTANTS.UNIT_TYPES.WORKER) {
+      return GAME_CONSTANTS.PARAMETERS.RESOURCE_CAPACITY.WORKER - spaceused;
+    } else {
+      return GAME_CONSTANTS.PARAMETERS.RESOURCE_CAPACITY.CART - spaceused;
+    }
+  }
+
   /** whether or not the unit can move or not */
   canMove() {
     return this.cooldown === 0;

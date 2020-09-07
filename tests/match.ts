@@ -14,7 +14,8 @@ const luxdim = Dimensions.create(design, {
 });
 
 const js = './kits/js/bot.js';
-const botList = [js, js];
+const testjs = './kits/js/testbot.js';
+const botList = [testjs, js];
 luxdim
   .createMatch(botList, {
     storeErrorLogs: true,
