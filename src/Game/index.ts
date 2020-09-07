@@ -620,23 +620,30 @@ export class Game {
     const actionedCells = Array.from(cellsToActionsToThere.keys());
     for (const cell of actionedCells) {
       const currActions = cellsToActionsToThere.get(cell);
-      if (currActions !== undefined && currActions.length > 1) {
-        // if there are collisions, revert those actions and remove the mapping
-        currActions.forEach((action) => {
-          revertAction(action);
-        });
-        currActions.forEach((action) => {
-          cellsToActionsToThere.delete(action.newcell);
-        });
+      const actionsToRevert = [];
+      if (currActions !== undefined) {
+        if (currActions.length > 1) {
+          // only revert actions that are going to the same tile that is not a city
+          // if going to the same city tile, we know those actions are from same team units, and is allowed
+          currActions.forEach((action) => {
+            if (!cell.isCityTile()) {
+              actionsToRevert.push(action);
+            }
+          });
+        }
       }
+      // if there are collisions, revert those actions and remove the mapping
+      actionsToRevert.forEach((action) => {
+        revertAction(action);
+      });
+      actionsToRevert.forEach((action) => {
+        cellsToActionsToThere.delete(action.newcell);
+      });
     }
 
     const prunedActions: Array<MoveAction> = [];
     cellsToActionsToThere.forEach((currActions) => {
-      if (currActions.length > 1) {
-        console.error('still have collisions after pruning');
-      }
-      prunedActions.push(currActions[0]);
+      prunedActions.push(...currActions);
     });
 
     return prunedActions;

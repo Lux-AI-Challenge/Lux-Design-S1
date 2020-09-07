@@ -3,6 +3,8 @@ import 'mocha';
 const expect = chai.expect;
 import { Game } from '../src/Game';
 import { GameMap } from '../src/GameMap';
+import { MatchWarn } from 'dimensions-ai';
+import { fail } from 'assert';
 
 describe('Test movement handling', () => {
   let game: Game;
@@ -175,6 +177,46 @@ describe('Test movement handling', () => {
       expect(pruned.length).to.equal(2);
       expect(pruned[0].unitid).to.equal(w6.id);
       expect(pruned[1].unitid).to.equal(w7.id);
+    });
+
+    it('should allow units to move onto the same city tile of the same team but not other units', () => {
+      // the following units will collide at (4, 5) unless its a city
+      const w1 = game.spawnWorker(0, 4, 4);
+      const w2 = game.spawnWorker(0, 4, 6);
+      const w3 = game.spawnWorker(0, 5, 5);
+      const w4 = game.spawnWorker(1, 3, 5);
+      game.spawnCityTile(0, 4, 5);
+
+      const moveActions: any[] = [
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w1.id} s`,
+        }),
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w2.id} n`,
+        }),
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w3.id} w`,
+        }),
+      ];
+
+      try {
+        game.validateCommand({
+          agentID: 1,
+          command: `m ${w4.id} e`,
+        });
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(MatchWarn, 'validate did not throw error');
+      }
+
+      const pruned = game.handleMovementActions(moveActions);
+      expect(pruned.length).to.equal(3);
+      expect(pruned[0].unitid).to.equal(w1.id);
+      expect(pruned[1].unitid).to.equal(w2.id);
+      expect(pruned[2].unitid).to.equal(w3.id);
     });
   });
 });
