@@ -50,6 +50,9 @@ class Position {
     }
     return true;
   }
+  equals(pos) {
+    return this.x === pos.x && this.y === pos.y;
+  }
 
   translate(direction, units) {
     switch (direction) {

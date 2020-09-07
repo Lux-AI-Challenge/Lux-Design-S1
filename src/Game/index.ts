@@ -6,7 +6,7 @@ import { GameMap } from '../GameMap';
 import { Cart, Worker } from '../Unit';
 import { LuxMatchConfigs } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
-import { MatchEngine, MatchWarn } from 'dimensions-ai';
+import { MatchEngine, MatchWarn, Match } from 'dimensions-ai';
 import {
   Action,
   SpawnCartAction,
@@ -574,7 +574,10 @@ export class Game {
   /**
    * Process given move actions and returns a pruned array of actions that can all be executed with no collisions
    */
-  handleMovementActions(actions: Array<MoveAction>): Array<MoveAction> {
+  handleMovementActions(
+    actions: Array<MoveAction>,
+    match: Match
+  ): Array<MoveAction> {
     /**
      * Algo:
      *
@@ -604,6 +607,12 @@ export class Game {
 
     // reverts a given action such that cellsToActionsToThere has no collisions due to action and all related actions
     const revertAction = (action: MoveAction): void => {
+      match.throw(
+        action.team,
+        new MatchWarn(
+          `Unit ${action.unitid} collided when trying to move to (${action.newcell.pos.x}, ${action.newcell.pos.y})`
+        )
+      );
       const origcell = this.map.getCellByPos(
         this.getUnit(action.team, action.unitid).pos
       );
@@ -721,7 +730,7 @@ export namespace Game {
     /** Formatted as `bc x y`. (x,y) should be an owned city tile, where the cart is to be built */
     BUILD_CART = 'bc',
     /**
-     * Formatted as `bcity unitid`. builds city at unitids pos, unitid should be
+     * Formatted as `bcity unitid`. builds city at unitid's pos, unitid should be
      * friendly owned unit that is a worker
      */
     BUILD_CITY = 'bcity',

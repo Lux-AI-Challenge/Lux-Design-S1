@@ -115,7 +115,7 @@ class Unit {
 
   /** return the command to build a city right under the worker */
   buildCity() {
-    return `bcity ${this.pos.x} ${this.pos.y}`;
+    return `bcity ${this.id}`;
   }
 }
 

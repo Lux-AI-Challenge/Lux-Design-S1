@@ -40,16 +40,29 @@ agent.initialize().then(async () => {
     player.cities.forEach((city) => {
       cityTilesArr.push(...city.citytiles);
     })
+    let workerCount = 0;
     // make our units move south
+    const targetPositions = new Set();
     player.units.forEach((unit) => {
       if (unit.isWorker()) {
+        workerCount++;
         // go to nearest forest, mine until just enough time to get back to city or full
-        if (unit.getCargoSpaceLeft() > 0) {
+        if (agent.turn % 40 === 0) {
+          commands.push(unit.buildCity());
+        } else if (unit.getCargoSpaceLeft() > 0) {
           let closestForestPos = null;
           if (forestResources.length) {
             closestForestPos = findClosestPos(unit.pos, forestResources.map(({
               pos
             }) => pos));
+
+            for (let i = 0; i < forestResources.length; i++) {
+              const r = forestResources[i];
+              if (r.pos.equals(closestForestPos)) {
+                forestResources.splice(i, 1);
+                break;
+              }
+            }
           }
 
           if (closestForestPos) {
@@ -71,6 +84,12 @@ agent.initialize().then(async () => {
             }
           }
         }
+      }
+    });
+
+    cityTilesArr.forEach((cityTile) => {
+      if (cityTile.canAct() && cityTilesArr.length > workerCount) {
+        commands.push(cityTile.buildWorker());
       }
     });
 
