@@ -219,11 +219,12 @@ describe('Test movement handling', () => {
       expect(pruned[2].unitid).to.equal(w3.id);
     });
 
-    it('should allow colliding units to revert onto the same city tiles', () => {
+    it('should allow colliding units to revert onto the same city tiles and units to go to the city tile', () => {
       // the following units will collide at (4, 5) unless its a city
       const w1 = game.spawnWorker(0, 4, 4);
       const w2 = game.spawnWorker(0, 4, 4);
       const w3 = game.spawnWorker(0, 4, 4);
+      const w4 = game.spawnWorker(0, 3, 4);
       game.spawnCityTile(0, 4, 4);
 
       const moveActions: any[] = [
@@ -235,15 +236,23 @@ describe('Test movement handling', () => {
           agentID: 0,
           command: `m ${w2.id} s`,
         }),
-        // this should be the only one working
+        // the following 2 should be the only ones working
+        // w3 can move north as nothing is blocking it there
         game.validateCommand({
           agentID: 0,
           command: `m ${w3.id} n`,
         }),
+        // w4 can still move east to the city tile where w1 and w2 were reverted to due to collision as it is a city tile
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w4.id} e`,
+        }),
       ];
 
       const pruned = game.handleMovementActions(moveActions);
-      expect(pruned.length).to.equal(1);
+      expect(pruned.length).to.equal(2);
+      expect(pruned[0].unitid).to.equal(w3.id);
+      expect(pruned[1].unitid).to.equal(w4.id);
     });
   });
 });
