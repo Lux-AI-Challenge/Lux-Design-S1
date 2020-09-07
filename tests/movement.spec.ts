@@ -3,6 +3,8 @@ import 'mocha';
 const expect = chai.expect;
 import { Game } from '../src/Game';
 import { GameMap } from '../src/GameMap';
+import { MatchWarn } from 'dimensions-ai';
+import { fail } from 'assert';
 
 describe('Test movement handling', () => {
   let game: Game;
@@ -175,6 +177,82 @@ describe('Test movement handling', () => {
       expect(pruned.length).to.equal(2);
       expect(pruned[0].unitid).to.equal(w6.id);
       expect(pruned[1].unitid).to.equal(w7.id);
+    });
+
+    it('should allow units to move onto the same city tile of the same team but not other units', () => {
+      // the following units will collide at (4, 5) unless its a city
+      const w1 = game.spawnWorker(0, 4, 4);
+      const w2 = game.spawnWorker(0, 4, 6);
+      const w3 = game.spawnWorker(0, 5, 5);
+      const w4 = game.spawnWorker(1, 3, 5);
+      game.spawnCityTile(0, 4, 5);
+
+      const moveActions: any[] = [
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w1.id} s`,
+        }),
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w2.id} n`,
+        }),
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w3.id} w`,
+        }),
+      ];
+
+      try {
+        game.validateCommand({
+          agentID: 1,
+          command: `m ${w4.id} e`,
+        });
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(MatchWarn, 'validate did not throw error');
+      }
+
+      const pruned = game.handleMovementActions(moveActions);
+      expect(pruned.length).to.equal(3);
+      expect(pruned[0].unitid).to.equal(w1.id);
+      expect(pruned[1].unitid).to.equal(w2.id);
+      expect(pruned[2].unitid).to.equal(w3.id);
+    });
+
+    it('should allow colliding units to revert onto the same city tiles and units to go to the city tile', () => {
+      // the following units will collide at (4, 5) unless its a city
+      const w1 = game.spawnWorker(0, 4, 4);
+      const w2 = game.spawnWorker(0, 4, 4);
+      const w3 = game.spawnWorker(0, 4, 4);
+      const w4 = game.spawnWorker(0, 3, 4);
+      game.spawnCityTile(0, 4, 4);
+
+      const moveActions: any[] = [
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w1.id} s`,
+        }),
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w2.id} s`,
+        }),
+        // the following 2 should be the only ones working
+        // w3 can move north as nothing is blocking it there
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w3.id} n`,
+        }),
+        // w4 can still move east to the city tile where w1 and w2 were reverted to due to collision as it is a city tile
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w4.id} e`,
+        }),
+      ];
+
+      const pruned = game.handleMovementActions(moveActions);
+      expect(pruned.length).to.equal(2);
+      expect(pruned[0].unitid).to.equal(w3.id);
+      expect(pruned[1].unitid).to.equal(w4.id);
     });
   });
 });
