@@ -589,6 +589,8 @@ export class Game {
      *
      */
     const cellsToActionsToThere: Map<Cell, Array<MoveAction>> = new Map();
+    const movingUnits: Set<string> = new Set();
+
     actions.forEach((action) => {
       const newcell = action.newcell;
       const currActions = cellsToActionsToThere.get(newcell);
@@ -597,6 +599,7 @@ export class Game {
       } else {
         cellsToActionsToThere.set(newcell, [...currActions, action]);
       }
+      movingUnits.add(action.unitid);
     });
 
     // reverts a given action such that cellsToActionsToThere has no collisions due to action and all related actions
@@ -627,11 +630,27 @@ export class Game {
         if (currActions.length > 1) {
           // only revert actions that are going to the same tile that is not a city
           // if going to the same city tile, we know those actions are from same team units, and is allowed
-          currActions.forEach((action) => {
-            if (!cell.isCityTile()) {
+          if (!cell.isCityTile()) {
+            currActions.forEach((action) => {
               actionsToRevert.push(action);
+            });
+          }
+        } else if (currActions.length === 1) {
+          // if there is just one move action, check there isn't a unit on there that is not moving and not a city tile
+          const action = currActions[0];
+          if (!cell.isCityTile()) {
+            if (cell.units.size === 1) {
+              let unitThereIsStill = true;
+              cell.units.forEach((unit) => {
+                if (movingUnits.has(unit.id)) {
+                  unitThereIsStill = false;
+                }
+              });
+              if (unitThereIsStill) {
+                actionsToRevert.push(action);
+              }
             }
-          });
+          }
         }
       }
       // if there are collisions, revert those actions and remove the mapping

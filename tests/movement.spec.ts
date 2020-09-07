@@ -54,6 +54,19 @@ describe('Test movement handling', () => {
       expect(pruned.length).to.equal(0);
     });
 
+    it('should not allow units to move to unit that is still', () => {
+      const w1 = game.spawnWorker(0, 4, 4);
+      game.spawnWorker(0, 4, 5);
+      const moveActions: any[] = [
+        game.validateCommand({
+          agentID: 0,
+          command: `m ${w1.id} s`,
+        }),
+      ];
+      const pruned = game.handleMovementActions(moveActions);
+      expect(pruned.length).to.equal(0);
+    });
+
     it('should remove all actions if some go to same place and other units expect the colliding units to move out of the way', () => {
       // the following units will collide at (4, 5)
       const w1 = game.spawnWorker(0, 4, 4);
