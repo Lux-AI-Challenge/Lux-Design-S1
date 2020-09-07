@@ -26,6 +26,7 @@ class GameMap {
       amount: amount
     }
   }
+
 }
 
 class Cell {
