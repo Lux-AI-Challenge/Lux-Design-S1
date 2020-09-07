@@ -605,15 +605,17 @@ export class Game {
         this.getUnit(action.team, action.unitid).pos
       );
 
-      // get the colliding actions caused by a revert of the given action and then delete them from the mapped origcell
+      // get the colliding actions caused by a revert of the given action and then delete them from the mapped origcell provided it is not a city tile
       const collidingActions = cellsToActionsToThere.get(origcell);
-      cellsToActionsToThere.delete(origcell);
+      if (!origcell.isCityTile()) {
+        cellsToActionsToThere.delete(origcell);
 
-      if (collidingActions) {
-        // for each colliding action, revert it.
-        collidingActions.forEach((collidingAction) => {
-          revertAction(collidingAction);
-        });
+        if (collidingActions) {
+          // for each colliding action, revert it.
+          collidingActions.forEach((collidingAction) => {
+            revertAction(collidingAction);
+          });
+        }
       }
     };
 
