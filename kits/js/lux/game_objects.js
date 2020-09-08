@@ -17,6 +17,12 @@ class Player {
     this.units = [];
     this.cities = new Map();
   }
+  researchedCoal() {
+    return this.researchPoints >= GAME_CONSTANTS.PARAMETERS.RESEARCH_REQUIREMENTS.COAL;
+  }
+  researchedUranium() {
+    return this.researchPoints >= GAME_CONSTANTS.PARAMETERS.RESEARCH_REQUIREMENTS.URANIUM;
+  }
 }
 
 // all data related to a city

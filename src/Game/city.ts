@@ -5,6 +5,7 @@ import { Game } from '.';
 import { MatchWarn } from 'dimensions-ai';
 import { Actionable } from '../Actionable';
 import { SpawnCartAction, SpawnWorkerAction, ResearchAction } from '../Actions';
+import { DEFAULT_CONFIGS } from '../defaults';
 
 /**
  * A city is composed of adjacent city tiles of the same team
@@ -96,6 +97,17 @@ export class CityTile extends Actionable {
       } else if (action instanceof ResearchAction) {
         this.resetCooldown();
         game.state.teamStates[this.team].researchPoints++;
+        if (
+          game.state.teamStates[this.team].researchPoints >=
+          this.configs.parameters.RESEARCH_REQUIREMENTS.COAL
+        ) {
+          game.state.teamStates[this.team].researched.coal = true;
+        } else if (
+          game.state.teamStates[this.team].researchPoints >=
+          this.configs.parameters.RESEARCH_REQUIREMENTS.URANIUM
+        ) {
+          game.state.teamStates[this.team].researched.uranium = true;
+        }
       }
     }
     if (this.cooldown > 0) {

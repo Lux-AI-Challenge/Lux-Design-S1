@@ -48,7 +48,7 @@ export interface LuxMatchConfigs {
       WORKER: number;
       CART: number;
     };
-    RESEARCH_TIME: {
+    RESEARCH_REQUIREMENTS: {
       COAL: number;
       URANIUM: number;
     };
