@@ -34,7 +34,7 @@
     "RESOURCE_TO_FUEL_RATE": {
       "WOOD": 1,
       "COAL": 5,
-      "URANIUM": 20
+      "URANIUM": 100
     },
     "BUILD_TIME": {
       "WORKER": 5,
