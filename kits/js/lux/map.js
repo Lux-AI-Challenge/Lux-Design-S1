@@ -42,7 +42,7 @@ class Position {
     this.x = x;
     this.y = y;
   }
-  isAdjacent() {
+  isAdjacent(pos) {
     const dx = this.x - pos.x;
     const dy = this.y - pos.y;
     if (Math.abs(dx) + Math.abs(dy) > 1) {

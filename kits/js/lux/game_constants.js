@@ -24,6 +24,11 @@ const GAME_CONSTANTS = {
       WORKER: 100,
       CART: 400,
     },
+    LIGHT_UPKEEP: {
+      CITY: 100,
+      WORKER: 20,
+      CART: 80,
+    },
   }
 }
 

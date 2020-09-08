@@ -287,7 +287,7 @@ export class LuxDesign extends Dimension.Design {
   }
 
   async debugViewer(game: Game): Promise<void> {
-    // console.clear();
+    console.clear();
     console.log(game.map.getMapString());
     console.log(`Turn: ${game.state.turn}`);
     const teams = [Unit.TEAM.A, Unit.TEAM.B];

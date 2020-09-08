@@ -32,6 +32,9 @@ class City {
     this.citytiles.push(ct);
     return ct;
   }
+  getLightUpkeep() {
+    return this.citytiles.length * GAME_CONSTANTS.PARAMETERS.LIGHT_UPKEEP.CITY;
+  }
 }
 
 /** CityTile and Unit are both actionable and can return action strings to send to engine  */

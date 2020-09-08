@@ -14,7 +14,7 @@ const luxdim = Dimensions.create(design, {
 });
 
 const js = './kits/js/bot.js';
-const testjs = './kits/js/testbot.js';
+const testjs = './tests/bots/js/bot.js';
 const botList = [testjs, js];
 luxdim
   .createMatch(botList, {
@@ -27,7 +27,7 @@ luxdim
       noStdErr: false,
     },
     mapType: 'debug',
-    loggingLevel: Logger.LEVEL.DETAIL,
+    loggingLevel: Logger.LEVEL.WARN,
   })
   .then(async (match) => {
     const res = await match.run();
