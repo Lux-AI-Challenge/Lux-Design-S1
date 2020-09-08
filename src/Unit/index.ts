@@ -1,6 +1,11 @@
 import { LuxMatchConfigs } from '../types';
 import { Game } from '../Game';
-import { MoveAction, TransferAction, SpawnCityAction } from '../Actions';
+import {
+  MoveAction,
+  TransferAction,
+  SpawnCityAction,
+  PillageAction,
+} from '../Actions';
 import { MatchWarn } from 'dimensions-ai';
 import { Actionable } from '../Actionable';
 import { Resource } from '../Resource';
@@ -124,14 +129,27 @@ export class Cart extends Unit {
           action.resourceType,
           action.amount
         );
+        this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.CART;
       }
     } else if (this.currentActions.length > 1) {
       throw new MatchWarn(
         `Agent ${this.team} tried to run more than 1 action for cart: ${this.id}`
       );
     }
+
+    // auto create roads by increasing the cooldown value of a cell
+    const cell = game.map.getCellByPos(this.pos);
+    if (cell.getTileCooldown() < this.configs.parameters.MAX_CELL_COOLDOWN) {
+      cell.cooldown = Math.min(
+        cell.cooldown + this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE,
+        this.configs.parameters.MAX_CELL_COOLDOWN
+      );
+    }
     if (this.cooldown > 0) {
-      this.cooldown--;
+      this.cooldown -= cell.getTileCooldown();
+      if (this.cooldown < 0) {
+        this.cooldown = 0;
+      }
     }
   }
 }
@@ -149,9 +167,6 @@ export class Worker extends Unit {
   }
 
   turn(game: Game): void {
-    if (this.cooldown > 0) {
-      this.cooldown--;
-    }
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
 
@@ -170,6 +185,13 @@ export class Worker extends Unit {
       } else if (action instanceof SpawnCityAction) {
         game.spawnCityTile(action.team, this.pos.x, this.pos.y);
         this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
+      } else if (action instanceof PillageAction) {
+        const cell = game.map.getCellByPos(this.pos);
+        cell.cooldown = Math.max(
+          cell.cooldown - this.configs.parameters.PILLAGE_RATE,
+          this.configs.parameters.MIN_CELL_COOLDOWN
+        );
+        this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
       }
     } else if (this.currentActions.length > 1) {
       throw new MatchWarn(
@@ -177,7 +199,10 @@ export class Worker extends Unit {
       );
     }
     if (this.cooldown > 0) {
-      this.cooldown--;
+      this.cooldown -= game.map.getCellByPos(this.pos).getTileCooldown();
+      if (this.cooldown < 0) {
+        this.cooldown = 0;
+      }
     }
   }
 }

@@ -12,6 +12,7 @@ import {
   ResearchAction,
   TransferAction,
   MoveAction,
+  PillageAction,
 } from './Actions';
 import { Game } from './Game';
 import { Unit } from './Unit';
@@ -30,8 +31,15 @@ export class LuxDesign extends Dimension.Design {
       configs: { ...DEFAULT_CONFIGS },
       game: null,
       rng: seedrandom(`${Math.random()}`),
+      profile: null,
     };
     state.configs = { ...state.configs, ...match.configs };
+    if (state.configs.runProfiler) {
+      state.profile = {
+        updateStage: [],
+        dataTransfer: [],
+      };
+    }
 
     if (state.configs.seed !== undefined) {
       state.rng = seedrandom(`${state.configs.seed}`);
@@ -73,17 +81,21 @@ export class LuxDesign extends Dimension.Design {
    * `ct t city_id x y cd` - team `t`'s city tile part of city with id city_id at `(x, y)` with cooldown `cd`
    * ...
    *
+   *
+   * `ccd x y cd` - cooldown of cell at (x, y). Only sent for any cells with cooldowns not equal to 1.
+   *
    */
   async sendAllAgentsGameInformation(match: Match): Promise<void> {
     let stime: number;
-    const game: Game = match.state.game;
+    const state: LuxMatchState = match.state;
+    const game = state.game;
     if (game.configs.runProfiler) {
       stime = new Date().valueOf();
     }
 
     const map = game.map;
 
-    let promises: Array<Promise<boolean>> = [];
+    const promises: Array<Promise<boolean>> = [];
     const teams = [Unit.TEAM.A, Unit.TEAM.B];
 
     // send research points
@@ -91,10 +103,8 @@ export class LuxDesign extends Dimension.Design {
       const pts = game.state.teamStates[team].researchPoints;
       promises.push(match.sendAll(`rp ${team} ${pts}`));
     });
-    await Promise.all(promises);
 
     // send resource information
-    promises = [];
     map.resourcesMap.forEach((cell) => {
       promises.push(
         match.sendAll(
@@ -102,10 +112,8 @@ export class LuxDesign extends Dimension.Design {
         )
       );
     });
-    await Promise.all(promises);
 
     // send unit information
-    promises = [];
     teams.forEach((team) => {
       const units = game.getTeamsUnits(team);
       units.forEach((unit) => {
@@ -117,10 +125,7 @@ export class LuxDesign extends Dimension.Design {
       });
     });
 
-    await Promise.all(promises);
-
     // send city information
-    promises = [];
     game.cities.forEach((city) => {
       promises.push(
         match.sendAll(
@@ -128,9 +133,8 @@ export class LuxDesign extends Dimension.Design {
         )
       );
     });
-    await Promise.all(promises);
 
-    promises = [];
+    // send road info in the form of cooldowns of cells
     game.cities.forEach((city) => {
       city.citycells.forEach((cell) => {
         promises.push(
@@ -141,19 +145,18 @@ export class LuxDesign extends Dimension.Design {
       });
     });
     await Promise.all(promises);
+
+    for (let y = 0; y < game.map.height; y++) {
+      for (let x = 0; x < game.map.width; x++) {
+        const cd = game.map.getCell(x, y).cooldown;
+        if (cd !== 1) {
+          match.sendAll(`ccd ${x} ${y} ${cd}`);
+        }
+      }
+    }
     if (game.configs.runProfiler) {
       const etime = new Date().valueOf();
-      let c = 0;
-      game.cities.forEach((city) => {
-        c += city.citycells.length;
-      });
-      console.log(
-        `Turn ${game.state.turn} - Data transfer took ${
-          etime - stime
-        }ms - Units: ${
-          game.getTeamsUnits(0).size + game.getTeamsUnits(1).size
-        }, City tiles: ${c}, Resource map size: ${game.map.resourcesMap.size}`
-      );
+      state.profile.dataTransfer.push(etime - stime);
     }
   }
 
@@ -240,6 +243,9 @@ export class LuxDesign extends Dimension.Design {
         const citytile = game.map.getCell(action.x, action.y).citytile;
         citytile.giveAction(action);
       });
+    actionsMap.get(Game.ACTIONS.PILLAGE).forEach((action: PillageAction) => {
+      game.getUnit(action.team, action.unitid).giveAction(action);
+    });
     actionsMap.get(Game.ACTIONS.RESEARCH).forEach((action: ResearchAction) => {
       const citytile = game.map.getCell(action.x, action.y).citytile;
       citytile.giveAction(action);
@@ -307,9 +313,7 @@ export class LuxDesign extends Dimension.Design {
     await match.sendAll('D_DONE');
     if (game.configs.runProfiler) {
       const etime = new Date().valueOf();
-      console.log(
-        `Turn ${game.state.turn} - Update stage took ${etime - stime}ms`
-      );
+      state.profile.updateStage.push(etime - stime);
     }
     game.state.turn++;
     match.log.detail('Beginning turn ' + game.state.turn);

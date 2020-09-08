@@ -21,14 +21,14 @@ luxdim
     storeErrorLogs: true,
     storeReplay: false,
     seed: 1,
-    debug: true,
+    debug: false,
     runProfiler: true,
     debugDelay: 100,
     engineOptions: {
       noStdErr: false,
     },
     mapType: 'debug',
-    loggingLevel: Logger.LEVEL.NONE,
+    loggingLevel: Logger.LEVEL.WARN,
   })
   .then(async (match) => {
     console.log('Created match');
@@ -37,5 +37,17 @@ luxdim
     console.log(`Match took ${new Date().valueOf() - stime}ms`);
     // console.log(match.state.game.map.getMapString());
     console.log(res);
+    console.log(
+      `Update Stage: avg ${
+        match.state.profile.updateStage.reduce((acc, curr) => acc + curr) /
+        match.state.profile.updateStage.length
+      }ms`
+    );
+    console.log(
+      `Data Transfer: avg ${
+        match.state.profile.dataTransfer.reduce((acc, curr) => acc + curr) /
+        match.state.profile.dataTransfer.length
+      }ms`
+    );
   })
   .catch(console.error);

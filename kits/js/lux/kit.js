@@ -133,7 +133,7 @@ class Agent {
           const unitid = update.nextStr();
           const x = update.nextInt();
           const y = update.nextInt();
-          const cooldown = update.nextInt();
+          const cooldown = update.nextFloat();
           const wood = update.nextInt();
           const coal = update.nextInt();
           const uranium = update.nextInt();
@@ -143,8 +143,8 @@ class Agent {
         case INPUT_CONSTANTS.CITY: {
           const team = update.nextInt();
           const cityid = update.nextStr();
-          const fuel = update.nextInt();
-          const lightUpkeep = update.nextInt();
+          const fuel = update.nextFloat();
+          const lightUpkeep = update.nextFloat();
           this.players[team].cities.set(cityid, new City(team, cityid, fuel, lightUpkeep));
           break;
         }
@@ -153,10 +153,17 @@ class Agent {
           const cityid = update.nextStr();
           const x = update.nextInt();
           const y = update.nextInt();
-          const cooldown = update.nextInt();
+          const cooldown = update.nextFloat();
           const city = this.players[team].cities.get(cityid);
           const citytile = city.addCityTile(x, y, cooldown);
           this.map.getCell(x, y).citytile = citytile;
+          break;
+        }
+        case INPUT_CONSTANTS.CELL_COOLDOWN: {
+          const x = update.nextInt();
+          const y = update.nextInt();
+          const cooldown = update.nextFloat();
+          this.map.getCell(x, y).cooldown = cooldown;
           break;
         }
       }

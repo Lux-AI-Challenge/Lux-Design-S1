@@ -6,6 +6,7 @@ const INPUT_CONSTANTS = {
   UNITS: 'u',
   CITY: 'c',
   CITY_TILES: 'ct',
+  CELL_COOLDOWN: 'ccd',
 }
 
 module.exports = {

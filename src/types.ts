@@ -8,6 +8,10 @@ export interface LuxMatchResults {
 export interface LuxMatchState {
   configs: LuxMatchConfigs;
   game: Game;
+  profile: {
+    dataTransfer: Array<number>;
+    updateStage: Array<number>;
+  };
   rng: () => number;
 }
 
@@ -58,5 +62,9 @@ export interface LuxMatchConfigs {
       CART: number;
       WORKER: number;
     };
+    MAX_CELL_COOLDOWN: number;
+    CART_ROAD_DEVELOPMENT_RATE: number;
+    PILLAGE_RATE: number;
+    MIN_CELL_COOLDOWN: number;
   };
 }
