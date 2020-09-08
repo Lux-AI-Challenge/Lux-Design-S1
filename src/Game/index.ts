@@ -6,7 +6,7 @@ import { GameMap } from '../GameMap';
 import { Cart, Worker } from '../Unit';
 import { LuxMatchConfigs } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
-import { MatchEngine, MatchWarn } from 'dimensions-ai';
+import { MatchEngine, MatchWarn, Match } from 'dimensions-ai';
 import {
   Action,
   SpawnCartAction,
@@ -434,17 +434,14 @@ export class Game {
       const cells = [originalCell, ...this.map.getAdjacentCells(originalCell)];
       const workersToReceiveResources: Array<Worker> = [];
       for (const cell of cells) {
-        if (!cell.isCityTile()) {
-          // there should never be more than one unit per tile
-          cell.units.forEach((unit) => {
-            if (
-              unit.type === Unit.Type.WORKER &&
-              this.state.teamStates[unit.team].researched[type]
-            ) {
-              workersToReceiveResources.push(unit);
-            }
-          });
-        }
+        cell.units.forEach((unit) => {
+          if (
+            unit.type === Unit.Type.WORKER &&
+            this.state.teamStates[unit.team].researched[type]
+          ) {
+            workersToReceiveResources.push(unit);
+          }
+        });
       }
 
       let rate: number;
@@ -574,7 +571,10 @@ export class Game {
   /**
    * Process given move actions and returns a pruned array of actions that can all be executed with no collisions
    */
-  handleMovementActions(actions: Array<MoveAction>): Array<MoveAction> {
+  handleMovementActions(
+    actions: Array<MoveAction>,
+    match: Match
+  ): Array<MoveAction> {
     /**
      * Algo:
      *
@@ -589,6 +589,8 @@ export class Game {
      *
      */
     const cellsToActionsToThere: Map<Cell, Array<MoveAction>> = new Map();
+    const movingUnits: Set<string> = new Set();
+
     actions.forEach((action) => {
       const newcell = action.newcell;
       const currActions = cellsToActionsToThere.get(newcell);
@@ -597,10 +599,19 @@ export class Game {
       } else {
         cellsToActionsToThere.set(newcell, [...currActions, action]);
       }
+      movingUnits.add(action.unitid);
     });
 
     // reverts a given action such that cellsToActionsToThere has no collisions due to action and all related actions
     const revertAction = (action: MoveAction): void => {
+      if (match) {
+        match.throw(
+          action.team,
+          new MatchWarn(
+            `Unit ${action.unitid} collided when trying to move to (${action.newcell.pos.x}, ${action.newcell.pos.y})`
+          )
+        );
+      }
       const origcell = this.map.getCellByPos(
         this.getUnit(action.team, action.unitid).pos
       );
@@ -627,11 +638,27 @@ export class Game {
         if (currActions.length > 1) {
           // only revert actions that are going to the same tile that is not a city
           // if going to the same city tile, we know those actions are from same team units, and is allowed
-          currActions.forEach((action) => {
-            if (!cell.isCityTile()) {
+          if (!cell.isCityTile()) {
+            currActions.forEach((action) => {
               actionsToRevert.push(action);
+            });
+          }
+        } else if (currActions.length === 1) {
+          // if there is just one move action, check there isn't a unit on there that is not moving and not a city tile
+          const action = currActions[0];
+          if (!cell.isCityTile()) {
+            if (cell.units.size === 1) {
+              let unitThereIsStill = true;
+              cell.units.forEach((unit) => {
+                if (movingUnits.has(unit.id)) {
+                  unitThereIsStill = false;
+                }
+              });
+              if (unitThereIsStill) {
+                actionsToRevert.push(action);
+              }
             }
-          });
+          }
         }
       }
       // if there are collisions, revert those actions and remove the mapping
@@ -702,7 +729,7 @@ export namespace Game {
     /** Formatted as `bc x y`. (x,y) should be an owned city tile, where the cart is to be built */
     BUILD_CART = 'bc',
     /**
-     * Formatted as `bcity unitid`. builds city at unitids pos, unitid should be
+     * Formatted as `bcity unitid`. builds city at unitid's pos, unitid should be
      * friendly owned unit that is a worker
      */
     BUILD_CITY = 'bcity',

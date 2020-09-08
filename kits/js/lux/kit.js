@@ -105,6 +105,8 @@ class Agent {
   }
   async retrieveUpdates() {
     this.resetPlayerStates();
+    // TODO: this can be optimized. we only reset because some resources get removed
+    this.map = new GameMap(this.mapWidth, this.mapHeight);
     while (true) {
       let update = (await this.getLine());
       if (update.str === INPUT_CONSTANTS.DONE) {

@@ -105,6 +105,8 @@ export class GameMap {
                   }
                 });
                 return unitstr;
+              } else {
+                return cell.units.size;
               }
             } else if (cell.hasResource()) {
               switch (cell.resource.type) {

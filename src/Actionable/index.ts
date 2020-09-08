@@ -17,9 +17,12 @@ export abstract class Actionable {
    * Game runs this function
    */
   handleTurn(game: Game): void {
-    this.turn(game);
+    try {
+      this.turn(game);
+    } finally {
+      this.currentActions = [];
+    }
     // reset actions to empty
-    this.currentActions = [];
   }
   giveAction(action: Action): void {
     this.currentActions.push(action);

@@ -32,6 +32,9 @@ class City {
     this.citytiles.push(ct);
     return ct;
   }
+  getLightUpkeep() {
+    return this.citytiles.length * GAME_CONSTANTS.PARAMETERS.LIGHT_UPKEEP.CITY;
+  }
 }
 
 /** CityTile and Unit are both actionable and can return action strings to send to engine  */
@@ -81,6 +84,15 @@ class Unit {
     return this.type === GAME_CONSTANTS.UNIT_TYPES.CART;
   }
 
+  getCargoSpaceLeft() {
+    const spaceused = this.cargo.wood + this.cargo.coal + this.cargo.uranium;
+    if (this.type === GAME_CONSTANTS.UNIT_TYPES.WORKER) {
+      return GAME_CONSTANTS.PARAMETERS.RESOURCE_CAPACITY.WORKER - spaceused;
+    } else {
+      return GAME_CONSTANTS.PARAMETERS.RESOURCE_CAPACITY.CART - spaceused;
+    }
+  }
+
   /** whether or not the unit can move or not */
   canMove() {
     return this.cooldown === 0;
@@ -106,7 +118,7 @@ class Unit {
 
   /** return the command to build a city right under the worker */
   buildCity() {
-    return `bcity ${this.pos.x} ${this.pos.y}`;
+    return `bcity ${this.id}`;
   }
 }
 

@@ -154,6 +154,7 @@ export class Worker extends Unit {
     }
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
+
       if (action instanceof MoveAction) {
         game.moveUnit(action.team, action.unitid, action.direction);
         this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
@@ -165,6 +166,7 @@ export class Worker extends Unit {
           action.resourceType,
           action.amount
         );
+        this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
       } else if (action instanceof SpawnCityAction) {
         game.spawnCityTile(action.team, this.pos.x, this.pos.y);
         this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;

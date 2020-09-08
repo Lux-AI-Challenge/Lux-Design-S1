@@ -1,5 +1,5 @@
-const kit = require('./kit');
-const GAME_CONSTANTS = require('./game_constants');
+const kit = require('./lux/kit');
+const GAME_CONSTANTS = require('./lux/game_constants');
 const DIRECTIONS = GAME_CONSTANTS.DIRECTIONS;
 // create a new agent
 const agent = new kit.Agent();

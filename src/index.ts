@@ -226,7 +226,8 @@ export class LuxDesign extends Dimension.Design {
     });
 
     const prunedMoveActions = game.handleMovementActions(
-      actionsMap.get(Game.ACTIONS.MOVE) as Array<MoveAction>
+      actionsMap.get(Game.ACTIONS.MOVE) as Array<MoveAction>,
+      match
     );
 
     prunedMoveActions.forEach((action) => {
@@ -289,15 +290,29 @@ export class LuxDesign extends Dimension.Design {
     console.clear();
     console.log(game.map.getMapString());
     console.log(`Turn: ${game.state.turn}`);
-    // const teams = [Unit.TEAM.A, Unit.TEAM.B];
-    // for (const team of teams) {
-    // }
+    const teams = [Unit.TEAM.A, Unit.TEAM.B];
+    for (const team of teams) {
+      const teamstate = game.state.teamStates[team];
+      let msg = `RP: ${teamstate.researchPoints} | Units: ${teamstate.units.size}`;
+      // teamstate.units.forEach((unit) => {
+      //   msg += `| ${unit.id} (${unit.pos.x}, ${
+      //     unit.pos.y
+      //   }) cargo space: ${unit.getCargoSpaceLeft()}`;
+      // });
+      if (team === Unit.TEAM.A) {
+        console.log(msg.cyan);
+      } else {
+        console.log(msg.red);
+      }
+    }
     game.cities.forEach((city) => {
       let iden = `City ${city.id}`.red;
       if (city.team === 0) {
         iden = `City ${city.id}`.cyan;
       }
-      console.log(`${iden} light: ${city.fuel}`);
+      console.log(
+        `${iden} light: ${city.fuel} - size: ${city.citycells.length}`
+      );
     });
     await sleep(game.configs.debugDelay);
   }

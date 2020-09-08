@@ -18,19 +18,30 @@ export const generateGame = (
   };
   const game = new Game(configs);
   const map = game.map;
+  const width = map.width;
+  const height = map.height;
   if (configs.mapType === GameMap.Types.DEBUG) {
     // for testing, hardcode wood and coal
-    map.addResource(3, 3, Resource.Types.WOOD, 1000);
-    map.addResource(3, 4, Resource.Types.WOOD, 1000);
-    map.addResource(4, 3, Resource.Types.WOOD, 1000);
-    map.addResource(12, 3, Resource.Types.WOOD, 1000);
-    map.addResource(12, 4, Resource.Types.WOOD, 1000);
-    map.addResource(11, 3, Resource.Types.WOOD, 1000);
-    map.addResource(12, 12, Resource.Types.WOOD, 1000);
-    map.addResource(3, 12, Resource.Types.WOOD, 1000);
+    const woodCoords = [
+      [3, 3],
+      [3, 4],
+      [4, 3],
+      [5, 6],
+      [1, 1],
+      [1, 2],
+      [1, 3],
+    ];
+
+    for (const c of woodCoords) {
+      map.addResource(c[0], c[1], Resource.Types.WOOD, 1500);
+      map.addResource(width - c[0] - 1, c[1], Resource.Types.WOOD, 1500);
+    }
 
     map.addResource(5, 5, Resource.Types.COAL, 200);
     map.addResource(10, 5, Resource.Types.COAL, 200);
+    map.addResource(0, 0, Resource.Types.COAL, 200);
+    map.addResource(15, 0, Resource.Types.COAL, 200);
+
     map.addResource(7, 8, Resource.Types.URANIUM, 20);
     map.addResource(8, 8, Resource.Types.URANIUM, 20);
 
@@ -41,8 +52,9 @@ export const generateGame = (
     game.spawnWorker(Unit.TEAM.A, 2, 2);
     game.spawnWorker(Unit.TEAM.B, 13, 2);
 
-    game.spawnCart(Unit.TEAM.A, 3, 2);
-    game.spawnCart(Unit.TEAM.B, 12, 2);
+    game.spawnCart(Unit.TEAM.A, 1, 2);
+    game.spawnCart(Unit.TEAM.B, 14, 2);
+    console.log(map.resourcesMap);
   }
 
   return game;
