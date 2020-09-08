@@ -144,7 +144,8 @@ class Agent {
           const team = update.nextInt();
           const cityid = update.nextStr();
           const fuel = update.nextInt();
-          this.players[team].cities.set(cityid, new City(team, cityid, fuel));
+          const lightUpkeep = update.nextInt();
+          this.players[team].cities.set(cityid, new City(team, cityid, fuel, lightUpkeep));
           break;
         }
         case INPUT_CONSTANTS.CITY_TILES: {

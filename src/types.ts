@@ -43,6 +43,7 @@ export interface LuxMatchConfigs {
       COAL: number;
       URANIUM: number;
     };
+    CITY_ADJACENCY_BONUS: number;
     BUILD_TIME: {
       WORKER: number;
       CART: number;

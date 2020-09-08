@@ -54,7 +54,6 @@ export const generateGame = (
 
     game.spawnCart(Unit.TEAM.A, 1, 2);
     game.spawnCart(Unit.TEAM.B, 14, 2);
-    console.log(map.resourcesMap);
   }
 
   return game;

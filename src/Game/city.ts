@@ -31,7 +31,20 @@ export class City {
 
   // TODO: Add adjacency bonuses
   getLightUpkeep(): number {
-    return this.citycells.length * this.configs.parameters.LIGHT_UPKEEP.CITY;
+    return (
+      this.citycells.length * this.configs.parameters.LIGHT_UPKEEP.CITY -
+      this.getAdjacencyBonuses()
+    );
+  }
+
+  getAdjacencyBonuses(): number {
+    let bonus = 0;
+    this.citycells.forEach((cell) => {
+      bonus +=
+        cell.citytile.adjacentCityTiles *
+        this.configs.parameters.CITY_ADJACENCY_BONUS;
+    });
+    return bonus;
   }
 
   addCityTile(cell: Cell): void {
@@ -44,6 +57,9 @@ export class CityTile extends Actionable {
   public cityid: string;
   /** cooldown for this city tile before it can build or research */
   public cooldown = 0;
+
+  /** dynamically updated counter for number of friendly adjacent city tiles */
+  public adjacentCityTiles = 0;
   constructor(public team: Unit.TEAM, configs: LuxMatchConfigs) {
     super(configs);
   }

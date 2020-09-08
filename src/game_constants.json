@@ -22,6 +22,7 @@
       "WORKER": 20,
       "CART": 80
     },
+    "CITY_ADJACENCY_BONUS": 10,
     "RESOURCE_CAPACITY": {
       "WORKER": 100,
       "CART": 2000

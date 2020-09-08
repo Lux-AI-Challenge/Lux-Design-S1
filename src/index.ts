@@ -67,15 +67,11 @@ export class LuxDesign extends Dimension.Design {
    * and `w` `c` `u` units of wood, coal, uranium
    * ...
    *
-   * `c t city_id f` - citeam `t`'s city with id city_id and fuel `f`
+   * `c t city_id f lk` - citeam `t`'s city with id city_id and fuel `f` and light upkeep `lk`
    * ...
    *
    * `ct t city_id x y cd` - team `t`'s city tile part of city with id city_id at `(x, y)` with cooldown `cd`
    * ...
-   *
-   *
-   *
-   *
    *
    */
   async sendAllAgentsGameInformation(match: Match): Promise<void> {
@@ -121,7 +117,11 @@ export class LuxDesign extends Dimension.Design {
     // send city information
     promises = [];
     game.cities.forEach((city) => {
-      promises.push(match.sendAll(`c ${city.team} ${city.id} ${city.fuel}`));
+      promises.push(
+        match.sendAll(
+          `c ${city.team} ${city.id} ${city.fuel} ${city.getLightUpkeep()}`
+        )
+      );
     });
     await Promise.all(promises);
 

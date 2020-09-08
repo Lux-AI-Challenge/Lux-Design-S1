@@ -2,8 +2,8 @@ const GAME_CONSTANTS = require('./game_constants');
 const DIRECTIONS = GAME_CONSTANTS.DIRECTIONS;
 class GameMap {
   constructor(width, height) {
-    this.height = width;
-    this.width = height;
+    this.height = height;
+    this.width = width;
     this.map = new Array(this.height);
 
     for (let y = 0; y < this.height; y++) {
