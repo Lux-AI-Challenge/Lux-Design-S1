@@ -102,7 +102,8 @@ export class CityTile extends Actionable {
           this.configs.parameters.RESEARCH_REQUIREMENTS.COAL
         ) {
           game.state.teamStates[this.team].researched.coal = true;
-        } else if (
+        }
+        if (
           game.state.teamStates[this.team].researchPoints >=
           this.configs.parameters.RESEARCH_REQUIREMENTS.URANIUM
         ) {
