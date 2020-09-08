@@ -106,7 +106,13 @@ export class GameMap {
                 });
                 return unitstr;
               } else {
-                return cell.units.size;
+                const size = cell.units.size;
+                const team = cell.units.values().next().value.team;
+                if (team === Unit.TEAM.A) {
+                  return `${size}`.cyan;
+                } else {
+                  return `${size}`.red;
+                }
               }
             } else if (cell.hasResource()) {
               switch (cell.resource.type) {
@@ -124,7 +130,14 @@ export class GameMap {
                 return `▩`.red;
               }
             }
-            return '0';
+            const cd = cell.getTileCooldown();
+            if (cd < 1.1) {
+              return '0';
+            } else if (cd < 2.1) {
+              return 'r'.black.bgYellow;
+            } else {
+              return 'r'.black.bgGreen;
+            }
           })
           .join(' ') + '\n';
     }

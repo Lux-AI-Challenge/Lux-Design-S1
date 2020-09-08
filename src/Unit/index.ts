@@ -124,6 +124,7 @@ export class Cart extends Unit {
           action.resourceType,
           action.amount
         );
+        this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.CART;
       }
     } else if (this.currentActions.length > 1) {
       throw new MatchWarn(
