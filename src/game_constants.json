@@ -49,6 +49,8 @@
     "UNIT_ACTION_COOLDOWN": {
       "CART": 3,
       "WORKER": 1
-    }
+    },
+    "MAX_CELL_COOLDOWN": 3,
+    "CART_ROAD_DEVELOPMENT_RATE": 0.5
   }
 }

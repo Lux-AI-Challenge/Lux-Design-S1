@@ -130,8 +130,20 @@ export class Cart extends Unit {
         `Agent ${this.team} tried to run more than 1 action for cart: ${this.id}`
       );
     }
+
+    // auto create roads by increasing the cooldown value of a cell
+    const cell = game.map.getCellByPos(this.pos);
+    if (cell.getTileCooldown() < this.configs.parameters.MAX_CELL_COOLDOWN) {
+      cell.cooldown = Math.min(
+        cell.cooldown + this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE,
+        this.configs.parameters.MAX_CELL_COOLDOWN
+      );
+    }
     if (this.cooldown > 0) {
-      this.cooldown--;
+      this.cooldown -= cell.getTileCooldown();
+      if (this.cooldown < 0) {
+        this.cooldown = 0;
+      }
     }
   }
 }
@@ -149,9 +161,6 @@ export class Worker extends Unit {
   }
 
   turn(game: Game): void {
-    if (this.cooldown > 0) {
-      this.cooldown--;
-    }
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
 
@@ -177,7 +186,10 @@ export class Worker extends Unit {
       );
     }
     if (this.cooldown > 0) {
-      this.cooldown--;
+      this.cooldown -= game.map.getCellByPos(this.pos).getTileCooldown();
+      if (this.cooldown < 0) {
+        this.cooldown = 0;
+      }
     }
   }
 }
