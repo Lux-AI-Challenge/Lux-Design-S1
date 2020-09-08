@@ -294,11 +294,11 @@ export class LuxDesign extends Dimension.Design {
     for (const team of teams) {
       const teamstate = game.state.teamStates[team];
       let msg = `RP: ${teamstate.researchPoints} | Units: ${teamstate.units.size}`;
-      teamstate.units.forEach((unit) => {
-        msg += `| ${unit.id} (${unit.pos.x}, ${
-          unit.pos.y
-        }) cargo space: ${unit.getCargoSpaceLeft()}`;
-      });
+      // teamstate.units.forEach((unit) => {
+      //   msg += `| ${unit.id} (${unit.pos.x}, ${
+      //     unit.pos.y
+      //   }) cargo space: ${unit.getCargoSpaceLeft()}`;
+      // });
       if (team === Unit.TEAM.A) {
         console.log(msg.cyan);
       } else {
