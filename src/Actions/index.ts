@@ -67,6 +67,12 @@ export class TransferAction extends Action {
   }
 }
 
+export class PillageAction extends Action {
+  constructor(action: Game.ACTIONS, team: Unit.TEAM, public unitid: string) {
+    super(action, team);
+  }
+}
+
 export class ResearchAction extends Action {
   constructor(
     action: Game.ACTIONS,

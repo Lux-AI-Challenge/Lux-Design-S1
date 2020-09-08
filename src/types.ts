@@ -64,5 +64,7 @@ export interface LuxMatchConfigs {
     };
     MAX_CELL_COOLDOWN: number;
     CART_ROAD_DEVELOPMENT_RATE: number;
+    PILLAGE_RATE: number;
+    MIN_CELL_COOLDOWN: number;
   };
 }

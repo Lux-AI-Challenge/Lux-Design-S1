@@ -12,6 +12,7 @@ import {
   ResearchAction,
   TransferAction,
   MoveAction,
+  PillageAction,
 } from './Actions';
 import { Game } from './Game';
 import { Unit } from './Unit';
@@ -242,6 +243,9 @@ export class LuxDesign extends Dimension.Design {
         const citytile = game.map.getCell(action.x, action.y).citytile;
         citytile.giveAction(action);
       });
+    actionsMap.get(Game.ACTIONS.PILLAGE).forEach((action: PillageAction) => {
+      game.getUnit(action.team, action.unitid).giveAction(action);
+    });
     actionsMap.get(Game.ACTIONS.RESEARCH).forEach((action: ResearchAction) => {
       const citytile = game.map.getCell(action.x, action.y).citytile;
       citytile.giveAction(action);

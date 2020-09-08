@@ -111,6 +111,19 @@ export class Game {
       const team: Unit.TEAM = cmd.agentID;
       let errormsg = `Agent ${cmd.agentID} sent invalid command`;
       switch (action) {
+        case Game.ACTIONS.PILLAGE:
+          if (strs.length === 2) {
+            const unitid = strs[1];
+            const unit = this.getUnit(team, unitid);
+            if (!unit) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build city with invalid/unowned unit id: ${unitid}`;
+              break;
+            }
+          } else {
+            valid = false;
+          }
+          break;
         case Game.ACTIONS.BUILD_CITY:
           if (strs.length === 2) {
             const unitid = strs[1];
@@ -376,9 +389,13 @@ export class Game {
       return false;
     });
 
+    // set cooldown to minimum as city auto gives max cooldown to units and once city is gone it should default to min cell cooldown
+    cell.cooldown = this.configs.parameters.MIN_CELL_COOLDOWN;
+
     // if no adjacent city cells of same team, generate new city
     if (adjSameTeamCityTiles.length === 0) {
       const city = new City(team, this.configs);
+
       cell.setCityTile(team, city.id);
       city.addCityTile(cell);
       this.cities.set(city.id, city);
@@ -745,6 +762,9 @@ export namespace Game {
      * adjacent. If command valid, it will transfer as much as possible with a max of the amount specified
      */
     TRANSFER = 't',
+
+    /** formatted as `p unitid`. Unit with the given unitid must be owned and pillages the tile they are on */
+    PILLAGE = 'p',
   }
 
   export enum DIRECTIONS {

@@ -127,6 +127,11 @@ class Unit {
   buildCity() {
     return `bcity ${this.id}`;
   }
+
+  /** return the command to pillage whatever is underneath the worker */
+  pillage() {
+    return `p ${this.id}`;
+  }
 }
 
 module.exports = {

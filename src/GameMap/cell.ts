@@ -21,6 +21,7 @@ export class Cell {
   public cooldown = 1;
   constructor(x: number, y: number, public configs: Readonly<LuxMatchConfigs>) {
     this.pos = new Position(x, y);
+    this.cooldown = this.configs.parameters.MIN_CELL_COOLDOWN;
   }
   /**
    * Set resource at cell and the amount of it
