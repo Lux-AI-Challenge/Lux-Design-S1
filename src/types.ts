@@ -8,6 +8,10 @@ export interface LuxMatchResults {
 export interface LuxMatchState {
   configs: LuxMatchConfigs;
   game: Game;
+  profile: {
+    dataTransfer: Array<number>;
+    updateStage: Array<number>;
+  };
   rng: () => number;
 }
 
