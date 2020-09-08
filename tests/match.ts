@@ -21,8 +21,8 @@ luxdim
     storeErrorLogs: true,
     storeReplay: false,
     seed: 1,
-    debug: false,
-    runProfiler: false,
+    debug: true,
+    runProfiler: true,
     debugDelay: 100,
     engineOptions: {
       noStdErr: false,
