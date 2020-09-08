@@ -75,7 +75,12 @@ export class LuxDesign extends Dimension.Design {
    *
    */
   async sendAllAgentsGameInformation(match: Match): Promise<void> {
+    let stime: number;
     const game: Game = match.state.game;
+    if (game.configs.runProfiler) {
+      stime = new Date().valueOf();
+    }
+
     const map = game.map;
 
     let promises: Array<Promise<boolean>> = [];
@@ -136,6 +141,20 @@ export class LuxDesign extends Dimension.Design {
       });
     });
     await Promise.all(promises);
+    if (game.configs.runProfiler) {
+      const etime = new Date().valueOf();
+      let c = 0;
+      game.cities.forEach((city) => {
+        c += city.citycells.length;
+      });
+      console.log(
+        `Turn ${game.state.turn} - Data transfer took ${
+          etime - stime
+        }ms - Units: ${
+          game.getTeamsUnits(0).size + game.getTeamsUnits(1).size
+        }, City tiles: ${c}, Resource map size: ${game.map.resourcesMap.size}`
+      );
+    }
   }
 
   // Update step of each match, called whenever the match moves forward by a single unit in time (1 timeStep)
@@ -145,6 +164,10 @@ export class LuxDesign extends Dimension.Design {
   ): Promise<Match.Status> {
     const state: LuxMatchState = match.state;
     const game = state.game;
+    let stime: number;
+    if (game.configs.runProfiler) {
+      stime = new Date().valueOf();
+    }
 
     match.log.detail('Processing turn ' + game.state.turn);
     // check if any agents are terminated and finish game if so
@@ -282,6 +305,12 @@ export class LuxDesign extends Dimension.Design {
     await this.sendAllAgentsGameInformation(match);
     // tell all agents updates are done
     await match.sendAll('D_DONE');
+    if (game.configs.runProfiler) {
+      const etime = new Date().valueOf();
+      console.log(
+        `Turn ${game.state.turn} - Update stage took ${etime - stime}ms`
+      );
+    }
     game.state.turn++;
     match.log.detail('Beginning turn ' + game.state.turn);
   }

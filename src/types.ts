@@ -19,6 +19,7 @@ export interface LuxMatchConfigs {
   width: number;
   height: number;
   debug?: boolean;
+  runProfiler: boolean;
   debugDelay: number;
   seed: number | undefined;
   parameters: {
