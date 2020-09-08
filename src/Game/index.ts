@@ -434,17 +434,14 @@ export class Game {
       const cells = [originalCell, ...this.map.getAdjacentCells(originalCell)];
       const workersToReceiveResources: Array<Worker> = [];
       for (const cell of cells) {
-        if (!cell.isCityTile()) {
-          // there should never be more than one unit per tile
-          cell.units.forEach((unit) => {
-            if (
-              unit.type === Unit.Type.WORKER &&
-              this.state.teamStates[unit.team].researched[type]
-            ) {
-              workersToReceiveResources.push(unit);
-            }
-          });
-        }
+        cell.units.forEach((unit) => {
+          if (
+            unit.type === Unit.Type.WORKER &&
+            this.state.teamStates[unit.team].researched[type]
+          ) {
+            workersToReceiveResources.push(unit);
+          }
+        });
       }
 
       let rate: number;
@@ -607,12 +604,14 @@ export class Game {
 
     // reverts a given action such that cellsToActionsToThere has no collisions due to action and all related actions
     const revertAction = (action: MoveAction): void => {
-      match.throw(
-        action.team,
-        new MatchWarn(
-          `Unit ${action.unitid} collided when trying to move to (${action.newcell.pos.x}, ${action.newcell.pos.y})`
-        )
-      );
+      if (match) {
+        match.throw(
+          action.team,
+          new MatchWarn(
+            `Unit ${action.unitid} collided when trying to move to (${action.newcell.pos.x}, ${action.newcell.pos.y})`
+          )
+        );
+      }
       const origcell = this.map.getCellByPos(
         this.getUnit(action.team, action.unitid).pos
       );

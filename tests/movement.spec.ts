@@ -50,7 +50,7 @@ describe('Test movement handling', () => {
         }),
       ];
 
-      const pruned = game.handleMovementActions(moveActions);
+      const pruned = game.handleMovementActions(moveActions, null);
       expect(pruned.length).to.equal(0);
     });
 
@@ -63,7 +63,7 @@ describe('Test movement handling', () => {
           command: `m ${w1.id} s`,
         }),
       ];
-      const pruned = game.handleMovementActions(moveActions);
+      const pruned = game.handleMovementActions(moveActions, null);
       expect(pruned.length).to.equal(0);
     });
 
@@ -107,7 +107,7 @@ describe('Test movement handling', () => {
         }),
       ];
 
-      const pruned = game.handleMovementActions(moveActions);
+      const pruned = game.handleMovementActions(moveActions, null);
       expect(pruned.length).to.equal(1);
       expect(pruned[0].unitid).to.equal(w6.id);
     });
@@ -137,7 +137,7 @@ describe('Test movement handling', () => {
           command: `m ${w4.id} n`,
         }),
       ];
-      const pruned = game.handleMovementActions(moveActions);
+      const pruned = game.handleMovementActions(moveActions, null);
       expect(pruned).to.eql(moveActions);
     });
 
@@ -186,7 +186,7 @@ describe('Test movement handling', () => {
         }),
       ];
 
-      const pruned = game.handleMovementActions(moveActions);
+      const pruned = game.handleMovementActions(moveActions, null);
       expect(pruned.length).to.equal(2);
       expect(pruned[0].unitid).to.equal(w6.id);
       expect(pruned[1].unitid).to.equal(w7.id);
@@ -225,7 +225,7 @@ describe('Test movement handling', () => {
         expect(err).to.be.instanceOf(MatchWarn, 'validate did not throw error');
       }
 
-      const pruned = game.handleMovementActions(moveActions);
+      const pruned = game.handleMovementActions(moveActions, null);
       expect(pruned.length).to.equal(3);
       expect(pruned[0].unitid).to.equal(w1.id);
       expect(pruned[1].unitid).to.equal(w2.id);
@@ -262,7 +262,7 @@ describe('Test movement handling', () => {
         }),
       ];
 
-      const pruned = game.handleMovementActions(moveActions);
+      const pruned = game.handleMovementActions(moveActions, null);
       expect(pruned.length).to.equal(2);
       expect(pruned[0].unitid).to.equal(w3.id);
       expect(pruned[1].unitid).to.equal(w4.id);

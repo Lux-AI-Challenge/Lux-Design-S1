@@ -310,7 +310,9 @@ export class LuxDesign extends Dimension.Design {
       if (city.team === 0) {
         iden = `City ${city.id}`.cyan;
       }
-      console.log(`${iden} light: ${city.fuel}`);
+      console.log(
+        `${iden} light: ${city.fuel} - size: ${city.citycells.length}`
+      );
     });
     await sleep(game.configs.debugDelay);
   }
