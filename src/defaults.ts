@@ -1,6 +1,6 @@
 import { LuxMatchConfigs } from './types';
 import { GameMap } from './GameMap';
-
+import GAME_CONSTANTS from './game_constants.json';
 // some temporary default configurations and parameters
 export const DEFAULT_CONFIGS: LuxMatchConfigs = {
   mapType: GameMap.Types.RANDOM,
@@ -8,40 +8,5 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
   height: 16,
   seed: undefined,
   debugDelay: 500,
-  parameters: {
-    DAY_LENGTH: 20,
-    MAX_DAYS: 200,
-    LIGHT_UPKEEP: {
-      CITY: 100,
-      WORKER: 20,
-      CART: 80,
-    },
-    RESOURCE_CAPACITY: {
-      WORKER: 100,
-      CART: 400,
-    },
-    WORKER_COLLECTION_RATE: {
-      WOOD: 20,
-      COAL: 10,
-      URANIUM: 1,
-    },
-    RESOURCE_TO_FUEL_RATE: {
-      WOOD: 1,
-      COAL: 5,
-      URANIUM: 20,
-    },
-    BUILD_TIME: {
-      WORKER: 5,
-      CART: 10,
-    },
-    RESEARCH_TIME: {
-      COAL: 40,
-      URANIUM: 60,
-    },
-    CITY_ACTION_COOLDOWN: 10,
-    UNIT_ACTION_COOLDOWN: {
-      CART: 3,
-      WORKER: 1,
-    },
-  },
+  parameters: GAME_CONSTANTS.PARAMETERS,
 };

@@ -293,7 +293,7 @@ export class LuxDesign extends Dimension.Design {
     const teams = [Unit.TEAM.A, Unit.TEAM.B];
     for (const team of teams) {
       const teamstate = game.state.teamStates[team];
-      let msg = `RP: ${teamstate.researchPoints} | Units: ${teamstate.units.size}`;
+      const msg = `RP: ${teamstate.researchPoints} | Units: ${teamstate.units.size}`;
       // teamstate.units.forEach((unit) => {
       //   msg += `| ${unit.id} (${unit.pos.x}, ${
       //     unit.pos.y

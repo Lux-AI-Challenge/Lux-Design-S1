@@ -1,0 +1,53 @@
+{
+  "UNIT_TYPES": {
+    "WORKER": 0,
+    "CART": 1
+  },
+  "RESOURCE_TYPES": {
+    "WOOD": "wood",
+    "COAL": "coal",
+    "URANIUM": "uranium"
+  },
+  "DIRECTIONS": {
+    "NORTH": "n",
+    "WEST": "w",
+    "EAST": "e",
+    "SOUTH": "s"
+  },
+  "PARAMETERS": {
+    "DAY_LENGTH": 20,
+    "MAX_DAYS": 200,
+    "LIGHT_UPKEEP": {
+      "CITY": 100,
+      "WORKER": 20,
+      "CART": 80
+    },
+    "RESOURCE_CAPACITY": {
+      "WORKER": 100,
+      "CART": 2000
+    },
+    "WORKER_COLLECTION_RATE": {
+      "WOOD": 20,
+      "COAL": 10,
+      "URANIUM": 1
+    },
+    "RESOURCE_TO_FUEL_RATE": {
+      "WOOD": 1,
+      "COAL": 5,
+      "URANIUM": 20
+    },
+    "BUILD_TIME": {
+      "WORKER": 5,
+      "CART": 10
+    },
+    "RESEARCH_TIME": {
+      "COAL": 40,
+      "URANIUM": 60
+    },
+    "CITY_ACTION_COOLDOWN": 10,
+    "UNIT_ACTION_COOLDOWN": {
+      "CART": 3,
+      "WORKER": 1
+    }
+  }
+}
