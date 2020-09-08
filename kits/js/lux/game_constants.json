@@ -22,6 +22,7 @@
       "WORKER": 20,
       "CART": 80
     },
+    "CITY_ADJACENCY_BONUS": 10,
     "RESOURCE_CAPACITY": {
       "WORKER": 100,
       "CART": 2000
@@ -34,13 +35,13 @@
     "RESOURCE_TO_FUEL_RATE": {
       "WOOD": 1,
       "COAL": 5,
-      "URANIUM": 20
+      "URANIUM": 100
     },
     "BUILD_TIME": {
       "WORKER": 5,
       "CART": 10
     },
-    "RESEARCH_TIME": {
+    "RESEARCH_REQUIREMENTS": {
       "COAL": 40,
       "URANIUM": 60
     },

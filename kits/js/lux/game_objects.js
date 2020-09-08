@@ -17,15 +17,22 @@ class Player {
     this.units = [];
     this.cities = new Map();
   }
+  researchedCoal() {
+    return this.researchPoints >= GAME_CONSTANTS.PARAMETERS.RESEARCH_REQUIREMENTS.COAL;
+  }
+  researchedUranium() {
+    return this.researchPoints >= GAME_CONSTANTS.PARAMETERS.RESEARCH_REQUIREMENTS.URANIUM;
+  }
 }
 
 // all data related to a city
 class City {
-  constructor(teamid, cityid, fuel) {
+  constructor(teamid, cityid, fuel, lightUpkeep) {
     this.cityid = cityid;
     this.team = teamid;
     this.fuel = fuel;
     this.citytiles = [];
+    this.lightUpkeep = lightUpkeep;
   }
   addCityTile(x, y, cooldown) {
     const ct = new CityTile(this.team, this.cityid, x, y, cooldown)
@@ -33,7 +40,7 @@ class City {
     return ct;
   }
   getLightUpkeep() {
-    return this.citytiles.length * GAME_CONSTANTS.PARAMETERS.LIGHT_UPKEEP.CITY;
+    return this.lightUpkeep;
   }
 }
 

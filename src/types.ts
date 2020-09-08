@@ -19,6 +19,7 @@ export interface LuxMatchConfigs {
   width: number;
   height: number;
   debug?: boolean;
+  runProfiler: boolean;
   debugDelay: number;
   seed: number | undefined;
   parameters: {
@@ -43,11 +44,12 @@ export interface LuxMatchConfigs {
       COAL: number;
       URANIUM: number;
     };
+    CITY_ADJACENCY_BONUS: number;
     BUILD_TIME: {
       WORKER: number;
       CART: number;
     };
-    RESEARCH_TIME: {
+    RESEARCH_REQUIREMENTS: {
       COAL: number;
       URANIUM: number;
     };

@@ -8,5 +8,6 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
   height: 16,
   seed: undefined,
   debugDelay: 500,
+  runProfiler: false,
   parameters: GAME_CONSTANTS.PARAMETERS,
 };

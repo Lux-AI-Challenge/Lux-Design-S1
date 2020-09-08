@@ -15,26 +15,22 @@ const luxdim = Dimensions.create(design, {
 
 const js = './kits/js/bot.js';
 const testjs = './tests/bots/js/bot.js';
-const botList = [testjs, testjs];
+const botList = [testjs, js];
 luxdim
   .createMatch(botList, {
     storeErrorLogs: true,
     storeReplay: false,
     seed: 1,
     debug: false,
-    runProfiler: false,
     debugDelay: 100,
     engineOptions: {
       noStdErr: false,
     },
     mapType: 'debug',
-    loggingLevel: Logger.LEVEL.NONE,
+    loggingLevel: Logger.LEVEL.WARN,
   })
   .then(async (match) => {
-    console.log('Created match');
-    const stime = new Date().valueOf();
     const res = await match.run();
-    console.log(`Match took ${new Date().valueOf() - stime}ms`);
     // console.log(match.state.game.map.getMapString());
     console.log(res);
   })

@@ -5,6 +5,7 @@ import { Game } from '.';
 import { MatchWarn } from 'dimensions-ai';
 import { Actionable } from '../Actionable';
 import { SpawnCartAction, SpawnWorkerAction, ResearchAction } from '../Actions';
+import { DEFAULT_CONFIGS } from '../defaults';
 
 /**
  * A city is composed of adjacent city tiles of the same team
@@ -31,7 +32,20 @@ export class City {
 
   // TODO: Add adjacency bonuses
   getLightUpkeep(): number {
-    return this.citycells.length * this.configs.parameters.LIGHT_UPKEEP.CITY;
+    return (
+      this.citycells.length * this.configs.parameters.LIGHT_UPKEEP.CITY -
+      this.getAdjacencyBonuses()
+    );
+  }
+
+  getAdjacencyBonuses(): number {
+    let bonus = 0;
+    this.citycells.forEach((cell) => {
+      bonus +=
+        cell.citytile.adjacentCityTiles *
+        this.configs.parameters.CITY_ADJACENCY_BONUS;
+    });
+    return bonus;
   }
 
   addCityTile(cell: Cell): void {
@@ -44,6 +58,9 @@ export class CityTile extends Actionable {
   public cityid: string;
   /** cooldown for this city tile before it can build or research */
   public cooldown = 0;
+
+  /** dynamically updated counter for number of friendly adjacent city tiles */
+  public adjacentCityTiles = 0;
   constructor(public team: Unit.TEAM, configs: LuxMatchConfigs) {
     super(configs);
   }
@@ -80,6 +97,18 @@ export class CityTile extends Actionable {
       } else if (action instanceof ResearchAction) {
         this.resetCooldown();
         game.state.teamStates[this.team].researchPoints++;
+        if (
+          game.state.teamStates[this.team].researchPoints >=
+          this.configs.parameters.RESEARCH_REQUIREMENTS.COAL
+        ) {
+          game.state.teamStates[this.team].researched.coal = true;
+        }
+        if (
+          game.state.teamStates[this.team].researchPoints >=
+          this.configs.parameters.RESEARCH_REQUIREMENTS.URANIUM
+        ) {
+          game.state.teamStates[this.team].researched.uranium = true;
+        }
       }
     }
     if (this.cooldown > 0) {

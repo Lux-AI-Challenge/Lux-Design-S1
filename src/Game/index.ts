@@ -389,6 +389,13 @@ export class Game {
       const cityid = adjSameTeamCityTiles[0].citytile.cityid;
       const city = this.cities.get(cityid);
       cell.setCityTile(team, cityid);
+
+      // update adjacency counts for bonuses
+      cell.citytile.adjacentCityTiles = adjSameTeamCityTiles.length;
+      adjSameTeamCityTiles.forEach((adjCell) => {
+        adjCell.citytile.adjacentCityTiles += 1;
+      });
+
       city.addCityTile(cell);
 
       // update all merged cities' cells with merged cityid, move to merged city and delete old city

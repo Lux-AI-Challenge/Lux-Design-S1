@@ -30,4 +30,16 @@ describe('Test light upkeep', () => {
     expect(w2.cargo.coal).to.equal(0);
     expect(w2.cargo.uranium).to.equal(0);
   });
+  it('should apply adjacency bonuses', () => {
+    const c1 = game.spawnCityTile(0, 1, 1);
+    const c2 = game.spawnCityTile(0, 1, 2);
+    game.spawnCityTile(0, 1, 3);
+    game.spawnCityTile(0, 2, 2);
+    expect(c1.adjacentCityTiles).to.equal(1);
+    expect(c2.adjacentCityTiles).to.equal(3);
+    expect(game.cities.get(c1.cityid).getLightUpkeep()).to.equal(
+      DEFAULT_CONFIGS.parameters.LIGHT_UPKEEP.CITY * 4 -
+        6 * DEFAULT_CONFIGS.parameters.CITY_ADJACENCY_BONUS
+    );
+  });
 });
