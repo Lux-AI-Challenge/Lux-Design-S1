@@ -46,7 +46,7 @@ export class LuxDesign extends Dimension.Design {
     }
     state.game = generateGame(state.configs);
 
-    match.log.info(state.configs);
+    match.log.detail(state.configs);
     // store the state into the match so it can be used again in `update` and `getResults`
     match.state = state;
 
