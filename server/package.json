@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf lib && tsc && ./copy.sh"
+    "build": "rm -rf lib && tsc && ./copy_keys.sh"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@lux-ai/2020-challenge": "^1.0.6",
     "dimensions-ai": "^4.5.4"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.2"
   }
 }
