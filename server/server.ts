@@ -22,7 +22,7 @@ const languageSpecificAgentOptions: Dimensions.Agent.LanguageSpecificOptions = {
     image: 'docker.io/golang',
   },
   '.js': {
-    image: 'docker.io/node',
+    image: 'node:12.18.4-alpine3.9',
   },
 };
 
@@ -32,7 +32,7 @@ const setup = async () => {
   });
   const gcs = new GCloudStorage({
     projectId: 'lux-ai-test',
-    keyFilename: './keys/gcs-key2.json',
+    keyFilename: './keys/gcs-key.json',
   });
   await luxdim.use(dstore);
   await luxdim.use(gcs);
@@ -43,7 +43,7 @@ const setup = async () => {
     agentsPerMatch: [2],
     consoleDisplay: false,
     tournamentConfigs: {
-      syncConfigs: false,
+      syncConfigs: true,
     },
     defaultMatchConfigs: {
       storeErrorLogs: true,
