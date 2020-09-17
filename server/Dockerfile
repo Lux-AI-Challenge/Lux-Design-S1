@@ -1,10 +1,10 @@
-FROM alpine:3.11
+FROM node:12.18.4-alpine3.11
 
 RUN apk update
 
 RUN apk --no-cache add docker-cli
 
-RUN apk add --no-cache nodejs nodejs-npm
+RUN apk add --no-cache bash
 
 RUN mkdir /server
 
