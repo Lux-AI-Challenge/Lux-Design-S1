@@ -11,3 +11,5 @@ local
 
 # these contain our test bots
 tests/bots
+
+server

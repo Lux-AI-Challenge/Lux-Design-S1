@@ -1,13 +1,14 @@
 {
-  "name": "lux-ai-challenge-2020",
-  "version": "1.0.0",
+  "name": "@lux-ai/2020-challenge",
+  "version": "1.0.1",
   "description": "The design for the first Lux AI Challenge",
   "main": "lib/index.ts",
   "scripts": {
     "test": "nyc --reporter=html mocha tests/*.spec.ts",
     "prettier": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --fix --ext .ts"
+    "lint:fix": "eslint . --fix --ext .ts",
+    "build": "rm -rf lib && tsc"
   },
   "repository": {
     "type": "git",
