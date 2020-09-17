@@ -1,8 +1,8 @@
 {
   "name": "@lux-ai/2020-challenge",
-  "version": "1.0.1",
+  "version": "1.0.6",
   "description": "The design for the first Lux AI Challenge",
-  "main": "lib/index.ts",
+  "main": "lib/index.js",
   "scripts": {
     "test": "nyc --reporter=html mocha tests/*.spec.ts",
     "prettier": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
@@ -24,11 +24,14 @@
   "bugs": {
     "url": "https://github.com/Lux-AI-Challenge/LuxDesign/issues"
   },
+  "files": [
+    "lib"
+  ],
   "homepage": "https://github.com/Lux-AI-Challenge/LuxDesign#readme",
   "dependencies": {
     "@types/seedrandom": "^2.4.28",
     "colors": "^1.4.0",
-    "dimensions-ai": "^4.5.1",
+    "dimensions-ai": "^4.5.4",
     "nanoid": "^3.1.12",
     "seedrandom": "^3.0.5"
   },
