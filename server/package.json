@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lux-ai/2020-challenge": "^1.0.6",
-    "dimensions-ai": "^4.5.4"
+    "@lux-ai/2020-challenge": "^1.0.7",
+    "dimensions-ai": "^4.5.5"
   },
   "devDependencies": {
     "typescript": "^4.0.2"
