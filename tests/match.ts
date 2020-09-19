@@ -58,4 +58,6 @@ const run = async () => {
 };
 try {
   run();
-} catch (err) {}
+} catch (err) {
+  //
+}

@@ -1,8 +1,9 @@
 {
   "name": "@lux-ai/2020-challenge",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "The design for the first Lux AI Challenge",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "nyc --reporter=html mocha tests/*.spec.ts",
     "prettier": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
