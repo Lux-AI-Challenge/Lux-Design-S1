@@ -131,10 +131,6 @@ export class Cart extends Unit {
         );
         this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.CART;
       }
-    } else if (this.currentActions.length > 1) {
-      throw new MatchWarn(
-        `Agent ${this.team} tried to run more than 1 action for cart: ${this.id}`
-      );
     }
 
     // auto create roads by increasing the cooldown value of a cell
@@ -193,10 +189,6 @@ export class Worker extends Unit {
         );
         this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
       }
-    } else if (this.currentActions.length > 1) {
-      throw new MatchWarn(
-        `Agent ${this.team} tried to run more than 1 action for worker: ${this.id}`
-      );
     }
     if (this.cooldown > 0) {
       this.cooldown -= game.map.getCellByPos(this.pos).getTileCooldown();

@@ -207,11 +207,16 @@ export class LuxDesign extends Dimension.Design {
     Object.values(Game.ACTIONS).forEach((val) => {
       actionsMap.set(val, []);
     });
+
+    const accumulatedActionStats = Game._initialAccumulatedActionStats;
     for (let i = 0; i < commands.length; i++) {
       // get the command and the agent that issued it and handle appropriately
       const agentID = commands[i].agentID;
       try {
-        const action = game.validateCommand(commands[i]);
+        const action = game.validateCommand(
+          commands[i],
+          accumulatedActionStats
+        );
         // TODO: this might be slow, depends on its optimized and compiled
         const newactionArray = [...actionsMap.get(action.action), action];
         actionsMap.set(action.action, newactionArray);

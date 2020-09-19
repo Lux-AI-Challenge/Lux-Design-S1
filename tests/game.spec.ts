@@ -3,6 +3,8 @@ import 'mocha';
 import { Game } from '../src/Game';
 import { fail } from 'assert';
 import { Resource } from '../src/Resource';
+import { MatchWarn } from 'dimensions-ai';
+
 const expect = chai.expect;
 describe('Test Game', () => {
   it('should initialize game map properly', () => {
@@ -123,10 +125,31 @@ describe('Test Game', () => {
       if (valid) fail('can not build city on existing city');
     });
     it('should validate build carts', () => {
-      game.validateCommand({
-        command: 'bc 2 2',
-        agentID: 0,
-      });
+      const init = game._genInitialAccumulatedActionStats();
+      game.spawnCityTile(0, 0, 0);
+      game.spawnCart(0, 14, 14);
+      game.validateCommand(
+        {
+          command: 'bc 2 2',
+          agentID: 0,
+        },
+        init
+      );
+      try {
+        game.validateCommand(
+          {
+            command: `bc 0 0`,
+            agentID: 0,
+          },
+          init
+        );
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(
+          MatchWarn,
+          'validate did not throw error for building carts after unit cap reached'
+        );
+      }
       let valid = false;
       try {
         game.validateCommand({
@@ -185,10 +208,32 @@ describe('Test Game', () => {
     });
 
     it('should validate build workers', () => {
-      game.validateCommand({
-        command: 'bw 2 2',
-        agentID: 0,
-      });
+      const init = game._genInitialAccumulatedActionStats();
+      game.spawnCityTile(0, 0, 0);
+      game.spawnWorker(0, 14, 14);
+      game.validateCommand(
+        {
+          command: 'bw 2 2',
+          agentID: 0,
+        },
+        init
+      );
+      // cannot build worker if unit cap reached
+      try {
+        game.validateCommand(
+          {
+            command: `bw 0 0`,
+            agentID: 0,
+          },
+          init
+        );
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(
+          MatchWarn,
+          'validate did not throw error for building worker after unit cap reached'
+        );
+      }
       let valid = false;
       try {
         game.validateCommand({
@@ -447,6 +492,200 @@ describe('Test Game', () => {
         // eslint-disable-next-line no-empty
       } catch (err) {}
       if (valid) fail('can not transfer invalid amount');
+    });
+    it('should validate pillage commands', () => {
+      const worker = game.spawnWorker(0, 4, 4);
+      game.validateCommand({
+        command: `p ${worker.id}`,
+        agentID: 0,
+      });
+      try {
+        game.validateCommand({
+          command: `p invalidid`,
+          agentID: 0,
+        });
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(
+          MatchWarn,
+          'validate did not throw error for unowned unit id'
+        );
+      }
+
+      worker.cooldown = 0.1;
+      try {
+        game.validateCommand({
+          command: `p ${worker.id}`,
+          agentID: 0,
+        });
+      } catch (err) {
+        expect(err).to.be.instanceOf(
+          MatchWarn,
+          'validate did not throw error for unit on cooldown'
+        );
+      }
+    });
+
+    it('should not allow duplicate commands for build cities', () => {
+      const init = game._genInitialAccumulatedActionStats();
+      const worker = game.spawnWorker(0, 4, 5);
+      game.spawnCityTile(0, 1, 5);
+      game.validateCommand(
+        {
+          command: `bcity ${worker.id}`,
+          agentID: 0,
+        },
+        init
+      );
+      try {
+        game.validateCommand(
+          {
+            command: `bcity ${worker.id}`,
+            agentID: 0,
+          },
+          init
+        );
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(MatchWarn, 'validate did not throw error');
+      }
+    });
+    it('should not allow duplicate commands for build carts', () => {
+      const init = game._genInitialAccumulatedActionStats();
+      game.validateCommand(
+        {
+          command: 'bc 2 2',
+          agentID: 0,
+        },
+        init
+      );
+      try {
+        game.validateCommand(
+          {
+            command: 'bc 2 2',
+            agentID: 0,
+          },
+          init
+        );
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(MatchWarn, 'validate did not throw error');
+      }
+    });
+    it('should not allow duplicate commands for build workers', () => {
+      const init = game._genInitialAccumulatedActionStats();
+      game.spawnCityTile(0, 0, 0);
+      game.validateCommand(
+        {
+          command: 'bw 2 2',
+          agentID: 0,
+        },
+        init
+      );
+      try {
+        game.validateCommand(
+          {
+            command: 'bw 2 2',
+            agentID: 0,
+          },
+          init
+        );
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(MatchWarn, 'validate did not throw error');
+      }
+    });
+    it('should not allow duplicate commands for research', () => {
+      const init = game._genInitialAccumulatedActionStats();
+      game.validateCommand(
+        {
+          command: 'r 2 2',
+          agentID: 0,
+        },
+        init
+      );
+      try {
+        game.validateCommand(
+          {
+            command: 'r 2 2',
+            agentID: 0,
+          },
+          init
+        );
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(MatchWarn, 'validate did not throw error');
+      }
+    });
+    it('should not allow duplicate commands for moves', () => {
+      const init = game._genInitialAccumulatedActionStats();
+      const worker = game.spawnWorker(0, 4, 4);
+      game.validateCommand(
+        {
+          command: `m ${worker.id} n`,
+          agentID: 0,
+        },
+        init
+      );
+      try {
+        game.validateCommand(
+          {
+            command: `m ${worker.id} s`,
+            agentID: 0,
+          },
+          init
+        );
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(MatchWarn, 'validate did not throw error');
+      }
+    });
+    it('should not allow duplicate commands for transfers', () => {
+      const init = game._genInitialAccumulatedActionStats();
+      const worker1 = game.spawnWorker(0, 10, 10);
+      const worker2 = game.spawnWorker(0, 11, 10);
+      game.validateCommand(
+        {
+          command: `t ${worker1.id} ${worker2.id} wood 100`,
+          agentID: 0,
+        },
+        init
+      );
+      try {
+        game.validateCommand(
+          {
+            command: `t ${worker1.id} ${worker2.id} wood 100`,
+            agentID: 0,
+          },
+          init
+        );
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(MatchWarn, 'validate did not throw error');
+      }
+    });
+    it('should not allow duplicate commands for pillage', () => {
+      const init = game._genInitialAccumulatedActionStats();
+      const worker = game.spawnWorker(0, 4, 4);
+      game.validateCommand(
+        {
+          command: `p ${worker.id}`,
+          agentID: 0,
+        },
+        init
+      );
+      try {
+        game.validateCommand(
+          {
+            command: `p ${worker.id}`,
+            agentID: 0,
+          },
+          init
+        );
+        fail();
+      } catch (err) {
+        expect(err).to.be.instanceOf(MatchWarn, 'validate did not throw error');
+      }
     });
   });
 });

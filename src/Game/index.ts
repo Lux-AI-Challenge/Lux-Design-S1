@@ -15,6 +15,7 @@ import {
   ResearchAction,
   TransferAction,
   SpawnCityAction,
+  PillageAction,
 } from '../Actions';
 import { Cell } from '../GameMap/cell';
 
@@ -96,10 +97,28 @@ export class Game {
     this.map = new GameMap(this.configs);
   }
 
+  _genInitialAccumulatedActionStats(): _AccumulatedActionStats {
+    return {
+      [Unit.TEAM.A]: {
+        workersBuilt: 0,
+        cartsBuilt: 0,
+        actionsPlaced: new Set(),
+      },
+      [Unit.TEAM.B]: {
+        workersBuilt: 0,
+        cartsBuilt: 0,
+        actionsPlaced: new Set(),
+      },
+    };
+  }
+
   /**
    * Returns an Action object if validated. If invalid, throws MatchWarn
    */
-  validateCommand(cmd: MatchEngine.Command): Action {
+  validateCommand(
+    cmd: MatchEngine.Command,
+    accumulatedActionStats: _AccumulatedActionStats = this._genInitialAccumulatedActionStats()
+  ): Action {
     const strs = cmd.command.split(' ');
     if (strs.length === 0) {
       throw new MatchWarn(
@@ -109,6 +128,7 @@ export class Game {
       const action = strs[0];
       let valid = true;
       const team: Unit.TEAM = cmd.agentID;
+      const acc = accumulatedActionStats[team];
       let errormsg = `Agent ${cmd.agentID} sent invalid command`;
       switch (action) {
         case Game.ACTIONS.PILLAGE:
@@ -117,8 +137,17 @@ export class Game {
             const unit = this.getUnit(team, unitid);
             if (!unit) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city with invalid/unowned unit id: ${unitid}`;
+              errormsg = `Agent ${cmd.agentID} tried to pillage tile with invalid/unowned unit id: ${unitid}`;
               break;
+            }
+            if (acc.actionsPlaced.has(unitid)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
+              break;
+            }
+            acc.actionsPlaced.add(unitid);
+            if (valid) {
+              return new PillageAction(action, team, unitid);
             }
           } else {
             valid = false;
@@ -144,6 +173,12 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} tried to build city on non-empty resource tile`;
               break;
             }
+            if (acc.actionsPlaced.has(unitid)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
+              break;
+            }
+            acc.actionsPlaced.add(unitid);
             if (valid) {
               return new SpawnCityAction(action, team, unitid);
             }
@@ -171,20 +206,36 @@ export class Game {
             }
 
             const citytile = cell.citytile;
+            if (acc.actionsPlaced.has(citytile.cityid)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} sent an extra command. City can perform only one action at a time`;
+              break;
+            }
+            acc.actionsPlaced.add(citytile.cityid);
             if (!citytile.canBuildUnit()) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
               break;
             }
-            if (this.unitCapReached(team)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but unit cap reached. Build more cities!`;
-              break;
+            if (action === Game.ACTIONS.BUILD_CART) {
+              if (this.cartUnitCapReached(team, acc.cartsBuilt + 1)) {
+                valid = false;
+                errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but cart unit cap reached. Build more cities!`;
+                break;
+              }
+            } else {
+              if (this.workerUnitCapReached(team, acc.workersBuilt + 1)) {
+                valid = false;
+                errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but worker unit cap reached. Build more cities!`;
+                break;
+              }
             }
             if (valid) {
               if (action === Game.ACTIONS.BUILD_CART) {
+                acc.cartsBuilt += 1;
                 return new SpawnCartAction(action, team, x, y);
               } else if (action === Game.ACTIONS.BUILD_WORKER) {
+                acc.workersBuilt += 1;
                 return new SpawnWorkerAction(action, team, x, y);
               }
             }
@@ -209,6 +260,12 @@ export class Game {
               valid = false;
               break;
             }
+            if (acc.actionsPlaced.has(unitid)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
+              break;
+            }
+            acc.actionsPlaced.add(unitid);
             switch (direction) {
               case Game.DIRECTIONS.NORTH:
               case Game.DIRECTIONS.EAST:
@@ -270,6 +327,12 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} tried to run research at tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
               break;
             }
+            if (acc.actionsPlaced.has(citytile.cityid)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} sent an extra command. City can perform only one action at a time`;
+              break;
+            }
+            acc.actionsPlaced.add(citytile.cityid);
             if (valid) {
               return new ResearchAction(action, team, x, y);
             }
@@ -294,6 +357,12 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} does not own destination unit: ${srcID} for transfer`;
               break;
             }
+            if (acc.actionsPlaced.has(srcID)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} sent an extra command. City can perform only one action at a time`;
+              break;
+            }
+            acc.actionsPlaced.add(srcID);
             const srcUnit = teamState.units.get(srcID);
             const destUnit = teamState.units.get(destID);
             if (srcID === destID) {
@@ -345,14 +414,28 @@ export class Game {
     }
   }
 
-  unitCapReached(team: Unit.TEAM): boolean {
+  workerUnitCapReached(team: Unit.TEAM, offset = 0): boolean {
     let teamCityTilesCount = 0;
     this.cities.forEach((city) => {
       if (city.team === team) {
         teamCityTilesCount += city.citycells.length;
       }
     });
-    return this.state.teamStates[team].units.size >= teamCityTilesCount;
+    return (
+      this.state.teamStates[team].units.size + offset >= teamCityTilesCount
+    );
+  }
+
+  cartUnitCapReached(team: Unit.TEAM, offset = 0): boolean {
+    let teamCityTilesCount = 0;
+    this.cities.forEach((city) => {
+      if (city.team === team) {
+        teamCityTilesCount += city.citycells.length;
+      }
+    });
+    return (
+      this.state.teamStates[team].units.size + offset >= teamCityTilesCount
+    );
   }
 
   spawnWorker(team: Unit.TEAM, x: number, y: number): Worker {
@@ -774,3 +857,14 @@ export namespace Game {
     WEST = 'w',
   }
 }
+
+/**
+ * internal use only
+ */
+type _AccumulatedActionStats = {
+  [x in Unit.TEAM]: {
+    workersBuilt: number;
+    cartsBuilt: number;
+    actionsPlaced: Set<string>;
+  };
+};

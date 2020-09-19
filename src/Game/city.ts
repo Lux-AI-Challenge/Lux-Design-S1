@@ -81,17 +81,9 @@ export class CityTile extends Actionable {
     } else if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       if (action instanceof SpawnCartAction) {
-        if (game.unitCapReached(this.team)) {
-          throw new MatchWarn(`City tried to build cart but unit cap reached`);
-        }
         game.spawnCart(action.team, action.x, action.y);
         this.resetCooldown();
       } else if (action instanceof SpawnWorkerAction) {
-        if (game.unitCapReached(this.team)) {
-          throw new MatchWarn(
-            `City tried to build worker but unit cap reached`
-          );
-        }
         game.spawnWorker(action.team, action.x, action.y);
         this.resetCooldown();
       } else if (action instanceof ResearchAction) {
