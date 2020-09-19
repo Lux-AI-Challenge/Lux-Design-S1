@@ -1,8 +1,7 @@
 import { Match } from 'dimensions-ai';
 import fs from 'fs';
 import path from 'path';
-import { isMainThread } from 'worker_threads';
-import { Action } from '../Actions';
+import { Action, MoveAction } from '../Actions';
 import { Game } from '../Game';
 import { CityTile } from '../Game/city';
 import { GameMap } from '../GameMap';
@@ -18,18 +17,44 @@ export class Replay {
         amt: number;
       }>
     >;
+    initialUnits: Array<{
+      type: Unit.Type;
+      id: string;
+      x: number;
+      y: number;
+      team: number;
+    }>;
+    initialCityTiles: Array<{
+      cityid: string;
+      x: number;
+      y: number;
+      team: number;
+    }>;
     frames: Array<{
-      actions: Record<Game.ACTIONS, Array<Action>>;
-      spawnedObjects: Array<{
-        // 2 means city tile
-        type: 2 | Unit.Type;
-        //
+      actions: Record<Game.ACTIONS, Array<Action>> &
+        Record<
+          Game.ACTIONS.MOVE,
+          Array<Pick<MoveAction, 'action' | 'direction' | 'team' | 'unitid'>>
+        >;
+      spawnedCityTiles: Array<{
         x: number;
         y: number;
+        cityid: string;
+        //TODO this might not be needed;
+        team: number;
+      }>;
+      spawnedUnits: Array<{
+        type: Unit.Type;
+        x: number;
+        y: number;
+        id: string;
+        team: number;
       }>;
     }>;
   } = {
     map: [],
+    initialUnits: [],
+    initialCityTiles: [],
     frames: [],
   };
   public currentFrame = -1;
@@ -75,28 +100,71 @@ export class Replay {
         m: [],
         p: [],
       },
-      spawnedObjects: [],
+      spawnedUnits: [],
+      spawnedCityTiles: [],
     });
     this.currentFrame++;
   }
+
+  public writeInitialUnits(game: Game): void {
+    game.getTeamsUnits(Unit.TEAM.A).forEach((unit) => {
+      this.data.initialUnits.push({
+        id: unit.id,
+        x: unit.pos.x,
+        y: unit.pos.y,
+        team: unit.team,
+        type: unit.type,
+      });
+    });
+    game.cities.forEach((city) => {
+      city.citycells.forEach((cell) => {
+        const ct = cell.citytile;
+        this.data.initialCityTiles.push({
+          cityid: ct.cityid,
+          team: ct.team,
+          x: ct.pos.x,
+          y: ct.pos.y,
+        });
+      });
+    });
+  }
+
   public writeActions(actions: Map<Game.ACTIONS, Array<Action>>): void {
     this.data.frames[this.currentFrame].actions;
     actions.forEach((actions, key) => {
-      this.data.frames[this.currentFrame].actions[key] = actions;
+      if (key === Game.ACTIONS.MOVE) {
+        this.data.frames[this.currentFrame].actions[key] = actions.map(
+          (action: MoveAction) => {
+            return {
+              action: action.action,
+              team: action.team,
+              direction: action.direction,
+              unitid: action.unitid,
+            };
+          }
+        );
+      } else {
+        this.data.frames[this.currentFrame].actions[key] = actions;
+      }
     });
   }
   public writeSpawnedObject(obj: CityTile | Unit): void {
-    let type: Unit.Type | 2 = 0;
     if (obj instanceof CityTile) {
-      type = 2;
+      this.data.frames[this.currentFrame].spawnedCityTiles.push({
+        x: obj.pos.x,
+        y: obj.pos.y,
+        cityid: obj.cityid,
+        team: obj.team,
+      });
     } else {
-      type = obj.type;
+      this.data.frames[this.currentFrame].spawnedUnits.push({
+        type: obj.type,
+        x: obj.pos.x,
+        y: obj.pos.y,
+        id: obj.id,
+        team: obj.team,
+      });
     }
-    this.data.frames[this.currentFrame].spawnedObjects.push({
-      type,
-      x: obj.pos.x,
-      y: obj.pos.y,
-    });
   }
   public writeOut(): void {
     fs.appendFileSync(this.replayFilePath, JSON.stringify(this.data));

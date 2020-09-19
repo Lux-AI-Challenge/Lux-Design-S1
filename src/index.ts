@@ -45,17 +45,21 @@ export class LuxDesign extends Dimension.Design {
     if (state.configs.seed !== undefined) {
       state.rng = seedrandom(`${state.configs.seed}`);
     }
-    state.game = generateGame(state.configs);
+    const game = generateGame(state.configs);
+    state.game = game;
     if (state.configs.storeReplay) {
-      state.game.replay = new Replay(match);
+      game.replay = new Replay(match);
     }
     match.log.detail(state.configs);
     // store the state into the match so it can be used again in `update` and `getResults`
     match.state = state;
 
-    if (state.game.replay) {
-      state.game.replay.writeMap(state.game.map);
+    if (game.replay) {
+      game.replay.writeMap(state.game.map);
+      game.replay.initNextFrame();
+      game.replay.writeInitialUnits(game);
     }
+
     // send each agent their id
     for (let i = 0; i < match.agents.length; i++) {
       const agentID = match.agents[i].id;
