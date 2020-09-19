@@ -62,7 +62,7 @@ export class GameMap {
       cells.push(this.getCell(cell.pos.x + 1, cell.pos.y));
     }
     // SOUTH
-    if (cell.pos.x < this.height - 1) {
+    if (cell.pos.y < this.height - 1) {
       cells.push(this.getCell(cell.pos.x, cell.pos.y + 1));
     }
     // WEST

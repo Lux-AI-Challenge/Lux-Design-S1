@@ -8,7 +8,7 @@ const luxdim = Dimensions.create(design, {
   id: 'luxdim',
   defaultMatchConfigs: {},
   loggingLevel: Logger.LEVEL.INFO,
-  secureMode: true,
+  secureMode: false,
   observe: false,
   activateStation: false,
 });
@@ -21,9 +21,9 @@ const botList = [
   { file: testjs, name: 'better' },
 ];
 const run = async () => {
-  let match = await luxdim.createMatch(botList, {
-    storeErrorLogs: true,
-    storeReplay: false,
+  const match = await luxdim.createMatch(botList, {
+    storeErrorLogs: false,
+    storeReplay: true,
     seed: 1,
     debug: false,
     runProfiler: false,

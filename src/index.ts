@@ -17,7 +17,8 @@ import {
 import { Game } from './Game';
 import { Unit } from './Unit';
 import seedrandom from 'seedrandom';
-import { sleep } from './utils';
+import { deepCopy, deepMerge, sleep } from './utils';
+import { Replay } from './Replay';
 
 export class LuxDesign extends Dimension.Design {
   constructor(name: string) {
@@ -28,12 +29,12 @@ export class LuxDesign extends Dimension.Design {
   async initialize(match: Match): Promise<void> {
     // initialize with default state and configurations and default RNG
     const state: LuxMatchState = {
-      configs: { ...DEFAULT_CONFIGS },
+      configs: deepCopy(DEFAULT_CONFIGS),
       game: null,
       rng: seedrandom(`${Math.random()}`),
       profile: null,
     };
-    state.configs = { ...state.configs, ...match.configs };
+    state.configs = deepMerge(state.configs, match.configs);
     if (state.configs.runProfiler) {
       state.profile = {
         updateStage: [],
@@ -45,11 +46,16 @@ export class LuxDesign extends Dimension.Design {
       state.rng = seedrandom(`${state.configs.seed}`);
     }
     state.game = generateGame(state.configs);
-
+    if (state.configs.storeReplay) {
+      state.game.replay = new Replay(match);
+    }
     match.log.detail(state.configs);
     // store the state into the match so it can be used again in `update` and `getResults`
     match.state = state;
 
+    if (state.game.replay) {
+      state.game.replay.writeMap(state.game.map);
+    }
     // send each agent their id
     for (let i = 0; i < match.agents.length; i++) {
       const agentID = match.agents[i].id;
@@ -173,6 +179,10 @@ export class LuxDesign extends Dimension.Design {
     }
 
     match.log.detail('Processing turn ' + game.state.turn);
+    if (game.replay) {
+      game.replay.initNextFrame();
+    }
+
     // check if any agents are terminated and finish game if so
     const agentsTerminated = [false, false];
     match.agents.forEach((agent) => {
@@ -199,6 +209,9 @@ export class LuxDesign extends Dimension.Design {
       if (state.configs.debug) {
         await this.debugViewer(game);
       }
+      if (game.replay) {
+        game.replay.writeOut();
+      }
       return Match.Status.FINISHED;
     }
 
@@ -208,7 +221,7 @@ export class LuxDesign extends Dimension.Design {
       actionsMap.set(val, []);
     });
 
-    const accumulatedActionStats = Game._initialAccumulatedActionStats;
+    const accumulatedActionStats = game._genInitialAccumulatedActionStats();
     for (let i = 0; i < commands.length; i++) {
       // get the command and the agent that issued it and handle appropriately
       const agentID = commands[i].agentID;
@@ -268,6 +281,11 @@ export class LuxDesign extends Dimension.Design {
       game.getUnit(action.team, action.unitid).giveAction(action);
     });
 
+    // TODO: look into whether we need to store pruned actions or not. viewer can calculate collisions themselves probably
+    if (game.replay) {
+      game.replay.writeActions(actionsMap);
+    }
+
     // now we go through every actionable entity and execute actions
     game.cities.forEach((city) => {
       city.citycells.forEach((cellWithCityTile) => {
@@ -309,6 +327,9 @@ export class LuxDesign extends Dimension.Design {
     }
 
     if (this.matchOver(match)) {
+      if (game.replay) {
+        game.replay.writeOut();
+      }
       return Match.Status.FINISHED;
     }
 
@@ -461,7 +482,11 @@ export class LuxDesign extends Dimension.Design {
         { rank: 1, agentID: winningTeam },
         { rank: 2, agentID: losingTeam },
       ],
+      replayFile: null,
     };
+    if (game.replay) {
+      results.replayFile = game.replay.replayFilePath;
+    }
     return results;
   }
 

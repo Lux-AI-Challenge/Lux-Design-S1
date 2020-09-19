@@ -19,6 +19,7 @@ export interface LuxMatchState {
  * Configurations for a match
  */
 export interface LuxMatchConfigs {
+  storeReplay: boolean;
   mapType: GameMap.Types;
   width: number;
   height: number;

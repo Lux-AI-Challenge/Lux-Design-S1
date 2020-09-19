@@ -5,7 +5,7 @@ import { Game } from '.';
 import { MatchWarn } from 'dimensions-ai';
 import { Actionable } from '../Actionable';
 import { SpawnCartAction, SpawnWorkerAction, ResearchAction } from '../Actions';
-import { DEFAULT_CONFIGS } from '../defaults';
+import { Position } from '../GameMap/position';
 
 /**
  * A city is composed of adjacent city tiles of the same team
@@ -59,10 +59,17 @@ export class CityTile extends Actionable {
   /** cooldown for this city tile before it can build or research */
   public cooldown = 0;
 
+  public pos: Position = null;
+
   /** dynamically updated counter for number of friendly adjacent city tiles */
   public adjacentCityTiles = 0;
   constructor(public team: Unit.TEAM, configs: LuxMatchConfigs) {
     super(configs);
+  }
+
+  // for validation purposes
+  getTileID(): string {
+    return `${this.cityid}_${this.pos.x}_${this.pos.y}`;
   }
 
   canBuildUnit(): boolean {
@@ -74,17 +81,15 @@ export class CityTile extends Actionable {
   }
 
   turn(game: Game): void {
-    if (this.currentActions.length > 1) {
-      throw new MatchWarn(
-        'Too many commands. City can perform only one action at a time'
-      );
-    } else if (this.currentActions.length === 1) {
+    if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       if (action instanceof SpawnCartAction) {
-        game.spawnCart(action.team, action.x, action.y);
+        const cart = game.spawnCart(action.team, action.x, action.y);
+        game.replay.writeSpawnedObject(cart);
         this.resetCooldown();
       } else if (action instanceof SpawnWorkerAction) {
-        game.spawnWorker(action.team, action.x, action.y);
+        const worker = game.spawnWorker(action.team, action.x, action.y);
+        game.replay.writeSpawnedObject(worker);
         this.resetCooldown();
       } else if (action instanceof ResearchAction) {
         this.resetCooldown();

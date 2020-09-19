@@ -179,7 +179,12 @@ export class Worker extends Unit {
         );
         this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
       } else if (action instanceof SpawnCityAction) {
-        game.spawnCityTile(action.team, this.pos.x, this.pos.y);
+        const citytile = game.spawnCityTile(
+          action.team,
+          this.pos.x,
+          this.pos.y
+        );
+        game.replay.writeSpawnedObject(citytile);
         this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
       } else if (action instanceof PillageAction) {
         const cell = game.map.getCellByPos(this.pos);

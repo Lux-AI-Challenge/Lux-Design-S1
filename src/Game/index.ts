@@ -18,6 +18,7 @@ import {
   PillageAction,
 } from '../Actions';
 import { Cell } from '../GameMap/cell';
+import { Replay } from '../Replay';
 
 /**
  * Holds basically all game data, including the map.
@@ -31,6 +32,8 @@ export class Game {
    * The actual map
    */
   public map: GameMap;
+
+  public replay: Replay;
 
   /**
    * Map a internal city id to the array of cells that are city tiles part of the same city
@@ -206,25 +209,25 @@ export class Game {
             }
 
             const citytile = cell.citytile;
-            if (acc.actionsPlaced.has(citytile.cityid)) {
+            if (acc.actionsPlaced.has(citytile.getTileID())) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} sent an extra command. City can perform only one action at a time`;
               break;
             }
-            acc.actionsPlaced.add(citytile.cityid);
+            acc.actionsPlaced.add(citytile.getTileID());
             if (!citytile.canBuildUnit()) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
               break;
             }
             if (action === Game.ACTIONS.BUILD_CART) {
-              if (this.cartUnitCapReached(team, acc.cartsBuilt + 1)) {
+              if (this.cartUnitCapReached(team, acc.cartsBuilt)) {
                 valid = false;
                 errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but cart unit cap reached. Build more cities!`;
                 break;
               }
             } else {
-              if (this.workerUnitCapReached(team, acc.workersBuilt + 1)) {
+              if (this.workerUnitCapReached(team, acc.workersBuilt)) {
                 valid = false;
                 errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but worker unit cap reached. Build more cities!`;
                 break;
@@ -327,12 +330,12 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} tried to run research at tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
               break;
             }
-            if (acc.actionsPlaced.has(citytile.cityid)) {
+            if (acc.actionsPlaced.has(citytile.getTileID())) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} sent an extra command. City can perform only one action at a time`;
               break;
             }
-            acc.actionsPlaced.add(citytile.cityid);
+            acc.actionsPlaced.add(citytile.getTileID());
             if (valid) {
               return new ResearchAction(action, team, x, y);
             }
@@ -359,7 +362,7 @@ export class Game {
             }
             if (acc.actionsPlaced.has(srcID)) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} sent an extra command. City can perform only one action at a time`;
+              errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
               break;
             }
             acc.actionsPlaced.add(srcID);
@@ -409,7 +412,9 @@ export class Game {
           valid = false;
       }
       if (valid === false) {
-        throw new MatchWarn(errormsg + `; cmd: ${cmd.command}`);
+        throw new MatchWarn(
+          errormsg + `; turn ${this.state.turn}; cmd: ${cmd.command}`
+        );
       }
     }
   }

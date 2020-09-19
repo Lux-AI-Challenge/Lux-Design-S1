@@ -39,6 +39,7 @@ export class Cell {
   /** Marks this as a city tile with the specified team */
   setCityTile(team: Unit.TEAM, cityid: string): void {
     this.citytile = new CityTile(team, this.configs);
+    this.citytile.pos = this.pos;
     this.citytile.cityid = cityid;
   }
 
