@@ -20,6 +20,7 @@ export const generateGame = (
   const map = game.map;
   const width = map.width;
   const height = map.height;
+
   if (configs.mapType === GameMap.Types.DEBUG) {
     // for testing, hardcode wood and coal
     const woodCoords = [

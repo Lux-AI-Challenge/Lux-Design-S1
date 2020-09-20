@@ -1,21 +1,21 @@
 import { Design, Match, Tournament, MatchEngine } from 'dimensions-ai';
 import { LuxMatchResults, LuxMatchState } from './types';
 import { Unit } from './Unit';
-import { LuxDesignMock } from './mock';
+import { LuxDesignLogic } from './logic';
 
 export class LuxDesign extends Design {
   constructor(name: string) {
     super(name);
   }
   async initialize(match: Match): Promise<void> {
-    return LuxDesignMock.initialize(match);
+    return LuxDesignLogic.initialize(match);
   }
 
   async update(
     match: Match,
     commands: Array<MatchEngine.Command>
   ): Promise<Match.Status> {
-    return LuxDesignMock.update(match, commands);
+    return LuxDesignLogic.update(match, commands);
   }
 
   // Result calculation of concluded match. Should return the results of a match after it finishes

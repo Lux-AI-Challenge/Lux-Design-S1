@@ -18,7 +18,7 @@ import seedrandom from 'seedrandom';
 import { deepCopy, deepMerge, sleep } from './utils';
 import { Replay } from './Replay';
 
-export class LuxDesignMock {
+export class LuxDesignLogic {
   // Initialization step of each match
   static async initialize(match: Match): Promise<void> {
     // initialize with default state and configurations and default RNG
@@ -39,7 +39,13 @@ export class LuxDesignMock {
     if (state.configs.seed !== undefined) {
       state.rng = seedrandom(`${state.configs.seed}`);
     }
-    const game = generateGame(state.configs);
+    let game: Game;
+    if (state.configs.preLoadedGame !== undefined) {
+      game = state.configs.preLoadedGame;
+    } else {
+      game = generateGame(state.configs);
+    }
+
     state.game = game;
     if (state.configs.storeReplay) {
       game.replay = new Replay(match);
@@ -209,7 +215,7 @@ export class LuxDesignMock {
       if (game.replay) {
         game.replay.writeOut();
       }
-      return Match.Status.FINISHED;
+      return 'finished' as Match.Status.FINISHED;
     }
 
     // loop over commands and validate and map into internal action representations
@@ -327,7 +333,7 @@ export class LuxDesignMock {
       if (game.replay) {
         game.replay.writeOut();
       }
-      return Match.Status.FINISHED;
+      return 'finished' as Match.Status.FINISHED;
     }
 
     /** Agent Update Section */
