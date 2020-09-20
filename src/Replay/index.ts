@@ -31,35 +31,12 @@ export class Replay {
       team: number;
     }>;
     allCommands: Array<Array<MatchEngine.Command>>;
-    frames: Array<{
-      actions: Record<Game.ACTIONS, Array<Action>> &
-        Record<
-          Game.ACTIONS.MOVE,
-          Array<Pick<MoveAction, 'action' | 'direction' | 'team' | 'unitid'>>
-        >;
-      spawnedCityTiles: Array<{
-        x: number;
-        y: number;
-        cityid: string;
-        //TODO this might not be needed;
-        team: number;
-      }>;
-      spawnedUnits: Array<{
-        type: Unit.Type;
-        x: number;
-        y: number;
-        id: string;
-        team: number;
-      }>;
-    }>;
   } = {
     map: [],
     allCommands: [],
     initialUnits: [],
     initialCityTiles: [],
-    frames: [],
   };
-  public currentFrame = -1;
   constructor(match: Match) {
     const d = new Date().valueOf();
     const replayFileName = `${d}_${match.id}.luxr`;
@@ -90,22 +67,6 @@ export class Replay {
         })
       );
     }
-  }
-  public initNextFrame(): void {
-    this.data.frames.push({
-      actions: {
-        bc: [],
-        bcity: [],
-        bw: [],
-        r: [],
-        t: [],
-        m: [],
-        p: [],
-      },
-      spawnedUnits: [],
-      spawnedCityTiles: [],
-    });
-    this.currentFrame++;
   }
 
   public writeInitialUnits(game: Game): void {
@@ -138,44 +99,6 @@ export class Replay {
         });
       });
     });
-  }
-
-  public writeActions(actions: Map<Game.ACTIONS, Array<Action>>): void {
-    this.data.frames[this.currentFrame].actions;
-    actions.forEach((actions, key) => {
-      if (key === Game.ACTIONS.MOVE) {
-        this.data.frames[this.currentFrame].actions[key] = actions.map(
-          (action: MoveAction) => {
-            return {
-              action: action.action,
-              team: action.team,
-              direction: action.direction,
-              unitid: action.unitid,
-            };
-          }
-        );
-      } else {
-        this.data.frames[this.currentFrame].actions[key] = actions;
-      }
-    });
-  }
-  public writeSpawnedObject(obj: CityTile | Unit): void {
-    // if (obj instanceof CityTile) {
-    //   this.data.frames[this.currentFrame].spawnedCityTiles.push({
-    //     x: obj.pos.x,
-    //     y: obj.pos.y,
-    //     cityid: obj.cityid,
-    //     team: obj.team,
-    //   });
-    // } else {
-    //   this.data.frames[this.currentFrame].spawnedUnits.push({
-    //     type: obj.type,
-    //     x: obj.pos.x,
-    //     y: obj.pos.y,
-    //     id: obj.id,
-    //     team: obj.team,
-    //   });
-    // }
   }
   public writeOut(): void {
     fs.appendFileSync(this.replayFilePath, JSON.stringify(this.data));

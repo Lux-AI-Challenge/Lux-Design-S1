@@ -84,12 +84,10 @@ export class CityTile extends Actionable {
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       if (action instanceof SpawnCartAction) {
-        const cart = game.spawnCart(action.team, action.x, action.y);
-        game.replay.writeSpawnedObject(cart);
+        game.spawnCart(action.team, action.x, action.y);
         this.resetCooldown();
       } else if (action instanceof SpawnWorkerAction) {
-        const worker = game.spawnWorker(action.team, action.x, action.y);
-        game.replay.writeSpawnedObject(worker);
+        game.spawnWorker(action.team, action.x, action.y);
         this.resetCooldown();
       } else if (action instanceof ResearchAction) {
         this.resetCooldown();

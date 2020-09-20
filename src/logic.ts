@@ -12,7 +12,7 @@ import {
   MoveAction,
   PillageAction,
 } from './Actions';
-import { Game } from './game';
+import { Game } from './Game';
 import { Unit } from './Unit';
 import seedrandom from 'seedrandom';
 import { deepCopy, deepMerge, sleep } from './utils';
@@ -182,7 +182,6 @@ export class LuxDesignLogic {
 
     match.log.detail('Processing turn ' + game.state.turn);
     if (game.replay) {
-      // game.replay.initNextFrame();
       game.replay.data.allCommands.push(commands);
     }
 
@@ -283,11 +282,6 @@ export class LuxDesignLogic {
     prunedMoveActions.forEach((action) => {
       game.getUnit(action.team, action.unitid).giveAction(action);
     });
-
-    // TODO: look into whether we need to store pruned actions or not. viewer can calculate collisions themselves probably
-    if (game.replay) {
-      // game.replay.writeActions(actionsMap);
-    }
 
     // now we go through every actionable entity and execute actions
     game.cities.forEach((city) => {

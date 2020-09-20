@@ -128,6 +128,7 @@ describe('Test Game', () => {
       const init = game._genInitialAccumulatedActionStats();
       game.spawnCityTile(0, 0, 0);
       game.spawnCart(0, 14, 14);
+      game.spawnCart(0, 14, 15);
       game.validateCommand(
         {
           command: 'bc 2 2',
@@ -211,6 +212,7 @@ describe('Test Game', () => {
       const init = game._genInitialAccumulatedActionStats();
       game.spawnCityTile(0, 0, 0);
       game.spawnWorker(0, 14, 14);
+      game.spawnWorker(0, 14, 15);
       game.validateCommand(
         {
           command: 'bw 2 2',
