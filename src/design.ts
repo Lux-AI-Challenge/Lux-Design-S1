@@ -1,6 +1,4 @@
-import * as Dimension from 'dimensions-ai';
-import Match = Dimension.Match;
-import Tournament = Dimension.Tournament;
+import { Design, Match, Tournament, MatchEngine } from 'dimensions-ai';
 import { LuxMatchResults, LuxMatchState } from './types';
 import { DEFAULT_CONFIGS } from './defaults';
 import { generateGame } from './Game/gen';
@@ -20,7 +18,7 @@ import seedrandom from 'seedrandom';
 import { deepCopy, deepMerge, sleep } from './utils';
 import { Replay } from './Replay';
 
-export class LuxDesign extends Dimension.Design {
+export class LuxDesign extends Design {
   constructor(name: string) {
     super(name);
   }
@@ -173,7 +171,7 @@ export class LuxDesign extends Dimension.Design {
   // Update step of each match, called whenever the match moves forward by a single unit in time (1 timeStep)
   async update(
     match: Match,
-    commands: Array<Dimension.MatchEngine.Command>
+    commands: Array<MatchEngine.Command>
   ): Promise<Match.Status> {
     const state: LuxMatchState = match.state;
     const game = state.game;

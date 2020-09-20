@@ -116,6 +116,15 @@ export class Replay {
         type: unit.type,
       });
     });
+    game.getTeamsUnits(Unit.TEAM.B).forEach((unit) => {
+      this.data.initialUnits.push({
+        id: unit.id,
+        x: unit.pos.x,
+        y: unit.pos.y,
+        team: unit.team,
+        type: unit.type,
+      });
+    });
     game.cities.forEach((city) => {
       city.citycells.forEach((cell) => {
         const ct = cell.citytile;
