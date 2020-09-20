@@ -54,7 +54,6 @@ export class LuxDesign extends Design {
 
     if (game.replay) {
       game.replay.writeMap(state.game.map);
-      game.replay.initNextFrame();
       game.replay.writeInitialUnits(game);
     }
 

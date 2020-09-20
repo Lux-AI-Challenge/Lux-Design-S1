@@ -77,7 +77,7 @@ export const generateGame = (
     game.spawnWorker(Unit.TEAM.B, width - 3, 2);
 
     game.spawnCart(Unit.TEAM.A, 1, 2);
-    game.spawnCart(Unit.TEAM.B, width - 3, 2);
+    game.spawnCart(Unit.TEAM.B, width - 2, 2);
   }
 
   return game;
