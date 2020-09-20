@@ -443,17 +443,23 @@ export class Game {
     );
   }
 
-  spawnWorker(team: Unit.TEAM, x: number, y: number): Worker {
+  spawnWorker(team: Unit.TEAM, x: number, y: number, unitid?: string): Worker {
     const cell = this.map.getCell(x, y);
     const unit = new Worker(x, y, team, this.configs);
+    if (unitid) {
+      unit.id = unitid;
+    }
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
     return unit;
   }
 
-  spawnCart(team: Unit.TEAM, x: number, y: number): Cart {
+  spawnCart(team: Unit.TEAM, x: number, y: number, unitid?: string): Cart {
     const cell = this.map.getCell(x, y);
     const unit = new Cart(x, y, team, this.configs);
+    if (unitid) {
+      unit.id = unitid;
+    }
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
     return unit;
@@ -462,7 +468,12 @@ export class Game {
   /**
    * Spawn city tile for a team at (x, y)
    */
-  spawnCityTile(team: Unit.TEAM, x: number, y: number): CityTile {
+  spawnCityTile(
+    team: Unit.TEAM,
+    x: number,
+    y: number,
+    cityid?: string
+  ): CityTile {
     const cell = this.map.getCell(x, y);
 
     // now update the cities field accordingly
@@ -483,7 +494,9 @@ export class Game {
     // if no adjacent city cells of same team, generate new city
     if (adjSameTeamCityTiles.length === 0) {
       const city = new City(team, this.configs);
-
+      if (cityid) {
+        city.id = cityid;
+      }
       cell.setCityTile(team, city.id);
       city.addCityTile(cell);
       this.cities.set(city.id, city);
