@@ -1,4 +1,5 @@
 export { LuxDesign } from './design';
+export { LuxDesignMock } from './mock';
 export * from './Game';
 export * from './Game/city';
 export * from './Actionable';
