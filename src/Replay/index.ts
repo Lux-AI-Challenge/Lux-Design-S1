@@ -1,4 +1,4 @@
-import { Match } from 'dimensions-ai';
+import { Match, MatchEngine } from 'dimensions-ai';
 import fs from 'fs';
 import path from 'path';
 import { Action, MoveAction } from '../Actions';
@@ -30,6 +30,7 @@ export class Replay {
       y: number;
       team: number;
     }>;
+    allCommands: Array<Array<MatchEngine.Command>>;
     frames: Array<{
       actions: Record<Game.ACTIONS, Array<Action>> &
         Record<
@@ -53,6 +54,7 @@ export class Replay {
     }>;
   } = {
     map: [],
+    allCommands: [],
     initialUnits: [],
     initialCityTiles: [],
     frames: [],
@@ -158,22 +160,22 @@ export class Replay {
     });
   }
   public writeSpawnedObject(obj: CityTile | Unit): void {
-    if (obj instanceof CityTile) {
-      this.data.frames[this.currentFrame].spawnedCityTiles.push({
-        x: obj.pos.x,
-        y: obj.pos.y,
-        cityid: obj.cityid,
-        team: obj.team,
-      });
-    } else {
-      this.data.frames[this.currentFrame].spawnedUnits.push({
-        type: obj.type,
-        x: obj.pos.x,
-        y: obj.pos.y,
-        id: obj.id,
-        team: obj.team,
-      });
-    }
+    // if (obj instanceof CityTile) {
+    //   this.data.frames[this.currentFrame].spawnedCityTiles.push({
+    //     x: obj.pos.x,
+    //     y: obj.pos.y,
+    //     cityid: obj.cityid,
+    //     team: obj.team,
+    //   });
+    // } else {
+    //   this.data.frames[this.currentFrame].spawnedUnits.push({
+    //     type: obj.type,
+    //     x: obj.pos.x,
+    //     y: obj.pos.y,
+    //     id: obj.id,
+    //     team: obj.team,
+    //   });
+    // }
   }
   public writeOut(): void {
     fs.appendFileSync(this.replayFilePath, JSON.stringify(this.data));
