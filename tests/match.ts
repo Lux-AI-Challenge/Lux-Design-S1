@@ -27,7 +27,7 @@ const run = async () => {
     seed: 1,
     debug: true,
     runProfiler: false,
-    debugDelay: 100,
+    debugDelay: 50,
     engineOptions: {
       noStdErr: false,
     },

@@ -5,7 +5,7 @@ import { LuxMatchConfigs } from '../types';
 import { Position } from './position';
 
 export class GameMap {
-  public resourcesMap: Set<Cell> = new Set();
+  public resources: Array<Cell> = [];
   public height: number;
   public width: number;
   /**
@@ -29,6 +29,13 @@ export class GameMap {
       }
     }
   }
+  // make resources array order determinstic
+  // TODO: should sort by distance to center so resource distribution is even on both sides of halves
+  sortResourcesDeterministically(): void {
+    this.resources.sort((a, b) => {
+      return a.pos.x * this.width + a.pos.y - (b.pos.x * this.width + b.pos.y);
+    });
+  }
 
   addResource(
     x: number,
@@ -38,7 +45,7 @@ export class GameMap {
   ): Cell {
     const cell = this.getCell(x, y);
     cell.setResource(resourceType, amount);
-    this.resourcesMap.add(cell);
+    this.resources.push(cell);
     return cell;
   }
   getCellByPos(pos: Position): Cell {

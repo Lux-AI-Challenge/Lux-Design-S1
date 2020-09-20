@@ -549,6 +549,7 @@ export class Game {
    *
    * This function is called on cells in the order of uranium, coal, then wood resource deposits
    *
+   *
    * @param cell - a cell with a resource
    */
   handleResourceRelease(originalCell: Cell): void {
@@ -596,26 +597,22 @@ export class Game {
       workersToReceiveResources.sort(
         (a, b) => a.getCargoSpaceLeft() - b.getCargoSpaceLeft()
       );
+
       workersToReceiveResources.forEach((worker, i) => {
         const spaceLeft = worker.getCargoSpaceLeft();
         const maxReceivable =
           amountToDistribute / (workersToReceiveResources.length - i);
 
         const distributeAmount = Math.min(spaceLeft, maxReceivable, rate);
-
         // we give workers a floored amount for sake of integers and effectiely waste the remainder
         worker.cargo[type] += Math.floor(distributeAmount);
+
         amountDistributed += distributeAmount;
         // subtract how much was given.
         amountToDistribute -= distributeAmount;
       });
 
       originalCell.resource.amount -= amountDistributed;
-      if (originalCell.resource.amount <= 0) {
-        // remove cell from resources map and remove from cell
-        this.map.resourcesMap.delete(originalCell);
-        originalCell.resource = null;
-      }
     }
   }
 

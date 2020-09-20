@@ -17,6 +17,7 @@ import { Unit } from './Unit';
 import seedrandom from 'seedrandom';
 import { deepCopy, deepMerge, sleep } from './utils';
 import { Replay } from './Replay';
+import { Cell } from './GameMap/cell';
 
 export class LuxDesignLogic {
   // Initialization step of each match
@@ -54,6 +55,8 @@ export class LuxDesignLogic {
     // store the state into the match so it can be used again in `update` and `getResults`
     match.state = state;
 
+    game.map.sortResourcesDeterministically();
+    console.log(game.map.resources);
     if (game.replay) {
       game.replay.writeMap(state.game.map);
       game.replay.writeInitialUnits(game);
@@ -114,7 +117,7 @@ export class LuxDesignLogic {
     });
 
     // send resource information
-    map.resourcesMap.forEach((cell) => {
+    map.resources.forEach((cell) => {
       promises.push(
         match.sendAll(
           `r ${cell.resource.type} ${cell.pos.x} ${cell.pos.y} ${cell.resource.amount}`
@@ -241,9 +244,19 @@ export class LuxDesignLogic {
     }
 
     // first distribute all resources
-    game.map.resourcesMap.forEach((cell) => {
+    game.map.resources.forEach((cell) => {
       game.handleResourceRelease(cell);
     });
+
+    // remove resources that are depleted from map
+    const newResourcesMap: Array<Cell> = [];
+    for (let i = 0; i < game.map.resources.length; i++) {
+      const cell = game.map.resources[i];
+      if (cell.resource.amount > 0) {
+        newResourcesMap.push(cell);
+      }
+    }
+    game.map.resources = newResourcesMap;
 
     // give units and city tiles their validated actions to use
     actionsMap
