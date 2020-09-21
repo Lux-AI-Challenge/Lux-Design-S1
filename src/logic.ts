@@ -56,7 +56,6 @@ export class LuxDesignLogic {
     match.state = state;
 
     game.map.sortResourcesDeterministically();
-    console.log(game.map.resources);
     if (game.replay) {
       game.replay.writeMap(state.game.map);
       game.replay.writeInitialUnits(game);

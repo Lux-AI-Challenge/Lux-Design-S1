@@ -31,7 +31,7 @@ const run = async () => {
     engineOptions: {
       noStdErr: false,
     },
-    loggingLevel: Logger.LEVEL.INFO,
+    loggingLevel: Logger.LEVEL.NONE,
     mapType: 'debug',
   });
 

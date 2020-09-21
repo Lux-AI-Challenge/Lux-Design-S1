@@ -58,7 +58,6 @@ export const generateGame = (
 
     const uCoords = [
       [9, 7],
-      [8, 8],
       [7, 8],
     ];
 
@@ -66,9 +65,6 @@ export const generateGame = (
       map.addResource(c[0], c[1], Resource.Types.URANIUM, 30);
       map.addResource(width - c[0] - 1, c[1], Resource.Types.URANIUM, 30);
     }
-
-    map.addResource(7, 8, Resource.Types.URANIUM, 20);
-    map.addResource(8, 8, Resource.Types.URANIUM, 20);
 
     // hardcode initial city tiles
     game.spawnCityTile(Unit.TEAM.A, 2, 1);
