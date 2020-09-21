@@ -11,7 +11,6 @@ import { Position } from '../GameMap/position';
  * A city is composed of adjacent city tiles of the same team
  */
 export class City {
-  static globalIdCount = 0;
   /**
    * fuel stored in city
    */
@@ -24,10 +23,10 @@ export class City {
 
   constructor(
     public team: Unit.TEAM,
-    public configs: Readonly<LuxMatchConfigs>
+    public configs: Readonly<LuxMatchConfigs>,
+    idcount: number
   ) {
-    this.id = 'c_' + City.globalIdCount;
-    City.globalIdCount++;
+    this.id = 'c_' + idcount;
   }
 
   // TODO: Add adjacency bonuses

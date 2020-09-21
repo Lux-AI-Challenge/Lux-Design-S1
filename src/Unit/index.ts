@@ -13,7 +13,6 @@ import { Position } from '../GameMap/position';
 
 export abstract class Unit extends Actionable {
   public id: string;
-  static globalIdCount = 0;
   public cooldown = 0;
   public cargo: Unit.Cargo = {
     wood: 0,
@@ -26,11 +25,11 @@ export abstract class Unit extends Actionable {
     y: number,
     public type: Unit.Type,
     public team: Unit.TEAM,
-    configs: LuxMatchConfigs
+    configs: LuxMatchConfigs,
+    idcount: number
   ) {
     super(configs);
-    this.id = 'u_' + Unit.globalIdCount;
-    Unit.globalIdCount++;
+    this.id = 'u_' + idcount;
     this.pos = new Position(x, y);
   }
   public getCargoSpaceLeft(): number {
@@ -104,8 +103,14 @@ export namespace Unit {
 }
 
 export class Cart extends Unit {
-  constructor(x: number, y: number, team: Unit.TEAM, configs: LuxMatchConfigs) {
-    super(x, y, Unit.Type.CART, team, configs);
+  constructor(
+    x: number,
+    y: number,
+    team: Unit.TEAM,
+    configs: LuxMatchConfigs,
+    idcount: number
+  ) {
+    super(x, y, Unit.Type.CART, team, configs, idcount);
   }
   getLightUpkeep(): number {
     return this.configs.parameters.LIGHT_UPKEEP.WORKER;
@@ -151,8 +156,14 @@ export class Cart extends Unit {
 }
 
 export class Worker extends Unit {
-  constructor(x: number, y: number, team: Unit.TEAM, configs: LuxMatchConfigs) {
-    super(x, y, Unit.Type.WORKER, team, configs);
+  constructor(
+    x: number,
+    y: number,
+    team: Unit.TEAM,
+    configs: LuxMatchConfigs,
+    idcount: number
+  ) {
+    super(x, y, Unit.Type.WORKER, team, configs, idcount);
   }
   getLightUpkeep(): number {
     return this.configs.parameters.LIGHT_UPKEEP.WORKER;

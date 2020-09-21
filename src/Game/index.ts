@@ -35,6 +35,9 @@ export class Game {
 
   public replay: Replay;
 
+  public globalCityIDCount = 0;
+  public globalUnitIDCount = 0;
+
   /**
    * Map a internal city id to the array of cells that are city tiles part of the same city
    */
@@ -445,7 +448,7 @@ export class Game {
 
   spawnWorker(team: Unit.TEAM, x: number, y: number, unitid?: string): Worker {
     const cell = this.map.getCell(x, y);
-    const unit = new Worker(x, y, team, this.configs);
+    const unit = new Worker(x, y, team, this.configs, this.globalUnitIDCount++);
     if (unitid) {
       unit.id = unitid;
     }
@@ -456,7 +459,7 @@ export class Game {
 
   spawnCart(team: Unit.TEAM, x: number, y: number, unitid?: string): Cart {
     const cell = this.map.getCell(x, y);
-    const unit = new Cart(x, y, team, this.configs);
+    const unit = new Cart(x, y, team, this.configs, this.globalUnitIDCount++);
     if (unitid) {
       unit.id = unitid;
     }
@@ -493,7 +496,7 @@ export class Game {
 
     // if no adjacent city cells of same team, generate new city
     if (adjSameTeamCityTiles.length === 0) {
-      const city = new City(team, this.configs);
+      const city = new City(team, this.configs, this.globalCityIDCount++);
       if (cityid) {
         city.id = cityid;
       }
