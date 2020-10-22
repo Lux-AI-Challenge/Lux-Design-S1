@@ -6,7 +6,8 @@ import { GameMap } from '../GameMap';
 import { Cart, Worker } from '../Unit';
 import { LuxMatchConfigs } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
-import { MatchEngine, MatchWarn, Match } from 'dimensions-ai';
+import { MatchWarn } from 'dimensions-ai/lib/main/DimensionError';
+import { MatchEngine, Match } from 'dimensions-ai';
 import {
   Action,
   SpawnCartAction,

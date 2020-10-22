@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "es6",
+    "module": "es6",
     "moduleResolution": "node",
-    "outDir": "lib/",
+    "outDir": "lib/es6",
     "sourceMap": true,
     "declaration": true,
     "allowJs": true,
@@ -15,7 +15,6 @@
     ]
   },
   "include": [
-    "src/**/*",
-    "tests/**/*"
+    "src/**/*"
   ]
 }

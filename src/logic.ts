@@ -190,6 +190,7 @@ export class LuxDesignLogic {
     // check if any agents are terminated and finish game if so
     const agentsTerminated = [false, false];
     match.agents.forEach((agent) => {
+      // FRONTEND needs to pass in psuedo isTerminated() function that returns true on the turn an agent terminated itself
       if (agent.isTerminated()) {
         agentsTerminated[agent.id] = true;
       }
