@@ -1,6 +1,6 @@
 const Dimensions = require('dimensions-ai');
 // test running a match
-const { LuxDesign } = require('../lib');
+const { LuxDesign } = require('../lib/es5');
 const Logger = Dimensions.Logger;
 const design = new LuxDesign('Lux Design');
 const luxdim = Dimensions.create(design, {

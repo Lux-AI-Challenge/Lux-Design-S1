@@ -32,7 +32,7 @@
   "dependencies": {
     "@types/seedrandom": "^2.4.28",
     "colors": "^1.4.0",
-    "dimensions-ai": "^4.6.8",
+    "dimensions-ai": "^4.6.13",
     "nanoid": "^3.1.12",
     "seedrandom": "^3.0.5"
   },
