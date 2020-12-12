@@ -29,6 +29,7 @@ export interface LuxMatchConfigs {
   debug?: boolean;
   runProfiler: boolean;
   debugDelay: number;
+  debugAnnotations: boolean;
   seed: number | undefined;
   parameters: {
     DAY_LENGTH: number;

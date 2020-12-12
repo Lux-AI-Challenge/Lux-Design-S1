@@ -190,6 +190,19 @@ export class LuxDesignLogic {
     }
 
     match.log.detail('Processing turn ' + game.state.turn);
+
+    if (!game.configs.debugAnnotations) {
+      // filter out all debug commands
+      commands = commands.filter((cmd) => {
+        const strs = cmd.command.split(' ');
+        const action = strs[0];
+        if (action[0] === 'd') {
+          return false;
+        }
+        return true;
+      }); 
+    }
+
     if (game.replay) {
       game.replay.data.allCommands.push(commands);
     }

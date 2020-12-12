@@ -10,5 +10,6 @@ export const DEFAULT_CONFIGS: LuxMatchConfigs = {
   debugDelay: 500,
   runProfiler: false,
   compressReplay: false,
+  debugAnnotations: false,
   parameters: GAME_CONSTANTS.PARAMETERS,
 };

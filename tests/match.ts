@@ -31,6 +31,7 @@ const run = async () => {
     height: 16,
     runProfiler: true,
     debugDelay: 150,
+    debugAnnotations: true,
     engineOptions: {
       noStdErr: false,
     },

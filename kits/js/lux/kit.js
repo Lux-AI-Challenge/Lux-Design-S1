@@ -178,6 +178,19 @@ class Agent {
   }
 }
 
+const annotate = {
+  circle: (x, y) => {
+    return `dc ${x} ${y}`
+  },
+  x: (x, y) => {
+    return `dc ${x} ${y}`
+  },
+  line: (x1, y1, x2, y2) => {
+    return `dc ${x1} ${y1} ${x2} ${y2}`
+  }
+}
+
 module.exports = {
-  Agent
+  Agent,
+  annotate
 };

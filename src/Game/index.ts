@@ -138,6 +138,11 @@ export class Game {
       const acc = accumulatedActionStats[team];
       let errormsg = `Agent ${cmd.agentID} sent invalid command`;
       switch (action) {
+        case Game.ACTIONS.DEBUG_ANNOTATE_CIRCLE:
+        case Game.ACTIONS.DEBUG_ANNOTATION_LINE:
+        case Game.ACTIONS.DEBUG_ANNOTATE_X:
+          // these actions go directly into the replay file if debugAnnotations is on
+          return null;
         case Game.ACTIONS.PILLAGE:
           if (strs.length === 2) {
             const unitid = strs[1];
@@ -872,6 +877,13 @@ export namespace Game {
 
     /** formatted as `p unitid`. Unit with the given unitid must be owned and pillages the tile they are on */
     PILLAGE = 'p',
+
+    /** formatted as dc <x> <y> */
+    DEBUG_ANNOTATE_CIRCLE = 'dc',
+    /** fomatted as dx <x> <y> */
+    DEBUG_ANNOTATE_X = 'dx',
+    /** fomatted as dx <x1> <y1> <x2> <y2> */
+    DEBUG_ANNOTATION_LINE = 'dl',
   }
 
   export enum DIRECTIONS {
