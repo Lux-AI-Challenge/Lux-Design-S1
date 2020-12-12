@@ -1,4 +1,4 @@
-import * as Dimensions from 'dimensions-ai';
+import * as Dimensions from 'dimensions-ai/lib/main';
 const { Logger, Tournament, GCloudDataStore, GCloudStorage } = Dimensions;
 import { LuxDesign } from '@lux-ai/2020-challenge';
 
