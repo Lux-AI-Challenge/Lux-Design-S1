@@ -5,6 +5,7 @@ coverage
 
 # we have mac users
 .DS_Store
+
 errorlogs
 replays
 local
