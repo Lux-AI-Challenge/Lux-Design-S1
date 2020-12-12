@@ -183,10 +183,10 @@ const annotate = {
     return `dc ${x} ${y}`
   },
   x: (x, y) => {
-    return `dc ${x} ${y}`
+    return `dx ${x} ${y}`
   },
   line: (x1, y1, x2, y2) => {
-    return `dc ${x1} ${y1} ${x2} ${y2}`
+    return `dl ${x1} ${y1} ${x2} ${y2}`
   }
 }
 
