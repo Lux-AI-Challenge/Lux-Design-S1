@@ -33,7 +33,7 @@ describe('Test resource collection and distribution', () => {
     game.handleResourceRelease(cell);
     expect(w1.cargo.wood).to.equal(Math.floor(rates.WOOD / 2));
     expect(w2.cargo.wood).to.equal(Math.floor(rates.WOOD / 2));
-    expect(cell.resource).to.equal(null);
+    expect(cell.resource.amount).to.equal(0);
   });
 
   it('should distribute evenly given some workers have limited space and abundance of resources ', () => {
@@ -72,6 +72,6 @@ describe('Test resource collection and distribution', () => {
     // due to w1 reaching cargo cap and there's limited resources, all other units take a little more than w1
     expect(w2.cargo.wood).to.equal(Math.floor((5 * rates.WOOD) / 12));
     expect(w3.cargo.wood).to.equal(Math.floor((5 * rates.WOOD) / 12));
-    expect(cell.resource).to.equal(null);
+    expect(cell.resource.amount).to.equal(0);
   });
 });
