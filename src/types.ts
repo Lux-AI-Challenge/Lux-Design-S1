@@ -1,6 +1,5 @@
 import { Game } from './Game';
 import { GameMap } from './GameMap';
-import { Resource } from './Resource';
 
 export interface LuxMatchResults {
   ranks: Array<{ rank: number; agentID: number }>;
@@ -22,9 +21,11 @@ export interface LuxMatchState {
 export interface LuxMatchConfigs {
   preLoadedGame?: Game;
   storeReplay: boolean;
+  compressReplay: boolean;
   mapType: GameMap.Types;
-  width: number;
-  height: number;
+  // we can set a forced width and height if necessary
+  width?: number;
+  height?: number;
   debug?: boolean;
   runProfiler: boolean;
   debugDelay: number;

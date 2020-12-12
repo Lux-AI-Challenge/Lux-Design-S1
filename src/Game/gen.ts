@@ -3,6 +3,7 @@ import { Resource } from '../Resource';
 import { Unit } from '../Unit';
 import { LuxMatchConfigs } from '../types';
 import { GameMap } from '../GameMap';
+import seedrandom from 'seedrandom';
 
 const defaultGenerationConfigs = {
   width: 16,
@@ -16,6 +17,15 @@ export const generateGame = (
     ...defaultGenerationConfigs,
     ...matchconfigs,
   };
+  const seed = configs.seed;
+  const rng = seedrandom(`gen_${seed}`);
+  if (configs.width === undefined) {
+    // TODO: use rng to get width and heights
+    configs.width = 16;
+  }
+  if (configs.height === undefined) {
+    configs.height = 16;
+  }
   const game = new Game(configs);
   const map = game.map;
   const width = map.width;

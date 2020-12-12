@@ -17,15 +17,18 @@ const js = './kits/js/bot.js';
 const testjs = './tests/bots/js/bot.js';
 const bugjs = './kits/bug/bot.js';
 const botList = [
-  { file: js, name: 'js' },
-  { file: testjs, name: 'better' },
+  { file: testjs, name: 'js22', existingID: 'abc' },
+  { file: testjs, name: 'better', existingID: 'def' },
 ];
 const run = async () => {
   const match = await luxdim.createMatch(botList, {
     storeErrorLogs: false,
     storeReplay: true,
-    seed: 1,
+    compressReplay: true,
+    // seed: 1,
     debug: false,
+    width: 16,
+    height: 16,
     runProfiler: true,
     debugDelay: 50,
     engineOptions: {

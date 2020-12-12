@@ -1,45 +1,37 @@
-import { Match, MatchEngine } from 'dimensions-ai';
+import { Agent, Match, MatchEngine } from 'dimensions-ai';
 import fs from 'fs';
+import JSZip from 'jszip';
 import path from 'path';
-import { Action, MoveAction } from '../Actions';
-import { Game } from '../Game';
-import { CityTile } from '../Game/city';
 import { GameMap } from '../GameMap';
-import { Resource } from '../Resource';
-import { Unit } from '../Unit';
 
 export class Replay {
   public replayFilePath: string = null;
   public data: {
-    map: Array<
-      Array<{
-        resource: Resource.Types | null;
-        amt: number;
-      }>
-    >;
-    initialUnits: Array<{
-      type: Unit.Type;
-      id: string;
-      x: number;
-      y: number;
-      team: number;
-    }>;
-    initialCityTiles: Array<{
-      cityid: string;
-      x: number;
-      y: number;
-      team: number;
-    }>;
+    seed: number;
+    width: number;
+    height: number;
+    mapType: GameMap.Types;
+    teamDetails: Array<{
+      name: string;
+      tournamentID: string;
+    }>
     allCommands: Array<Array<MatchEngine.Command>>;
   } = {
-    map: [],
+    seed: 0,
     allCommands: [],
-    initialUnits: [],
-    initialCityTiles: [],
+    mapType: GameMap.Types.RANDOM,
+    width: -1,
+    height: -1,
+    teamDetails: [],
   };
-  constructor(match: Match) {
+  constructor(match: Match, public compressReplay: boolean) {
     const d = new Date().valueOf();
-    const replayFileName = `${d}_${match.id}.luxr`;
+    let replayFileName = `${d}_${match.id}`;
+    if (compressReplay) {
+      replayFileName += '.luxr';
+    } else {
+      replayFileName += '.json';
+    }
     this.replayFilePath = path.join(
       match.configs.storeReplayDirectory,
       replayFileName
@@ -49,58 +41,35 @@ export class Replay {
     }
     fs.writeFileSync(this.replayFilePath, '');
   }
-  public writeMap(gameMap: GameMap): void {
-    for (let y = 0; y < gameMap.width; y++) {
-      this.data.map.push(
-        gameMap.getRow(y).map((cell) => {
-          if (cell.resource) {
-            return {
-              resource: cell.resource.type,
-              amt: cell.resource.amount,
-            };
-          } else {
-            return {
-              resource: null,
-              amt: 0,
-            };
-          }
-        })
-      );
-    }
-  }
-
-  public writeInitialUnits(game: Game): void {
-    game.getTeamsUnits(Unit.TEAM.A).forEach((unit) => {
-      this.data.initialUnits.push({
-        id: unit.id,
-        x: unit.pos.x,
-        y: unit.pos.y,
-        team: unit.team,
-        type: unit.type,
-      });
-    });
-    game.getTeamsUnits(Unit.TEAM.B).forEach((unit) => {
-      this.data.initialUnits.push({
-        id: unit.id,
-        x: unit.pos.x,
-        y: unit.pos.y,
-        team: unit.team,
-        type: unit.type,
-      });
-    });
-    game.cities.forEach((city) => {
-      city.citycells.forEach((cell) => {
-        const ct = cell.citytile;
-        this.data.initialCityTiles.push({
-          cityid: ct.cityid,
-          team: ct.team,
-          x: ct.pos.x,
-          y: ct.pos.y,
-        });
-      });
+  public writeTeams(agents: Agent[]): void {
+    agents.forEach((agent) => {
+      let id = '';
+      if (agent.tournamentID && agent.tournamentID.id) {
+        id = agent.tournamentID.id;
+      }
+      this.data.teamDetails.push({
+        name: agent.name,
+        tournamentID: id,
+      })
     });
   }
   public writeOut(): void {
-    fs.appendFileSync(this.replayFilePath, JSON.stringify(this.data));
+    if (this.compressReplay) {
+      const zipper = new JSZip();
+      zipper.file(this.replayFilePath, JSON.stringify(this.data));
+      zipper
+        .generateAsync({
+          type: 'nodebuffer',
+          compression: 'DEFLATE',
+          compressionOptions: {
+            level: 9,
+          },
+        })
+        .then((content) => {
+          fs.appendFileSync(this.replayFilePath, content);
+        });
+    } else {
+      fs.appendFileSync(this.replayFilePath, JSON.stringify(this.data));
+    }
   }
 }

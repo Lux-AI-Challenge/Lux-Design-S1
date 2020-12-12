@@ -4,12 +4,11 @@ import GAME_CONSTANTS from './game_constants.json';
 // some temporary default configurations and parameters
 export const DEFAULT_CONFIGS: LuxMatchConfigs = {
   mapType: GameMap.Types.RANDOM,
-  width: 16,
-  height: 16,
   storeReplay: true,
   seed: undefined,
   debug: false,
   debugDelay: 500,
   runProfiler: false,
+  compressReplay: false,
   parameters: GAME_CONSTANTS.PARAMETERS,
 };

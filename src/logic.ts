@@ -23,10 +23,11 @@ export class LuxDesignLogic {
   // Initialization step of each match
   static async initialize(match: Match): Promise<void> {
     // initialize with default state and configurations and default RNG
+    const randseed = Math.floor(Math.random() * 1e9);
     const state: LuxMatchState = {
       configs: deepCopy(DEFAULT_CONFIGS),
       game: null,
-      rng: seedrandom(`${Math.random()}`),
+      rng: seedrandom(`${randseed}`),
       profile: null,
     };
     state.configs = deepMerge(state.configs, match.configs);
@@ -39,17 +40,22 @@ export class LuxDesignLogic {
 
     if (state.configs.seed !== undefined) {
       state.rng = seedrandom(`${state.configs.seed}`);
-    }
-    let game: Game;
-    if (state.configs.preLoadedGame !== undefined) {
-      game = state.configs.preLoadedGame;
     } else {
-      game = generateGame(state.configs);
+      state.configs.seed = randseed;
     }
+    
+    const forcedWidth = state.configs.width;
+    const forcedHeight = state.configs.height;
+
+    const game = generateGame(state.configs);
 
     state.game = game;
     if (state.configs.storeReplay) {
-      game.replay = new Replay(match);
+      game.replay = new Replay(match, state.configs.compressReplay);
+      game.replay.data.seed = state.configs.seed;
+      game.replay.data.width = forcedWidth;
+      game.replay.data.height = forcedHeight;
+      game.replay.data.mapType = state.configs.mapType;
     }
     match.log.detail(state.configs);
     // store the state into the match so it can be used again in `update` and `getResults`
@@ -57,8 +63,9 @@ export class LuxDesignLogic {
 
     game.map.sortResourcesDeterministically();
     if (game.replay) {
-      game.replay.writeMap(state.game.map);
-      game.replay.writeInitialUnits(game);
+      // game.replay.writeMap(state.game.map);
+      // game.replay.writeInitialUnits(game);
+      game.replay.writeTeams(match.agents);
     }
 
     // send each agent their id
