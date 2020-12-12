@@ -16,6 +16,7 @@
   },
   "PARAMETERS": {
     "DAY_LENGTH": 20,
+    "NIGHT_LENGTH": 5,
     "MAX_DAYS": 200,
     "LIGHT_UPKEEP": {
       "CITY": 100,

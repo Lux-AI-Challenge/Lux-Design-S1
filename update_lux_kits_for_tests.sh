@@ -1,5 +1,5 @@
 #!/bin/bash
 
-# this updates every starter kits game_constants.json file to match what is in src/game_constants.json
+# this updates the test bots kits
 
 cp -r kits/js/lux tests/bots/js
