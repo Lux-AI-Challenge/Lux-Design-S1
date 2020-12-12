@@ -24,13 +24,13 @@ const run = async () => {
   const match = await luxdim.createMatch(botList, {
     storeErrorLogs: false,
     storeReplay: true,
-    compressReplay: true,
+    compressReplay: false,
     // seed: 1,
     debug: false,
     width: 16,
     height: 16,
     runProfiler: true,
-    debugDelay: 50,
+    debugDelay: 150,
     engineOptions: {
       noStdErr: false,
     },
