@@ -536,6 +536,9 @@ export class Game {
     }
   }
 
+  /**
+   * Move specified unit in specified direction
+   */
   moveUnit(team: Unit.TEAM, unitid: string, direction: Game.DIRECTIONS): void {
     const unit = this.getUnit(team, unitid);
     // remove unit from old cell and move to new one and update unit pos
@@ -548,7 +551,7 @@ export class Game {
    * For cells with resources, this will release the resource to all adjacent workers (including any unit on top) in a
    * even manner and taking in account for the worker's team's research level. This is effectively a worker mining.
    *
-   * Workers adjacent will only receive resources if they can mine it and if they aren't on a city tile. They will
+   * Workers adjacent will only receive resources if they can mine it. They will
    * never receive more than they carry
    *
    * This function is called on cells in the order of uranium, coal, then wood resource deposits
@@ -597,7 +600,7 @@ export class Game {
 
       // distribute resources as evenly as possible
 
-      // sort from least space to most so those with more capacity will have the correct distribution of resources before we cargo caps
+      // sort from least space to most so those with more capacity will have the correct distribution of resources before we reach cargo capacity
       workersToReceiveResources.sort(
         (a, b) => a.getCargoSpaceLeft() - b.getCargoSpaceLeft()
       );
@@ -620,7 +623,9 @@ export class Game {
     }
   }
 
-  // deposits the units resources on city tile it is on
+  /**
+   * Auto deposit resources of unit to tile it is on
+   */
   handleResourceDeposit(unit: Unit): void {
     const cell = this.map.getCellByPos(unit.pos);
     if (cell.isCityTile() && cell.citytile.team === unit.team) {

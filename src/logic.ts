@@ -324,11 +324,7 @@ export class LuxDesignLogic {
       });
     }
 
-    if (
-      game.state.turn !== 0 &&
-      game.state.turn % state.configs.parameters.DAY_LENGTH === 0
-    ) {
-      // do something at night
+    if (this.currentTurnIsNight(game)) {
       this.handleNight(state);
     }
 
@@ -353,6 +349,16 @@ export class LuxDesignLogic {
     }
     game.state.turn++;
     match.log.detail('Beginning turn ' + game.state.turn);
+  }
+
+  static currentTurnIsNight(game: Game): boolean {
+    if (game.state.turn === 0) return false;
+    const dayNightTime = game.configs.parameters.NIGHT_LENGTH + game.configs.parameters.DAY_LENGTH;
+    const mod = game.state.turn % dayNightTime;
+    if (mod > game.configs.parameters.DAY_LENGTH || mod === 0) {
+      return true;
+    }
+    return false;
   }
 
   static async debugViewer(game: Game): Promise<void> {

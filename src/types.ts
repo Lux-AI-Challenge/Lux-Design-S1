@@ -31,6 +31,7 @@ export interface LuxMatchConfigs {
   seed: number | undefined;
   parameters: {
     DAY_LENGTH: number;
+    NIGHT_LENGTH: number;
     MAX_DAYS: number;
     LIGHT_UPKEEP: {
       CITY: number;

@@ -25,8 +25,8 @@ const run = async () => {
     storeErrorLogs: false,
     storeReplay: true,
     seed: 1,
-    debug: true,
-    runProfiler: false,
+    debug: false,
+    runProfiler: true,
     debugDelay: 50,
     engineOptions: {
       noStdErr: false,
