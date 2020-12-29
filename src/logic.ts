@@ -453,22 +453,16 @@ export class LuxDesignLogic {
         city.fuel -= city.getLightUpkeep();
       }
     });
-    game.state.teamStates[0].units.forEach((unit) => {
-      // TODO: add condition for different light upkeep for units stacked on a city.
-      if (!game.map.getCellByPos(unit.pos).isCityTile()) {
-        if (!unit.spendFuelToSurvive()) {
-          // delete unit
-          game.destroyUnit(unit.team, unit.id);
+    [Unit.TEAM.A, Unit.TEAM.B].forEach((team) => {
+      game.state.teamStates[team].units.forEach((unit) => {
+        // TODO: add condition for different light upkeep for units stacked on a city.
+        if (!game.map.getCellByPos(unit.pos).isCityTile()) {
+          if (!unit.spendFuelToSurvive()) {
+            // delete unit
+            game.destroyUnit(unit.team, unit.id);
+          }
         }
-      }
-    });
-    game.state.teamStates[1].units.forEach((unit) => {
-      if (!game.map.getCellByPos(unit.pos).isCityTile()) {
-        if (!unit.spendFuelToSurvive()) {
-          // delete unit
-          game.destroyUnit(unit.team, unit.id);
-        }
-      }
-    });
+      });
+    })
   }
 }

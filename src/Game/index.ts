@@ -53,6 +53,11 @@ export class Game {
           coal: 0,
           uranium: 0,
         },
+        cityTilesBuilt: 0,
+        workersBuilt: 0,
+        cartsBuilt: 0,
+        roadsBuilt: 0,
+        roadsPillaged: 0,
       },
       [Unit.TEAM.B]: {
         fuelGenerated: 0,
@@ -61,6 +66,11 @@ export class Game {
           coal: 0,
           uranium: 0,
         },
+        cityTilesBuilt: 0,
+        workersBuilt: 0,
+        cartsBuilt: 0,
+        roadsBuilt: 0,
+        roadsPillaged: 0,
       },
     },
   };
@@ -460,6 +470,7 @@ export class Game {
     }
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
+    this.stats.teamStats[team].workersBuilt += 1;
     return unit;
   }
 
@@ -471,6 +482,7 @@ export class Game {
     }
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
+    this.stats.teamStats[team].cartsBuilt += 1;
     return unit;
   }
 
@@ -620,6 +632,10 @@ export class Game {
         worker.cargo[type] += Math.floor(distributeAmount);
 
         amountDistributed += distributeAmount;
+
+        // update stats
+        this.stats.teamStats[worker.team].resourcesCollected[type] += Math.floor(distributeAmount);
+
         // subtract how much was given.
         amountToDistribute -= distributeAmount;
       });
@@ -635,13 +651,18 @@ export class Game {
     const cell = this.map.getCellByPos(unit.pos);
     if (cell.isCityTile() && cell.citytile.team === unit.team) {
       const city = this.cities.get(cell.citytile.cityid);
-      city.fuel +=
+      let fuelGained = 0;
+      fuelGained +=
         unit.cargo.wood * this.configs.parameters.RESOURCE_TO_FUEL_RATE.WOOD;
-      city.fuel +=
+      fuelGained +=
         unit.cargo.coal * this.configs.parameters.RESOURCE_TO_FUEL_RATE.COAL;
-      city.fuel +=
+      fuelGained +=
         unit.cargo.uranium *
         this.configs.parameters.RESOURCE_TO_FUEL_RATE.URANIUM;
+      city.fuel += fuelGained;
+      
+      this.stats.teamStats[unit.team].fuelGenerated += fuelGained;
+      
       unit.cargo = {
         wood: 0,
         uranium: 0,
@@ -830,6 +851,11 @@ export namespace Game {
     resourcesCollected: {
       [x in Resource.Types]: number;
     };
+    cityTilesBuilt: number;
+    workersBuilt: number;
+    cartsBuilt: number;
+    roadsBuilt: number;
+    roadsPillaged: number;
   }
   export interface State {
     turn: number;

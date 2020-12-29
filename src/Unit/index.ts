@@ -51,7 +51,6 @@ export abstract class Unit extends Actionable {
     const woodUsed = Math.min(this.cargo.wood, woodNeeded);
     fuelNeeded -= woodUsed * this.configs.parameters.RESOURCE_TO_FUEL_RATE.WOOD;
     this.cargo.wood -= woodUsed;
-
     if (fuelNeeded <= 0) {
       return true;
     }
@@ -145,6 +144,7 @@ export class Cart extends Unit {
         cell.cooldown + this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE,
         this.configs.parameters.MAX_CELL_COOLDOWN
       );
+      game.stats.teamStats[this.team].roadsBuilt += this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE;
     }
     if (this.cooldown > 0) {
       this.cooldown -= cell.getTileCooldown();

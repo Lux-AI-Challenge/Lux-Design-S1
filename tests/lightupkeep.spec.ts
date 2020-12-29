@@ -16,8 +16,10 @@ describe('Test light upkeep', () => {
   });
   it('should make units spend wood, then coal, then uranium if left in night to survive', () => {
     const w1 = game.spawnWorker(0, 1, 1);
-    w1.cargo.wood = lightUpkeep.WORKER * fuelRates.WOOD;
-    expect(w1.spendFuelToSurvive()).to.equal(true);
+    w1.cargo.wood = lightUpkeep.WORKER * fuelRates.WOOD * DEFAULT_CONFIGS.parameters.NIGHT_LENGTH;
+    for (let i = 0; i < DEFAULT_CONFIGS.parameters.NIGHT_LENGTH; i++) {
+      expect(w1.spendFuelToSurvive()).to.equal(true);
+    }
     expect(w1.cargo.wood).to.equal(0);
 
     // this test can fail depending on parameters
@@ -25,7 +27,12 @@ describe('Test light upkeep', () => {
     w2.cargo.wood = 1;
     w2.cargo.coal = 1;
     w2.cargo.uranium = 1;
+    // use up wood and coal
     expect(w2.spendFuelToSurvive()).to.equal(true);
+    // use up uranium
+    expect(w2.spendFuelToSurvive()).to.equal(true);
+    // goodbye
+    expect(w2.spendFuelToSurvive()).to.equal(false);
     expect(w2.cargo.wood).to.equal(0);
     expect(w2.cargo.coal).to.equal(0);
     expect(w2.cargo.uranium).to.equal(0);
