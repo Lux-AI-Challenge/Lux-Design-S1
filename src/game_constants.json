@@ -19,10 +19,11 @@
     "NIGHT_LENGTH": 5,
     "MAX_DAYS": 200,
     "LIGHT_UPKEEP": {
-      "CITY": 20,
+      "CITY": 60,
       "WORKER": 4,
       "CART": 16
     },
+    "CITY_PENALTY_FACTOR": 10,
     "CITY_ADJACENCY_BONUS": 10,
     "RESOURCE_CAPACITY": {
       "WORKER": 100,

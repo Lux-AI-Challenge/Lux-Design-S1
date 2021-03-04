@@ -43,7 +43,7 @@ export class LuxDesignLogic {
     } else {
       state.configs.seed = randseed;
     }
-    
+
     const forcedWidth = state.configs.width;
     const forcedHeight = state.configs.height;
 
@@ -200,7 +200,7 @@ export class LuxDesignLogic {
           return false;
         }
         return true;
-      }); 
+      });
     }
 
     if (game.replay) {
@@ -255,9 +255,11 @@ export class LuxDesignLogic {
           commands[i],
           accumulatedActionStats
         );
-        // TODO: this might be slow, depends on its optimized and compiled
-        const newactionArray = [...actionsMap.get(action.action), action];
-        actionsMap.set(action.action, newactionArray);
+        if (action != null) {
+          // TODO: this might be slow, depends on its optimized and compiled
+          const newactionArray = [...actionsMap.get(action.action), action];
+          actionsMap.set(action.action, newactionArray);
+        }
       } catch (err) {
         match.throw(agentID, err);
       }

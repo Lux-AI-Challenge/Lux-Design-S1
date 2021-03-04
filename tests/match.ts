@@ -15,9 +15,10 @@ const luxdim = Dimensions.create(design, {
 
 const js = './kits/js/bot.js';
 const testjs = './tests/bots/js/bot.js';
+const spamjs = './tests/bots/spam/bot.js';
 const bugjs = './kits/bug/bot.js';
 const botList = [
-  { file: testjs, name: 'js22', existingID: 'abc' },
+  { file: spamjs, name: 'spambot', existingID: 'abc' },
   { file: testjs, name: 'better', existingID: 'def' },
 ];
 const run = async () => {
@@ -35,7 +36,7 @@ const run = async () => {
     engineOptions: {
       noStdErr: false,
     },
-    loggingLevel: Logger.LEVEL.NONE,
+    loggingLevel: Logger.LEVEL.ALL,
     mapType: 'debug',
   });
 
@@ -47,15 +48,13 @@ const run = async () => {
   console.log(res);
   if (match.state.profile) {
     console.log(
-      `Update Stage: avg ${
-        match.state.profile.updateStage.reduce((acc, curr) => acc + curr) /
-        match.state.profile.updateStage.length
+      `Update Stage: avg ${match.state.profile.updateStage.reduce((acc, curr) => acc + curr) /
+      match.state.profile.updateStage.length
       }ms`
     );
     console.log(
-      `Data Transfer: avg ${
-        match.state.profile.dataTransfer.reduce((acc, curr) => acc + curr) /
-        match.state.profile.dataTransfer.length
+      `Data Transfer: avg ${match.state.profile.dataTransfer.reduce((acc, curr) => acc + curr) /
+      match.state.profile.dataTransfer.length
       }ms`
     );
   }
