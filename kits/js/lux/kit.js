@@ -85,7 +85,6 @@ class Agent {
     this.mapHeight = height;
     this.map = new GameMap(width, height);
     this.players = [new Player(0), new Player(1)];
-    await this.retrieveUpdates();
   }
   /**
    * Updates agent's own known state of `Match`

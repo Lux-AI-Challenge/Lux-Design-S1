@@ -189,9 +189,7 @@ export class LuxDesignLogic {
     if (game.configs.runProfiler) {
       stime = new Date().valueOf();
     }
-
     match.log.detail('Processing turn ' + game.state.turn);
-
     if (!game.configs.debugAnnotations) {
       // filter out all debug commands
       commands = commands.filter((cmd) => {

@@ -19,7 +19,7 @@ const spamjs = './tests/bots/spam/bot.js'; // has randomness
 const bugjs = './kits/bug/bot.js';
 const botList = [
   { file: testjs, name: 'test1', existingID: 'abc' },
-  { file: js, name: 'test2', existingID: 'def' },
+  { file: testjs, name: 'test2', existingID: 'def' },
 ];
 const run = async () => {
   const match = await luxdim.createMatch(botList, {
