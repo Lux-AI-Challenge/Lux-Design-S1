@@ -17,15 +17,15 @@ export class GameMap {
    * @param width - width of map
    * @param height - height of map
    */
-  constructor(public configs: Readonly<LuxMatchConfigs>) {
-    this.height = this.configs.height;
-    this.width = this.configs.width;
+  constructor(configs: Readonly<LuxMatchConfigs>) {
+    this.height = configs.height;
+    this.width = configs.width;
     this.map = new Array(this.height);
     for (let y = 0; y < this.height; y++) {
       this.map[y] = new Array(this.width);
       for (let x = 0; x < this.width; x++) {
         // this should be the only time we ever call new Cell(...)
-        this.map[y][x] = new Cell(x, y, this.configs);
+        this.map[y][x] = new Cell(x, y, configs);
       }
     }
   }

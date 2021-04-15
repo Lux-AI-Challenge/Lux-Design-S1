@@ -27,7 +27,7 @@ const run = async () => {
     storeReplay: true,
     compressReplay: false,
     // seed: 1,
-    debug: false,
+    debug: true,
     width: 16,
     height: 16,
     runProfiler: true,
@@ -36,7 +36,7 @@ const run = async () => {
     engineOptions: {
       noStdErr: false,
     },
-    loggingLevel: Logger.LEVEL.ALL,
+    loggingLevel: Logger.LEVEL.NONE,
     mapType: 'debug',
   });
 

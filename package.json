@@ -1,6 +1,6 @@
 {
   "name": "@lux-ai/2020-challenge",
-  "version": "1.1.25",
+  "version": "1.1.27",
   "description": "The design for the first Lux AI Challenge",
   "main": "lib/es5/index.js",
   "types": "lib/es5/index.d.ts",
@@ -32,7 +32,7 @@
   "dependencies": {
     "@types/seedrandom": "^2.4.28",
     "colors": "^1.4.0",
-    "dimensions-ai": "^4.6.14",
+    "dimensions-ai": "^4.7.1",
     "jszip": "^3.5.0",
     "nanoid": "^3.1.12",
     "seedrandom": "^3.0.5"
