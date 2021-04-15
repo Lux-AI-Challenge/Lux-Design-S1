@@ -162,16 +162,17 @@ export class LuxDesignLogic {
         );
       });
     });
-    await Promise.all(promises);
+    
 
     for (let y = 0; y < game.map.height; y++) {
       for (let x = 0; x < game.map.width; x++) {
         const cd = game.map.getCell(x, y).cooldown;
         if (cd !== 1) {
-          match.sendAll(`ccd ${x} ${y} ${cd}`);
+          promises.push(match.sendAll(`ccd ${x} ${y} ${cd}`));
         }
       }
     }
+    await Promise.all(promises);
     if (game.configs.runProfiler) {
       const etime = new Date().valueOf();
       state.profile.dataTransfer.push(etime - stime);
@@ -265,11 +266,6 @@ export class LuxDesignLogic {
       }
     }
 
-    // first distribute all resources
-    game.map.resources.forEach((cell) => {
-      game.handleResourceRelease(cell);
-    });
-
     // remove resources that are depleted from map
     const newResourcesMap: Array<Cell> = [];
     for (let i = 0; i < game.map.resources.length; i++) {
@@ -338,6 +334,11 @@ export class LuxDesignLogic {
         }
       });
     }
+
+    // distribute all resources
+    game.map.resources.forEach((cell) => {
+      game.handleResourceRelease(cell);
+    });
 
     // now we make all units with cargo drop all resources on the city they are standing on
     for (const team of teams) {

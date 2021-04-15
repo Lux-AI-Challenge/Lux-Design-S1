@@ -14,12 +14,12 @@ const luxdim = Dimensions.create(design, {
 });
 
 const js = './kits/js/bot.js';
-const testjs = './tests/bots/js/bot.js';
-const spamjs = './tests/bots/spam/bot.js';
+const testjs = './tests/bots/js/bot.js'; // deterministic
+const spamjs = './tests/bots/spam/bot.js'; // has randomness
 const bugjs = './kits/bug/bot.js';
 const botList = [
-  { file: spamjs, name: 'spambot', existingID: 'abc' },
-  { file: testjs, name: 'better', existingID: 'def' },
+  { file: testjs, name: 'test1', existingID: 'abc' },
+  { file: js, name: 'test2', existingID: 'def' },
 ];
 const run = async () => {
   const match = await luxdim.createMatch(botList, {
@@ -27,7 +27,7 @@ const run = async () => {
     storeReplay: true,
     compressReplay: false,
     // seed: 1,
-    debug: true,
+    debug: false,
     width: 16,
     height: 16,
     runProfiler: true,
@@ -36,7 +36,7 @@ const run = async () => {
     engineOptions: {
       noStdErr: false,
     },
-    loggingLevel: Logger.LEVEL.NONE,
+    loggingLevel: Logger.LEVEL.ALL,
     mapType: 'debug',
   });
 
