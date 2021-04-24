@@ -15,7 +15,7 @@ var Module = {
     let input = [];
     function stdin() {
       if (input.length === 0) {
-        console.log("Prompted");
+        // console.log("Prompted");
         let rawInput = reader.question();
         input.push(...rawInput.split(""), "\n", -1);
       }

@@ -35,9 +35,9 @@ int main()
       }
     }
 
-    for (int i = 0; i < commands.size() - 1; i++)
+    for (int i = 0; i < commands.size(); i++)
     {
-      if (i != 0) cout << " ";
+      if (i != 0) cout << ",";
       cout << commands[i];
     }
     cout << endl;

@@ -39,12 +39,10 @@ namespace kit
         int end = s.find(del);
         while (end != -1)
         {
-            // cout << s.substr(start, end - start) << endl;
             strings.push_back(s.substr(start, end - start));
             start = end + del.size();
             end = s.find(del, start);
         }
-        // cout << s.substr(start, end - start);
         strings.push_back(s.substr(start, end - start));
         return strings;
     }
@@ -74,7 +72,6 @@ namespace kit
 
             mapWidth = stoi(map_parts[0]);
             mapHeight = stoi(map_parts[1]);
-            cout << mapWidth << "x" << mapHeight << endl;
 
             this->map = lux::GameMap(mapWidth, mapHeight);
         }
@@ -130,7 +127,8 @@ namespace kit
                     int wood = stoi(updates[i++]);
                     int coal = stoi(updates[i++]);
                     int uranium = stoi(updates[i++]);
-                    this->players[team].units.push_back(lux::Unit(team, unittype, unitid, x, y, cooldown, wood, coal, uranium));
+                    lux::Unit unit = lux::Unit(team, unittype, unitid, x, y, cooldown, wood, coal, uranium);
+                    this->players[team].units.push_back(unit);
                 }
                 else if (input_identifier == INPUT_CONSTANTS::CITY)
                 {

@@ -13,6 +13,7 @@ local
 # artifacts from compilation
 kits/cpp/main.js
 kits/cpp/main.wasm
+kits/cpp/*.out
 
 # these contain our test bots
 tests/bots

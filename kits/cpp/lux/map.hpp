@@ -42,11 +42,10 @@ namespace lux
         {
             this->width = width;
             this->height = height;
-            map = vector<vector<Cell> >();
-
+            map = vector<vector<Cell> >(height, vector<Cell>(width));
             for (int y = 0; y < height; y++)
             {
-                for (int x = 0; y < width; x++)
+                for (int x = 0; x < width; x++)
                 {
                     map[y][x] = Cell(x, y);
                 }

@@ -17,9 +17,10 @@ const js = './kits/js/bot.js';
 const testjs = './tests/bots/js/bot.js'; // deterministic
 const spamjs = './tests/bots/spam/bot.js'; // has randomness
 const bugjs = './kits/bug/bot.js';
+const cpp = './kits/cpp/main.cpp';
 const botList = [
-  { file: testjs, name: 'test1', existingID: 'abc' },
-  { file: testjs, name: 'test2', existingID: 'def' },
+  { file: js, name: 'test1', existingID: 'abc' },
+  { file: cpp, name: 'cpp', existingID: 'def' },
 ];
 const run = async () => {
   const match = await luxdim.createMatch(botList, {
@@ -36,7 +37,7 @@ const run = async () => {
     engineOptions: {
       noStdErr: false,
     },
-    loggingLevel: Logger.LEVEL.ERROR,
+    loggingLevel: Logger.LEVEL.ALL,
     mapType: 'debug',
   });
 
