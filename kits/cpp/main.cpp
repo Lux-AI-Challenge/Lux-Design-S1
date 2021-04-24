@@ -1,5 +1,5 @@
 
-#include "kit.hpp"
+#include "lux/kit.hpp"
 #include <string>
 
 int main() {
@@ -11,7 +11,7 @@ int main() {
     // wait for updates
     agent.update();
     // send some commands
-    std::cout << 'my command, other command' << std::endl << std::flush;
+    std::cout << "my command, other command" << std::endl << std::flush;
     // end turn
     agent.end_turn();
     

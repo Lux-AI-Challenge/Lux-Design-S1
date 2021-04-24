@@ -10,6 +10,10 @@ errorlogs
 replays
 local
 
+# artifacts from compilation
+kits/cpp/main.js
+kits/cpp/main.wasm
+
 # these contain our test bots
 tests/bots
 

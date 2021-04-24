@@ -1,17 +1,26 @@
+// source ../LuxAI/transpilers/emsdk/emsdk_env.sh
+// emcc -s FORCE_FILESYSTEM=1 --pre-js init_fs.js hello.cpp
 #include <string>
 #include <iostream>
 using namespace std; 
 namespace kit {
 
     static string getline() {
-        string line;
-        getline(std::cin, line);
-
         // exit if stdin is bad now
         if (!std::cin.good()) exit(0);
 
+        char str[2048], ch;
+        int i = 0;
+        ch = getchar();
+        while (ch != '\n') {
+            str[i] = ch;
+            i++;
+            ch = getchar();
+        }
+
+        str[i] = '\0';
         // return the line
-        return line;
+        return string(str);
     }
     
 
@@ -42,7 +51,7 @@ namespace kit {
          * User should edit this according to their `Design`.
          */
         static void update() {
-            int updateInfo = kit::getline();
+            std:string updateInfo = kit::getline();
         }
     };
     
