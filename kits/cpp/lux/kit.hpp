@@ -6,6 +6,7 @@
 #include "map.hpp"
 #include "lux_io.hpp"
 #include "game_objects.hpp"
+#include "annotate.hpp"
 #include "city.hpp"
 using namespace std;
 namespace kit
@@ -171,17 +172,4 @@ namespace kit
             players[1].cities.clear();
         };
     };
-
-// TODO: implement annotation commands
-// const annotate = {
-//   circle: (x, y) => {
-//     return `dc ${x} ${y}`
-//   },
-//   x: (x, y) => {
-//     return `dx ${x} ${y}`
-//   },
-//   line: (x1, y1, x2, y2) => {
-//     return `dl ${x1} ${y1} ${x2} ${y2}`
-//   }
-// }
 }

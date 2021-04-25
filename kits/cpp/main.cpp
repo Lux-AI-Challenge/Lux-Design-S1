@@ -18,6 +18,7 @@ int main()
     // std::cout << "my command, other command" << std::endl << std::flush;
     Player player = agent.players[agent.id];
     Player opponent = agent.players[(agent.id + 1) % 2];
+    commands.push_back(lux::Annotate::line(0, 0, 14, 2));
     if (agent.turn % 10 == 2 || (agent.turn % 10 == 1 && agent.turn != 1))
     {
       for (int i = 0; i < player.units.size(); i++)

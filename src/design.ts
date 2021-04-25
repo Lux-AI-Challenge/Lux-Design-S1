@@ -66,7 +66,7 @@ export class LuxDesign extends Design {
       ],
       replayFile: null,
     };
-    if (game.replay) {
+    if (game.configs.storeReplay) {
       results.replayFile = game.replay.replayFilePath;
     }
     return results;

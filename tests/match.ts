@@ -38,7 +38,7 @@ const run = async () => {
     engineOptions: {
       noStdErr: false,
       timeout: {
-        active: false
+        active: true
       }
     },
     loggingLevel: Logger.LEVEL.ALL,
