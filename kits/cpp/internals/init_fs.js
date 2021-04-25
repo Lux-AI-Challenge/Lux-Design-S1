@@ -9,15 +9,25 @@ const sleep = (time) => {
   });
 }
 const reader = require("./internals/readline-sync/lib/readline-sync"); //npm install readline-sync
+const fs = require('fs');
 var Module = {
   preRun: function() {
     let i = 0;
     let input = [];
     function stdin() {
       if (input.length === 0) {
-        // console.log("Prompted");
-        let rawInput = reader.question();
-        input.push(...rawInput.split(""), "\n", -1);
+        let rawInput = Buffer.alloc(1024);
+        fs.readSync(0, rawInput, 0, 1024);
+        let rawString = rawInput.toString("utf-8");
+        let i = 0;
+        for (let char of rawString) {
+          i++;
+          if (char == '\x00') {
+            break;
+          }
+        }
+        rawString = rawString.slice(0, i);
+        input.push(...(rawString).split(""), -1);
       }
       if (input[0] === -1) {
         input.shift();
@@ -39,7 +49,7 @@ var Module = {
     let stderrBuffer = "";
     function stderr(code) {
       if (code === "\n".charCodeAt(0) && stderrBuffer !== "") {
-        console.log(stderrBuffer);
+        console.error(stderrBuffer);
         stderrBuffer = "";
       } else {
         stderrBuffer += String.fromCharCode(code);
