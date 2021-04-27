@@ -24,11 +24,11 @@ describe('Test kit consistency', () => {
       name: 'js',
     },
     cpp: {
-      file: './kits/cpp/main.cpp',
+      file: './kits/cpp/organic/main.cpp',
       name: 'cpp',
     },
     cppTranspiled: {
-      file: './kits/cpp/main.js',
+      file: './kits/cpp/organic/main.js',
       name: 'cpp-transpiled',
     },
   };
@@ -52,7 +52,7 @@ describe('Test kit consistency', () => {
       }
     },
   }
-  it.only('c++ consistency test', async () => {
+  it('c++ consistency test', async () => {
     
     let botList = [bots.js, bots.cppTranspiled];
     const match = await luxdim.createMatch(botList, options);
