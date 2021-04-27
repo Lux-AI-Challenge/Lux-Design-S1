@@ -1,15 +1,3 @@
-// TODO: implement annotation commands
-// const annotate = {
-//   circle: (x, y) => {
-//     return `dc ${x} ${y}`
-//   },
-//   x: (x, y) => {
-//     return `dx ${x} ${y}`
-//   },
-//   line: (x1, y1, x2, y2) => {
-//     return `dl ${x1} ${y1} ${x2} ${y2}`
-//   }
-// }
 #include <string>
 using namespace std;
 namespace lux {

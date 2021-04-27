@@ -1,4 +1,5 @@
 // source ./emsdk/emsdk_env.sh
+// source ../../../LuxAI/transpilers/emsdk/emsdk_env.sh
 // emcc -s FORCE_FILESYSTEM=1 --pre-js internals/init_fs.js myBot.cpp 
 
 const sleep = (time) => {

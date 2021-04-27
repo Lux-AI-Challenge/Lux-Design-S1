@@ -16,10 +16,11 @@ namespace lux
         lux::Position pos;
         int cooldown;
         CityTile(){};
-        CityTile(int teamid, string cityid, int x, int y, int cooldown)
+        CityTile(int teamid, const string &cityid, int x, int y, int cooldown)
         {
             this->cityid = cityid;
             this->team = teamid;
+            
             this->pos = lux::Position(x, y);
             this->cooldown = cooldown;
         }
@@ -51,20 +52,20 @@ namespace lux
         string cityid;
         int team;
         float fuel;
-        vector<CityTile> citytiles;
+        vector<CityTile *> citytiles;
         float lightUpkeep;
         City(){};
-        City(int teamid, string cityid, float fuel, float lightUpkeep)
+        City(int teamid, const string &cityid, float fuel, float lightUpkeep)
         {
             this->cityid = cityid;
             this->team = teamid;
             this->fuel = fuel;
-            this->citytiles = vector<CityTile>();
+            this->citytiles = vector<CityTile *>();
             this->lightUpkeep = lightUpkeep;
         }
-        CityTile addCityTile(int x, int y, int cooldown)
+        CityTile* addCityTile(int x, int y, int cooldown)
         {
-            CityTile ct = CityTile(this->team, this->cityid, x, y, cooldown);
+            CityTile* ct = new CityTile(this->team, this->cityid, x, y, cooldown);
             this->citytiles.push_back(ct);
             return ct;
         }

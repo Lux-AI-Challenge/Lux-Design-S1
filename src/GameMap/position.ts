@@ -20,6 +20,8 @@ export class Position {
         return new Position(this.x, this.y + units);
       case Game.DIRECTIONS.WEST:
         return new Position(this.x - units, this.y);
+      case Game.DIRECTIONS.CENTER:
+        return new Position(this.x, this.y);
     }
   }
 }

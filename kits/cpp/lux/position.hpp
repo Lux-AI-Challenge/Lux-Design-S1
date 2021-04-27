@@ -1,8 +1,12 @@
 #ifndef position_h
 #define position_h
 #include <vector>
-namespace lux {
-class Position
+#include <string>
+#include "constants.hpp"
+using namespace std;
+namespace lux
+{
+    class Position
     {
     public:
         int x = -1;
@@ -30,46 +34,60 @@ class Position
 
         // TODO: implement
 
-        // translate(direction, units) {
-        //     switch (direction) {
-        //     case DIRECTIONS.NORTH:
-        //         return new Position(this.x, this.y - units);
-        //     case DIRECTIONS.EAST:
-        //         return new Position(this.x + units, this.y);
-        //     case DIRECTIONS.SOUTH:
-        //         return new Position(this.x, this.y + units);
-        //     case DIRECTIONS.WEST:
-        //         return new Position(this.x - units, this.y);
-        //     }
-        // }
+        Position translate(const DIRECTIONS &direction, int units)
+        {
+            switch (direction)
+            {
+            case DIRECTIONS::NORTH:
+                return Position(this->x, this->y - units);
+            case DIRECTIONS::EAST:
+                return Position(this->x + units, this->y);
+            case DIRECTIONS::SOUTH:
+                return Position(this->x, this->y + units);
+            case DIRECTIONS::WEST:
+                return Position(this->x - units, this->y);
+            case DIRECTIONS::CENTER:
+                return Position(this->x, this->y);
+            }
+        }
 
         /** Returns distance to pos from this position */
-        // distanceTo(pos) {
-        //     const dx = pos.x - this.x;
-        //     const dy = pos.y - this.y;
-        //     return Math.sqrt(dx * dx + dy * dy);
-        // }
+        float distanceTo(const Position &pos) const
+        {
+            int dx = pos.x - this->x;
+            int dy = pos.y - this->y;
+            return sqrt(dx * dx + dy * dy);
+        }
 
-        // /** Returns closest direction to targetPos, or null if staying put is best */
-        // directionTo(targetPos) {
-        //     const checkDirections = [
-        //     DIRECTIONS.NORTH,
-        //     DIRECTIONS.EAST,
-        //     DIRECTIONS.SOUTH,
-        //     DIRECTIONS.WEST,
-        //     ];
-        //     let closestDirection = null;
-        //     let closestDist = this.distanceTo(targetPos);
-        //     checkDirections.forEach((dir) => {
-        //     const newpos = this.translate(dir, 1);
-        //     const dist = targetPos.distanceTo(newpos);
-        //     if (dist < closestDist) {
-        //         closestDist = dist;
-        //         closestDirection = dir;
-        //     }
-        //     });
-        //     return closestDirection;
-        // }
+        /** Returns closest direction to targetPos, or null if staying put is best */
+        DIRECTIONS directionTo(const Position &targetPos)
+        {
+
+            DIRECTIONS closestDirection = DIRECTIONS::CENTER;
+            float closestDist = this->distanceTo(targetPos);
+            for (const DIRECTIONS dir : ALL_DIRECTIONS)
+            {
+                const Position newpos = this->translate(dir, 1);
+                float dist = targetPos.distanceTo(newpos);
+                if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closestDirection = dir;
+                }
+            }
+            return closestDirection;
+        }
+        friend ostream &operator<<(ostream &out, const Position &p);
+        operator std::string() const
+        {
+            return "(" + to_string(this->x) + ", " + to_string(this->y) + ")";
+        }
+    };
+    ostream &operator<<(ostream &out, const Position &p)
+    {
+        out << "(" << p.x << "," << p.y << ")"; // access private data
+        return out;
     };
 }
+
 #endif

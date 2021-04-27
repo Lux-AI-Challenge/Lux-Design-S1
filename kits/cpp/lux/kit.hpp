@@ -69,6 +69,7 @@ namespace kit
             // get agent ID
             id = stoi(kit::getline());
             string map_info = kit::getline();
+
             vector<string> map_parts = kit::tokenize(map_info, " ");
 
             mapWidth = stoi(map_parts[0]);
@@ -105,7 +106,7 @@ namespace kit
                 if (input_identifier == INPUT_CONSTANTS::RESEARCH_POINTS)
                 {
                     int team = stoi(updates[1]);
-                    this->players[team].research_points = stoi(updates[2]);
+                    this->players[team].researchPoints = stoi(updates[2]);
                 }
                 else if (input_identifier == INPUT_CONSTANTS::RESOURCES)
                 {
@@ -138,7 +139,7 @@ namespace kit
                     string cityid = updates[i++];
                     float fuel = stof(updates[i++]);
                     float lightUpkeep = stof(updates[i++]);
-                    this->players[team].cities[cityid] = lux::City(team, cityid, fuel, lightUpkeep);
+                    this->players[team].cities[cityid] = new lux::City(team, cityid, fuel, lightUpkeep);
                 }
                 else if (input_identifier == INPUT_CONSTANTS::CITY_TILES)
                 {
@@ -148,9 +149,10 @@ namespace kit
                     int x = stoi(updates[i++]);
                     int y = stoi(updates[i++]);
                     float cooldown = stof(updates[i++]);
-                    lux::City city = this->players[team].cities[cityid];
-                    lux::CityTile citytile = city.addCityTile(x, y, cooldown);
-                    this->map.getCell(x, y).citytile = citytile;
+                    lux::City * city = this->players[team].cities[cityid];
+                    lux::CityTile * citytile = city->addCityTile(x, y, cooldown);
+                    this->map.getCell(x, y)->citytile = citytile;
+                    players[team].cityTileCount += 1;
                 }
                 else if (input_identifier == INPUT_CONSTANTS::CELL_COOLDOWN)
                 {
@@ -158,8 +160,8 @@ namespace kit
                     int x = stoi(updates[i++]);
                     int y = stoi(updates[i++]);
                     float cooldown = stof(updates[i++]);
-                    lux::Cell cell = this->map.getCell(x, y);
-                    cell.cooldown = cooldown;
+                    lux::Cell * cell = this->map.getCell(x, y);
+                    cell->cooldown = cooldown;
                 }
             };
         }
@@ -170,6 +172,8 @@ namespace kit
             players[0].cities.clear();
             players[1].units.clear();
             players[1].cities.clear();
+            players[0].cityTileCount = 0;
+            players[1].cityTileCount = 0;
         };
     };
 }
