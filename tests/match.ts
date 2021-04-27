@@ -18,10 +18,12 @@ const testjs = './tests/bots/js/bot.js'; // deterministic
 const spamjs = './tests/bots/spam/bot.js'; // has randomness
 const bugjs = './kits/bug/bot.js';
 const cpp = './kits/cpp/simple/main.cpp';
+const cppOrganic = './kits/cpp/organic/main.cpp';
 const cppTranspiled = './kits/cpp/main.js';
+const cppOrganicTranspiled = './kits/cpp/organic/main.js';
 const botList = [
   { file: js, name: 'test1', existingID: 'abc' },
-  { file: cpp, name: 'cppjs', existingID: 'def' },
+  { file: cppOrganicTranspiled, name: 'cppjs', existingID: 'def' },
 ];
 const run = async () => {
   const match = await luxdim.createMatch(botList, {

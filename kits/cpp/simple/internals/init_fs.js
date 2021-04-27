@@ -1,7 +1,4 @@
-// source ./emsdk/emsdk_env.sh
-// source ../../../LuxAI/transpilers/emsdk/emsdk_env.sh
-// emcc -s FORCE_FILESYSTEM=1 --pre-js internals/init_fs.js myBot.cpp 
-
+// source ../../../../LuxAI/transpilers/emsdk/emsdk_env.sh
 const sleep = (time) => {
   return new Promise((res) => {
     setTimeout(() => {
@@ -9,26 +6,35 @@ const sleep = (time) => {
     }, time);
   });
 }
-const reader = require("./internals/readline-sync/lib/readline-sync"); //npm install readline-sync
+const reader = require("./internals/readline-sync/lib/readline-sync");
 const fs = require('fs');
+const readSize = 4096;
 var Module = {
   preRun: function() {
     let i = 0;
     let input = [];
     function stdin() {
       if (input.length === 0) {
-        let rawInput = Buffer.alloc(1024);
-        fs.readSync(0, rawInput, 0, 1024);
-        let rawString = rawInput.toString("utf-8");
-        let i = 0;
-        for (let char of rawString) {
-          i++;
-          if (char == '\x00') {
+        while(true) {
+          let rawInput = Buffer.alloc(readSize);
+          fs.readSync(0, rawInput, 0, readSize);
+
+          let rawString = rawInput.toString("utf-8");
+          let i = 0;
+          for (let char of rawString) {
+            if (char == '\x00') {
+              break;
+            }
+            i++;
+          }
+          rawString = rawString.slice(0, i);
+          input.push(...(rawString).split(""));
+
+          if (input.slice(-7).join("") === "D_DONE\n") {
             break;
           }
         }
-        rawString = rawString.slice(0, i);
-        input.push(...(rawString).split(""), -1);
+        input.push(-1);
       }
       if (input[0] === -1) {
         input.shift();
