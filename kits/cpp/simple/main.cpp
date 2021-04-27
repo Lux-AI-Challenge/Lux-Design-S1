@@ -43,9 +43,11 @@ int main()
     }
 
     int citiesToBuild = 0;
-    for (auto it : player.cities) {
-      City* city = it.second;
-      if (city->getLightUpkeep() < city->fuel + 200) {
+    for (auto it : player.cities)
+    {
+      City *city = it.second;
+      if (city->getLightUpkeep() < city->fuel + 200)
+      {
         citiesToBuild += 1;
       }
     }
@@ -57,7 +59,7 @@ int main()
       {
         if (unit.getCargoSpaceLeft() > 0)
         {
-          Cell *closestResourceTile = resourceTiles[0];
+          Cell *closestResourceTile;
           float closestDist = 9999999;
           for (auto it = resourceTiles.begin(); it != resourceTiles.end(); it++)
           {
@@ -69,8 +71,11 @@ int main()
               closestResourceTile = cell;
             }
           }
-          auto dir = unit.pos.directionTo(closestResourceTile->pos);
-          commands.push_back(unit.move(dir));
+          if (closestResourceTile != nullptr)
+          {
+            auto dir = unit.pos.directionTo(closestResourceTile->pos);
+            commands.push_back(unit.move(dir));
+          }
         }
         else
         {
@@ -80,13 +85,29 @@ int main()
             auto city_iter = player.cities.begin();
             auto city = city_iter->second;
 
-            auto dir = unit.pos.directionTo(city->citytiles[0]->pos);
-
-            if (citiesToBuild > 0 && unit.pos.isAdjacent(city->citytiles[0]->pos) && unit.canBuild(gameMap)) {
-              commands.push_back(unit.buildCity());
+            float closestDist = 999999;
+            CityTile *closestCityTile;
+            for (auto citytile : city->citytiles)
+            {
+              float dist = citytile->pos.distanceTo(unit.pos);
+              if (dist < closestDist)
+              {
+                closestCityTile = citytile;
+                closestDist = dist;
+              }
             }
-            else {
-              commands.push_back(unit.move(dir));
+            if (closestCityTile != nullptr)
+            {
+              auto dir = unit.pos.directionTo(closestCityTile->pos);
+
+              if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile->pos) && unit.canBuild(gameMap))
+              {
+                commands.push_back(unit.buildCity());
+              }
+              else
+              {
+                commands.push_back(unit.move(dir));
+              }
             }
           }
         }

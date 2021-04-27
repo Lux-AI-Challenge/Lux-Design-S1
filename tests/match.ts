@@ -17,7 +17,7 @@ const js = './kits/js/bot.js';
 const testjs = './tests/bots/js/bot.js'; // deterministic
 const spamjs = './tests/bots/spam/bot.js'; // has randomness
 const bugjs = './kits/bug/bot.js';
-const cpp = './kits/cpp/main.cpp';
+const cpp = './kits/cpp/simple/main.cpp';
 const cppTranspiled = './kits/cpp/main.js';
 const botList = [
   { file: js, name: 'test1', existingID: 'abc' },

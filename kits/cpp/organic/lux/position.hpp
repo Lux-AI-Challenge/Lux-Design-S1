@@ -59,7 +59,7 @@ namespace lux
             return sqrt(dx * dx + dy * dy);
         }
 
-        /** Returns closest direction to targetPos, or null if staying put is best */
+        /** Returns closest direction to targetPos, or center if staying put is best */
         DIRECTIONS directionTo(const Position &targetPos)
         {
 
