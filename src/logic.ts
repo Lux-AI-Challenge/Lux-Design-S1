@@ -50,21 +50,19 @@ export class LuxDesignLogic {
     const game = generateGame(state.configs);
 
     state.game = game;
-    if (state.configs.storeReplay) {
-      game.replay = new Replay(match, state.configs.compressReplay);
-      game.replay.data.seed = state.configs.seed;
-      game.replay.data.width = forcedWidth;
-      game.replay.data.height = forcedHeight;
-      game.replay.data.mapType = state.configs.mapType;
-    }
+
+    game.replay = new Replay(match, state.configs.compressReplay);
+    game.replay.data.seed = state.configs.seed;
+    game.replay.data.width = forcedWidth;
+    game.replay.data.height = forcedHeight;
+    game.replay.data.mapType = state.configs.mapType;
+
     match.log.detail(state.configs);
     // store the state into the match so it can be used again in `update` and `getResults`
     match.state = state;
 
     game.map.sortResourcesDeterministically();
     if (game.replay) {
-      // game.replay.writeMap(state.game.map);
-      // game.replay.writeInitialUnits(game);
       game.replay.writeTeams(match.agents);
     }
 
@@ -233,7 +231,7 @@ export class LuxDesignLogic {
       if (state.configs.debug) {
         await this.debugViewer(game);
       }
-      if (game.replay) {
+      if (game.configs.storeReplay) {
         game.replay.writeOut();
       }
       return 'finished' as Match.Status.FINISHED;

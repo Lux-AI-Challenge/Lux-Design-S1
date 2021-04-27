@@ -12,7 +12,8 @@
     "NORTH": "n",
     "WEST": "w",
     "EAST": "e",
-    "SOUTH": "s"
+    "SOUTH": "s",
+    "CENTER": "c"
   },
   "PARAMETERS": {
     "DAY_LENGTH": 20,

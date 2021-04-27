@@ -1,0 +1,14 @@
+{
+  "files.associations": {
+    "string": "cpp",
+    "iostream": "cpp",
+    "bitset": "cpp",
+    "cstdio": "cpp",
+    "string_view": "cpp",
+    "iosfwd": "cpp",
+    "vector": "cpp",
+    "memory_resource": "cpp",
+    "utility": "cpp",
+    "set": "cpp"
+  }
+}

@@ -306,6 +306,10 @@ export class Game {
                 }
                 break;
               }
+              case Game.DIRECTIONS.CENTER: {
+                // do nothing
+                break;
+              }
               default:
                 errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} in invalid direction ${direction}`;
                 valid = false;
@@ -917,6 +921,7 @@ export namespace Game {
     EAST = 'e',
     SOUTH = 's',
     WEST = 'w',
+    CENTER = 'c',
   }
 }
 
