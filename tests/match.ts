@@ -22,7 +22,7 @@ const cppOrganic = './kits/cpp/organic/main.cpp';
 const cppTranspiled = './kits/cpp/main.js';
 const cppOrganicTranspiled = './kits/cpp/organic/main.js';
 const botList = [
-  { file: js, name: 'test1', existingID: 'abc' },
+  { file: cppOrganicTranspiled, name: 'test1', existingID: 'abc' },
   { file: cppOrganicTranspiled, name: 'cppjs', existingID: 'def' },
 ];
 const run = async () => {
@@ -40,8 +40,8 @@ const run = async () => {
     engineOptions: {
       noStdErr: false,
       timeout: {
-        active: true
-      }
+        active: true,
+      },
     },
     loggingLevel: Logger.LEVEL.ERROR,
     mapType: 'debug',
@@ -55,13 +55,15 @@ const run = async () => {
   console.log(res);
   if (match.state.profile) {
     console.log(
-      `Update Stage: avg ${match.state.profile.updateStage.reduce((acc, curr) => acc + curr) /
-      match.state.profile.updateStage.length
+      `Update Stage: avg ${
+        match.state.profile.updateStage.reduce((acc, curr) => acc + curr) /
+        match.state.profile.updateStage.length
       }ms`
     );
     console.log(
-      `Data Transfer: avg ${match.state.profile.dataTransfer.reduce((acc, curr) => acc + curr) /
-      match.state.profile.dataTransfer.length
+      `Data Transfer: avg ${
+        match.state.profile.dataTransfer.reduce((acc, curr) => acc + curr) /
+        match.state.profile.dataTransfer.length
       }ms`
     );
   }

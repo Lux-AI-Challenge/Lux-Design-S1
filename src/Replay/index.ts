@@ -14,7 +14,7 @@ export class Replay {
     teamDetails: Array<{
       name: string;
       tournamentID: string;
-    }>
+    }>;
     allCommands: Array<Array<MatchEngine.Command>>;
   } = {
     seed: 0,
@@ -36,10 +36,12 @@ export class Replay {
       match.configs.storeReplayDirectory,
       replayFileName
     );
-    if (!fs.existsSync(match.configs.storeReplayDirectory)) {
-      fs.mkdirSync(match.configs.storeReplayDirectory, { recursive: true });
+    if (fs.existsSync) {
+      if (!fs.existsSync(match.configs.storeReplayDirectory)) {
+        fs.mkdirSync(match.configs.storeReplayDirectory, { recursive: true });
+      }
+      fs.writeFileSync(this.replayFilePath, '');
     }
-    fs.writeFileSync(this.replayFilePath, '');
   }
   public writeTeams(agents: Agent[]): void {
     agents.forEach((agent) => {
@@ -50,10 +52,11 @@ export class Replay {
       this.data.teamDetails.push({
         name: agent.name,
         tournamentID: id,
-      })
+      });
     });
   }
   public writeOut(): void {
+    if (!fs.appendFileSync) return;
     if (this.compressReplay) {
       const zipper = new JSZip();
       zipper.file(this.replayFilePath, JSON.stringify(this.data));

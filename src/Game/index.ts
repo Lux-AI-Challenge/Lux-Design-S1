@@ -638,7 +638,9 @@ export class Game {
         amountDistributed += distributeAmount;
 
         // update stats
-        this.stats.teamStats[worker.team].resourcesCollected[type] += Math.floor(distributeAmount);
+        this.stats.teamStats[worker.team].resourcesCollected[
+          type
+        ] += Math.floor(distributeAmount);
 
         // subtract how much was given.
         amountToDistribute -= distributeAmount;
@@ -664,9 +666,9 @@ export class Game {
         unit.cargo.uranium *
         this.configs.parameters.RESOURCE_TO_FUEL_RATE.URANIUM;
       city.fuel += fuelGained;
-      
+
       this.stats.teamStats[unit.team].fuelGenerated += fuelGained;
-      
+
       unit.cargo = {
         wood: 0,
         uranium: 0,
@@ -837,6 +839,16 @@ export class Game {
     });
 
     return prunedActions;
+  }
+  isNight(): boolean {
+    if (this.state.turn === 0) return false;
+    const dayNightTime =
+      this.configs.parameters.NIGHT_LENGTH + this.configs.parameters.DAY_LENGTH;
+    const mod = this.state.turn % dayNightTime;
+    if (mod > this.configs.parameters.DAY_LENGTH || mod === 0) {
+      return true;
+    }
+    return false;
   }
 }
 export namespace Game {

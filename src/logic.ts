@@ -160,7 +160,6 @@ export class LuxDesignLogic {
         );
       });
     });
-    
 
     for (let y = 0; y < game.map.height; y++) {
       for (let x = 0; x < game.map.width; x++) {
@@ -343,7 +342,7 @@ export class LuxDesignLogic {
       });
     }
 
-    if (this.currentTurnIsNight(game)) {
+    if (game.isNight()) {
       this.handleNight(state);
     }
 
@@ -372,7 +371,8 @@ export class LuxDesignLogic {
 
   static currentTurnIsNight(game: Game): boolean {
     if (game.state.turn === 0) return false;
-    const dayNightTime = game.configs.parameters.NIGHT_LENGTH + game.configs.parameters.DAY_LENGTH;
+    const dayNightTime =
+      game.configs.parameters.NIGHT_LENGTH + game.configs.parameters.DAY_LENGTH;
     const mod = game.state.turn % dayNightTime;
     if (mod > game.configs.parameters.DAY_LENGTH || mod === 0) {
       return true;
@@ -462,6 +462,6 @@ export class LuxDesignLogic {
           }
         }
       });
-    })
+    });
   }
 }

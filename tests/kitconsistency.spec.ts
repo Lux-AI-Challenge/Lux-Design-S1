@@ -1,11 +1,8 @@
 import chai from 'chai';
 import 'mocha';
 const expect = chai.expect;
-import { Game } from '../src/Game';
-import { GameMap } from '../src/GameMap';
 import { create, Logger } from 'dimensions-ai';
 import { LuxDesign, LuxMatchState } from '../src';
-import { fail } from 'assert';
 
 describe('Test kit consistency', () => {
   const design = new LuxDesign('Lux Design');
@@ -48,12 +45,11 @@ describe('Test kit consistency', () => {
       noStdErr: false,
       timeout: {
         active: true,
-        max: 2000
-      }
+        max: 2000,
+      },
     },
-  }
+  };
   it('c++ consistency test', async () => {
-    
     let botList = [bots.js, bots.cppTranspiled];
     const match = await luxdim.createMatch(botList, options);
     const res = await match.run();
@@ -63,11 +59,11 @@ describe('Test kit consistency', () => {
     const res2 = await match.run();
     const state: LuxMatchState = match.state;
     const state2: LuxMatchState = match.state;
-    let cmds1 = state.game.replay.data.allCommands;
-    let cmds2 = state2.game.replay.data.allCommands;
+    const cmds1 = state.game.replay.data.allCommands;
+    const cmds2 = state2.game.replay.data.allCommands;
     for (let turn = 0; turn < cmds1.length; turn++) {
-      let match1_cmds = cmds1[turn];
-      let match2_cmds = cmds2[turn];
+      const match1_cmds = cmds1[turn];
+      const match2_cmds = cmds2[turn];
       expect(match1_cmds).to.eql(match2_cmds);
     }
   }).timeout(10000);

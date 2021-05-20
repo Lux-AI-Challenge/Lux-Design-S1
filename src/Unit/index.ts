@@ -6,7 +6,6 @@ import {
   SpawnCityAction,
   PillageAction,
 } from '../Actions';
-import { MatchWarn } from 'dimensions-ai';
 import { Actionable } from '../Actionable';
 import { Resource } from '../Resource';
 import { Position } from '../GameMap/position';
@@ -120,11 +119,16 @@ export class Cart extends Unit {
   }
 
   turn(game: Game): void {
+    const cell = game.map.getCellByPos(this.pos);
+    const isNight = game.isNight();
+    const cooldownSpeed = isNight ? 2 : 1;
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       if (action instanceof MoveAction) {
         game.moveUnit(action.team, action.unitid, action.direction);
-        this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.CART;
+        this.cooldown +=
+          this.configs.parameters.UNIT_ACTION_COOLDOWN.CART * cooldownSpeed;
+        this.cooldown -= cell.getTileCooldown();
       } else if (action instanceof TransferAction) {
         game.transferResources(
           action.team,
@@ -133,25 +137,23 @@ export class Cart extends Unit {
           action.resourceType,
           action.amount
         );
-        this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.CART;
+        this.cooldown +=
+          this.configs.parameters.UNIT_ACTION_COOLDOWN.CART * cooldownSpeed;
+        this.cooldown -= cell.getTileCooldown();
       }
     }
 
     // auto create roads by increasing the cooldown value of a cell
-    const cell = game.map.getCellByPos(this.pos);
     if (cell.getTileCooldown() < this.configs.parameters.MAX_CELL_COOLDOWN) {
       cell.cooldown = Math.min(
         cell.cooldown + this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE,
         this.configs.parameters.MAX_CELL_COOLDOWN
       );
-      game.stats.teamStats[this.team].roadsBuilt += this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE;
+      game.stats.teamStats[
+        this.team
+      ].roadsBuilt += this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE;
     }
-    if (this.cooldown > 0) {
-      this.cooldown -= cell.getTileCooldown();
-      if (this.cooldown < 0) {
-        this.cooldown = 0;
-      }
-    }
+    this.cooldown = Math.max(this.cooldown - 1, 0);
   }
 }
 
@@ -174,12 +176,14 @@ export class Worker extends Unit {
   }
 
   turn(game: Game): void {
+    const cell = game.map.getCellByPos(this.pos);
+    const isNight = game.isNight();
+    const cooldownSpeed = isNight ? 2 : 1;
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
-
+      let acted = true;
       if (action instanceof MoveAction) {
         game.moveUnit(action.team, action.unitid, action.direction);
-        this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
       } else if (action instanceof TransferAction) {
         game.transferResources(
           action.team,
@@ -188,24 +192,22 @@ export class Worker extends Unit {
           action.resourceType,
           action.amount
         );
-        this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
       } else if (action instanceof SpawnCityAction) {
         game.spawnCityTile(action.team, this.pos.x, this.pos.y);
-        this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
       } else if (action instanceof PillageAction) {
-        const cell = game.map.getCellByPos(this.pos);
         cell.cooldown = Math.max(
           cell.cooldown - this.configs.parameters.PILLAGE_RATE,
           this.configs.parameters.MIN_CELL_COOLDOWN
         );
-        this.cooldown += this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER;
+      } else {
+        acted = false;
+      }
+      if (acted) {
+        this.cooldown +=
+          this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER * cooldownSpeed;
+        this.cooldown -= cell.getTileCooldown();
       }
     }
-    if (this.cooldown > 0) {
-      this.cooldown -= game.map.getCellByPos(this.pos).getTileCooldown();
-      if (this.cooldown < 0) {
-        this.cooldown = 0;
-      }
-    }
+    this.cooldown = Math.max(this.cooldown - 1, 0);
   }
 }

@@ -36,9 +36,9 @@ export interface LuxMatchConfigs {
   debug?: boolean;
   runProfiler: boolean;
   debugDelay: number;
-  /** 
-   * whether to store debug annotations in the replay for viewing. 
-   * @default false 
+  /**
+   * whether to store debug annotations in the replay for viewing.
+   * @default false
    */
   debugAnnotations: boolean;
   seed: number | undefined;
@@ -77,11 +77,6 @@ export interface LuxMatchConfigs {
     };
     /** How much lower fuel cost a city has during night if it has adjacent city tiles */
     CITY_ADJACENCY_BONUS: number;
-    /** Time it takes to build the following units */
-    BUILD_TIME: {
-      WORKER: number;
-      CART: number;
-    };
     /** Number of research points required to unlock the mining of the following resources */
     RESEARCH_REQUIREMENTS: {
       COAL: number;
