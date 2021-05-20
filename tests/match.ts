@@ -43,7 +43,7 @@ const run = async () => {
         active: true
       }
     },
-    loggingLevel: Logger.LEVEL.ALL,
+    loggingLevel: Logger.LEVEL.ERROR,
     mapType: 'debug',
   });
 
