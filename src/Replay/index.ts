@@ -24,6 +24,7 @@ export class Replay {
     height: -1,
     teamDetails: [],
   };
+  public storeReplay: boolean = false;
   constructor(match: Match, public compressReplay: boolean) {
     const d = new Date().valueOf();
     let replayFileName = `${d}_${match.id}`;
@@ -36,7 +37,8 @@ export class Replay {
       match.configs.storeReplayDirectory,
       replayFileName
     );
-    if (fs.existsSync) {
+    this.storeReplay = match.configs.storeReplay;
+    if (fs.existsSync && this.storeReplay) {
       if (!fs.existsSync(match.configs.storeReplayDirectory)) {
         fs.mkdirSync(match.configs.storeReplayDirectory, { recursive: true });
       }
@@ -56,7 +58,7 @@ export class Replay {
     });
   }
   public writeOut(): void {
-    if (!fs.appendFileSync) return;
+    if (!fs.appendFileSync || !this.storeReplay) return;
     if (this.compressReplay) {
       const zipper = new JSZip();
       zipper.file(this.replayFilePath, JSON.stringify(this.data));

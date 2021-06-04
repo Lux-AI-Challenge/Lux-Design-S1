@@ -22,8 +22,8 @@ const cppOrganic = './kits/cpp/organic/main.cpp';
 const cppTranspiled = './kits/cpp/main.js';
 const cppOrganicTranspiled = './kits/cpp/organic/main.js';
 const botList = [
-  { file: cppOrganicTranspiled, name: 'test1', existingID: 'abc' },
-  { file: cppOrganicTranspiled, name: 'cppjs', existingID: 'def' },
+  { file: testjs, name: 'test1', existingID: 'abc' },
+  { file: testjs, name: 'cppjs', existingID: 'def' },
 ];
 const run = async () => {
   const match = await luxdim.createMatch(botList, {
