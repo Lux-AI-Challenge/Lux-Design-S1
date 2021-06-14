@@ -5,20 +5,19 @@
   "main": "test.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "rm -rf dist && webpack",
     "clean": "rm -rf lib && rm -rf node_modules"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@lux-ai/2020-challenge": "^1.1.32",
-    "dimensions-ai": "^4.8.0"
-    
+    "dimensions-ai": "^4.8.3"
   },
   "devDependencies": {
+    "ts-loader": "^9.2.3",
     "typescript": "^4.2.4",
     "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.2",
-    "ts-loader": "^9.2.3"
+    "webpack-cli": "^4.7.2"
   }
 }

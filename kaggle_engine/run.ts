@@ -1,16 +1,11 @@
-// import { create, Logger, Match, MatchEngine } from "dimensions-ai";
-import { create } from "dimensions-ai/lib/main/Dimension"
-// import { create } from "dimensions-ai/lib/main/Match"
+import { create, Logger, Match, MatchEngine } from "dimensions-ai";
 import readline from "readline";
 import {
   LuxDesign,
   LuxMatchConfigs,
   LuxMatchState,
-} from "@lux-ai/2020-challenge/lib/es6";
+} from "@lux-ai/2020-challenge";
 import { DeepPartial } from "dimensions-ai/lib/main/utils/DeepPartial";
-import { Match } from "dimensions-ai/lib/main/Match";
-import { MatchEngine } from "dimensions-ai/lib/main/MatchEngine";
-import { Logger } from "dimensions-ai/lib/main/Logger";
 
 const lux2021 = new LuxDesign("lux_ai_2021");
 
