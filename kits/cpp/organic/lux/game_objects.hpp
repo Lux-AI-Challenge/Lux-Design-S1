@@ -33,7 +33,7 @@ namespace lux
             this->type = type;
             this->cooldown = cooldown;
             this->cargo.wood = wood;
-            this->cargo.coal = wood;
+            this->cargo.coal = coal;
             this->cargo.uranium = uranium;
         };
         bool isWorker()
@@ -67,7 +67,7 @@ namespace lux
         bool canBuild(const GameMap &gameMap) {
             auto cell = gameMap.getCellByPos(this->pos);
             if (!cell->hasResource()) {
-                // future, check cargo?
+                // TODO: future, check cargo?
                 return true;
             }
             return false;
