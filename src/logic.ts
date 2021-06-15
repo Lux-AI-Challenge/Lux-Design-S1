@@ -306,7 +306,9 @@ export class LuxDesignLogic {
     );
 
     prunedMoveActions.forEach((action) => {
-      game.getUnit(action.team, action.unitid).giveAction(action);
+      if (action.direction !== Game.DIRECTIONS.CENTER) {
+        game.getUnit(action.team, action.unitid).giveAction(action);
+      }
     });
 
     // now we go through every actionable entity and execute actions

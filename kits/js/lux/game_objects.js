@@ -100,7 +100,16 @@ class Unit {
     }
   }
 
-  /** whether or not the unit can move or not */
+  /** whether or not the unit can build where it is right now */
+  canBuild(gameMap) {
+    let cell = gameMap.getCellByPos(this.pos);
+    if (cell.resource === null) {
+      return true;
+    }
+    return false;
+  }
+
+  /** whether or not the unit can move or not. This does not check for potential collisions into other units or enemy cities */
   canMove() {
     return this.cooldown === 0;
   }
