@@ -6,21 +6,21 @@
 
 using namespace std;
 using namespace lux;
-// using json = nlohmann::json;
 int main()
 {
-  // std::ifstream ifs("lux/game_constants.json");
-  // json jf = json::parse(ifs);
   kit::Agent agent = kit::Agent();
   // initialize
   agent.initialize();
 
   while (true)
   {
+    /** Do not edit! **/
     // wait for updates
     agent.update();
 
     vector<string> commands = vector<string>();
+
+    /** AI Code Goes Below! **/
 
     Player player = agent.players[agent.id];
     Player opponent = agent.players[(agent.id + 1) % 2];
@@ -136,7 +136,10 @@ int main()
         }
       }
     }
+    
+    /** AI Code Goes Above! **/
 
+    /** Do not edit! **/
     for (int i = 0; i < commands.size(); i++)
     {
       if (i != 0)
