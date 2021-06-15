@@ -28,6 +28,19 @@ describe('Test movement handling', () => {
     expect(game.map.getCell(4, 4).units.size).to.equal(0);
     expect(game.map.getCell(4, 5).units.get(w1.id)).to.equal(w1);
   });
+  it('should not move units given center direction', () => {
+    const w1 = game.spawnWorker(0, 4, 4);
+    const action = game.validateCommand({
+      agentID: 0,
+      command: `m ${w1.id} c`,
+    });
+    w1.giveAction(action);
+    w1.turn(game);
+    expect(w1.pos.y).to.equal(4);
+    expect(w1.pos.x).to.equal(4);
+    expect(game.map.getCell(4, 4).units.size).to.equal(1);
+    expect(game.map.getCell(4, 4).units.get(w1.id)).to.equal(w1);
+  });
   describe('collison testing', () => {
     it('should remove all actions if all go to the same place', () => {
       // the following units will collide at (4, 5)
