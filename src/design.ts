@@ -1,11 +1,12 @@
-import { Design, Match, Tournament, MatchEngine } from 'dimensions-ai';
+import { Design, Match, Tournament, MatchEngine, DesignOptions } from 'dimensions-ai';
 import { LuxMatchResults, LuxMatchState } from './types';
 import { Unit } from './Unit';
 import { LuxDesignLogic } from './logic';
+import { DeepPartial } from 'dimensions-ai/lib/main/utils/DeepPartial';
 
 export class LuxDesign extends Design {
-  constructor(name: string) {
-    super(name);
+  constructor(name: string, options: DeepPartial<DesignOptions> = {}) {
+    super(name, options);
   }
   async initialize(match: Match): Promise<void> {
     return LuxDesignLogic.initialize(match);

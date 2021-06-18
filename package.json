@@ -28,6 +28,9 @@
   "files": [
     "lib"
   ],
+  "bin": {
+    "lux-ai-2021-run": "./lib/es5/bin.js"
+  },
   "homepage": "https://github.com/Lux-AI-Challenge/LuxDesign#readme",
   "dependencies": {
     "@types/seedrandom": "^2.4.28",
@@ -35,13 +38,15 @@
     "dimensions-ai": "^4.8.0",
     "jszip": "^3.5.0",
     "nanoid": "^3.1.12",
-    "seedrandom": "^3.0.5"
+    "seedrandom": "^3.0.5",
+    "yargs": "^17.0.1"
   },
   "sideEffects": false,
   "devDependencies": {
     "@types/chai": "^4.2.12",
     "@types/mocha": "^8.0.3",
     "@types/node": "^14.6.2",
+    "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "chai": "^4.2.0",

@@ -9,7 +9,7 @@ Change this name some time later
 Install the design with
 
 ```
-npm install -g lux-ai-challenge-2020
+npm install -g lux-ai-challenge-2021
 ```
 
 To run a match from command line, simply run

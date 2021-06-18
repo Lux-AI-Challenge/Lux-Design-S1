@@ -14,11 +14,14 @@ After setting up and running the `source ./emsdk_env.sh` (or `emsdk_env.bat` on 
 
 Now copy one of the folders, `organic` or `simple` which are two starting strategies provided by us along with the necessary infrastructure to compete in the competition. You may edit anything you want, but make sure to always have a `main.cpp` file that follows the structure given by us. 
 
-## Submission to Competition
+## Running Matches and Submission to Competition
 
 We **highly recommend** you read this section first before starting to code your bot
 
 First navigate to the bot folder you are working in. Run the `compile.sh` or `compile.bat` program. This should automatically generate some transpiled Web Assembly (.wasm) and Javascript (.js) code in your folder. 
+
+To test your setup is working correctly, we will run a single match of your bot against itself. If you haven't already, make sure you follow the getting started instructions for the overall competition.
+
 
 Now test your submission on the competition by going to [INSERT KAGGLE COMPETITION SUBMISSION LINK] and click ....
 
@@ -34,3 +37,7 @@ If you haven't read it already, take a look at the [design specifications for th
 All of our kits follow a common API through which you can use to access various functions and properties that will help you develop your strategy and bot.
 
 The online version is hosted here: [ADD API LINK], the markdown version is here: [ADD HERE]
+
+## FAQ
+
+As questions come up, this will be populated with frequently asked questions regarding the C++ kit.
