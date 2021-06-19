@@ -16,6 +16,7 @@ class Player {
     // map unit id to the unit
     this.units = [];
     this.cities = new Map();
+    this.cityTileCount = 0;
   }
   researchedCoal() {
     return this.researchPoints >= GAME_CONSTANTS.PARAMETERS.RESEARCH_REQUIREMENTS.COAL;

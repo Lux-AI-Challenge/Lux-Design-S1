@@ -106,8 +106,10 @@ class Agent {
     players = this.gameState.players
     players[0].units = [];
     players[0].cities = new Map();
+    players[0].cityTileCount = 0;
     players[1].units = [];
     players[1].cities = new Map();
+    players[1].cityTileCount = 0;
   }
   async retrieveUpdates() {
     this.resetPlayerStates();
@@ -163,6 +165,7 @@ class Agent {
           const city = this.gameState.players[team].cities.get(cityid);
           const citytile = city.addCityTile(x, y, cooldown);
           this.gameState.map.getCell(x, y).citytile = citytile;
+          this.gameState.players[team].cityTileCount += 1;
           break;
         }
         case INPUT_CONSTANTS.CELL_COOLDOWN: {
