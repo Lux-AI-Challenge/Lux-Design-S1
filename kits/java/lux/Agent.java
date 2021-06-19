@@ -1,4 +1,4 @@
-package kit;
+package lux;
 
 import java.util.Scanner;
 
