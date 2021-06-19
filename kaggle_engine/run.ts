@@ -4,7 +4,7 @@ import {
   LuxDesign,
   LuxMatchConfigs,
   LuxMatchState,
-} from "@lux-ai/2020-challenge";
+} from "@lux-ai/2021-challenge";
 import { DeepPartial } from "dimensions-ai/lib/main/utils/DeepPartial";
 
 const lux2021 = new LuxDesign("lux_ai_2021");
@@ -14,6 +14,7 @@ const myDimension = create(lux2021, {
   loggingLevel: Logger.LEVEL.NONE,
   activateStation: false,
   observe: false,
+  createBotDirectories: false,
 });
 
 const rl = readline.createInterface({

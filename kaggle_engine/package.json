@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lux-ai/2020-challenge": "^1.1.33",
-    "dimensions-ai": "^4.8.3"
+    "@lux-ai/2021-challenge": "^0.0.1",
+    "dimensions-ai": "^4.8.4"
   },
   "devDependencies": {
     "ts-loader": "^9.2.3",
