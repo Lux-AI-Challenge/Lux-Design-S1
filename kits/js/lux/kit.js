@@ -75,37 +75,44 @@ class Agent {
   async initialize() {
 
     // get agent ID
-    this.id = (await this.getLine()).nextInt();
-    this.turn = 0;
+    const id = (await this.getLine()).nextInt();
     // get some other necessary initial input
     let mapInfo = (await this.getLine());
     let width = mapInfo.nextInt();
     let height = mapInfo.nextInt();
     this.mapWidth = width;
     this.mapHeight = height;
-    this.map = new GameMap(width, height);
-    this.players = [new Player(0), new Player(1)];
+    const map = new GameMap(width, height);
+    const players = [new Player(0), new Player(1)];
+
+    this.gameState = {
+      id,
+      map,
+      players,
+      turn: 0,
+    }
   }
   /**
    * Updates agent's own known state of `Match`
    * User should edit this according to their `Design`.
    */
   async update() {
-    this.turn++;
+    this.gameState.turn++;
     // wait for the engine to send any updates
     await this.retrieveUpdates();
   }
 
   resetPlayerStates() {
-    this.players[0].units = [];
-    this.players[0].cities = new Map();
-    this.players[1].units = [];
-    this.players[1].cities = new Map();
+    players = this.gameState.players
+    players[0].units = [];
+    players[0].cities = new Map();
+    players[1].units = [];
+    players[1].cities = new Map();
   }
   async retrieveUpdates() {
     this.resetPlayerStates();
     // TODO: this can be optimized. we only reset because some resources get removed
-    this.map = new GameMap(this.mapWidth, this.mapHeight);
+    this.gameState.map = new GameMap(this.mapWidth, this.mapHeight);
     while (true) {
       let update = (await this.getLine());
       if (update.str === INPUT_CONSTANTS.DONE) {
@@ -115,7 +122,7 @@ class Agent {
       switch (inputIdentifier) {
         case INPUT_CONSTANTS.RESEARCH_POINTS: {
           const team = update.nextInt();
-          this.players[team].researchPoints = update.nextInt();
+          this.gameState.players[team].researchPoints = update.nextInt();
           break;
         }
         case INPUT_CONSTANTS.RESOURCES: {
@@ -123,7 +130,7 @@ class Agent {
           const x = update.nextInt();
           const y = update.nextInt();
           const amt = update.nextInt();
-          this.map._setResource(type, x, y, amt);
+          this.gameState.map._setResource(type, x, y, amt);
           break;
         }
         case INPUT_CONSTANTS.UNITS: {
@@ -136,7 +143,7 @@ class Agent {
           const wood = update.nextInt();
           const coal = update.nextInt();
           const uranium = update.nextInt();
-          this.players[team].units.push(new Unit(team, unittype, unitid, x, y, cooldown, wood, coal, uranium));
+          this.gameState.players[team].units.push(new Unit(team, unittype, unitid, x, y, cooldown, wood, coal, uranium));
           break;
         }
         case INPUT_CONSTANTS.CITY: {
@@ -144,7 +151,7 @@ class Agent {
           const cityid = update.nextStr();
           const fuel = update.nextFloat();
           const lightUpkeep = update.nextFloat();
-          this.players[team].cities.set(cityid, new City(team, cityid, fuel, lightUpkeep));
+          this.gameState.players[team].cities.set(cityid, new City(team, cityid, fuel, lightUpkeep));
           break;
         }
         case INPUT_CONSTANTS.CITY_TILES: {
@@ -153,16 +160,16 @@ class Agent {
           const x = update.nextInt();
           const y = update.nextInt();
           const cooldown = update.nextFloat();
-          const city = this.players[team].cities.get(cityid);
+          const city = this.gameState.players[team].cities.get(cityid);
           const citytile = city.addCityTile(x, y, cooldown);
-          this.map.getCell(x, y).citytile = citytile;
+          this.gameState.map.getCell(x, y).citytile = citytile;
           break;
         }
         case INPUT_CONSTANTS.CELL_COOLDOWN: {
           const x = update.nextInt();
           const y = update.nextInt();
           const cooldown = update.nextFloat();
-          this.map.getCell(x, y).cooldown = cooldown;
+          this.gameState.map.getCell(x, y).cooldown = cooldown;
           break;
         }
       }

@@ -27,7 +27,7 @@ namespace lux
         /** Whether or not this unit can research or build */
         bool canAct()
         {
-            return this->cooldown == 0;
+            return this->cooldown < 1;
         };
         /** returns command to ask this tile to research this turn */
         string research()

@@ -115,7 +115,7 @@ export class Cart extends Unit {
   }
 
   canMove(): boolean {
-    return this.cooldown === 0;
+    return this.cooldown < 1;
   }
 
   turn(game: Game): void {
@@ -172,7 +172,7 @@ export class Worker extends Unit {
   }
 
   canMove(): boolean {
-    return this.cooldown === 0;
+    return this.cooldown < 1;
   }
 
   turn(game: Game): void {

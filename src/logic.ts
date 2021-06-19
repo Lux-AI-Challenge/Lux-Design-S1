@@ -164,9 +164,7 @@ export class LuxDesignLogic {
     for (let y = 0; y < game.map.height; y++) {
       for (let x = 0; x < game.map.width; x++) {
         const cd = game.map.getCell(x, y).cooldown;
-        if (cd !== 1) {
-          promises.push(match.sendAll(`ccd ${x} ${y} ${cd}`));
-        }
+        promises.push(match.sendAll(`ccd ${x} ${y} ${cd}`));
       }
     }
     await Promise.all(promises);

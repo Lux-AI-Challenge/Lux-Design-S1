@@ -60,7 +60,7 @@ namespace lux
         /** whether or not the unit can move or not */
         bool canMove()
         {
-            return this->cooldown == 0;
+            return this->cooldown < 1;
         }
 
         /** whether or not the unit can build where it is right now */

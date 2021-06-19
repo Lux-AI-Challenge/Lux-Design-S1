@@ -10,20 +10,22 @@ agent.initialize().then(async () => {
     // wait for update from match engine
     await agent.update();
 
+    // contains all gameState in the current turn
+    const gameState = agent.gameState
+    
     // player is your player, opponent is the opposing player
-    const player = agent.players[agent.id];
-    const opponent = agent.players[(agent.id + 1) % 2];
+    const player = gameState.players[gameState.id];
+    const opponent = gameState.players[(gameState.id + 1) % 2];
+    let commands = [];
 
     /** AI Code goes here */
 
-    let commands = [];
-
     // make our units move south
-    if (agent.turn % 10 === 2 || (agent.turn % 10 === 1 && agent.turn !== 1)) {
+    if (gameState.turn % 10 === 2 || (gameState.turn % 10 === 1 && gameState.turn !== 1)) {
       player.units.forEach((unit) => {
         commands.push(unit.move(DIRECTIONS.SOUTH));
       });
-    } else if (agent.turn % 10 === 7 || agent.turn % 10 === 8) {
+    } else if (gameState.turn % 10 === 7 || gameState.turn % 10 === 8) {
       player.units.forEach((unit) => {
         commands.push(unit.move(DIRECTIONS.NORTH));
       });

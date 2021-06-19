@@ -71,11 +71,11 @@ export class CityTile extends Actionable {
   }
 
   canBuildUnit(): boolean {
-    return this.cooldown === 0;
+    return this.cooldown < 1;
   }
 
   canResearch(): boolean {
-    return this.cooldown === 0;
+    return this.cooldown < 1;
   }
 
   turn(game: Game): void {

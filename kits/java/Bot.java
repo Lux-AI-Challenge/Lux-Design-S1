@@ -1,6 +1,7 @@
 import kit.*;
-public class MyBot {
+public class Bot {
     public static void main(final String[] args) throws Exception {
+        System.out.println("HELLO WORLD KAGGLE");
         Agent agent = new Agent();
 
         while(true) {

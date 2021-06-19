@@ -38,19 +38,23 @@
     "RESOURCE_TO_FUEL_RATE": {
       "WOOD": 1,
       "COAL": 5,
-      "URANIUM": 25
+      "URANIUM": 100
+    },
+    "BUILD_TIME": {
+      "WORKER": 5,
+      "CART": 10
     },
     "RESEARCH_REQUIREMENTS": {
       "COAL": 40,
-      "URANIUM": 100
+      "URANIUM": 60
     },
     "CITY_ACTION_COOLDOWN": 10,
     "UNIT_ACTION_COOLDOWN": {
       "CART": 3,
-      "WORKER": 2
+      "WORKER": 1
     },
-    "MAX_CELL_COOLDOWN": 6,
-    "MIN_CELL_COOLDOWN": 0,
+    "MAX_CELL_COOLDOWN": 3,
+    "MIN_CELL_COOLDOWN": 1,
     "CART_ROAD_DEVELOPMENT_RATE": 0.5,
     "PILLAGE_RATE": 0.25
   }

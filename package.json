@@ -9,7 +9,8 @@
     "build": "rm -rf lib && tsc -p tsconfig-build.json && tsc -p tsconfig-buildes5.json",
     "prettier": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --fix --ext .ts"
+    "lint:fix": "eslint . --fix --ext .ts",
+    "clean": "sh clean.sh"
   },
   "repository": {
     "type": "git",
