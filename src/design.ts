@@ -45,12 +45,21 @@ export class LuxDesign extends Design {
         game.getTeamsUnits(Unit.TEAM.A),
         game.getTeamsUnits(Unit.TEAM.B),
       ];
-      if (unitCount[Unit.TEAM.A] > unitCount[Unit.TEAM.B]) {
+      if (unitCount[Unit.TEAM.A].size > unitCount[Unit.TEAM.B].size) {
         break figureresults;
-      } else if (unitCount[Unit.TEAM.A] < unitCount[Unit.TEAM.B]) {
+      } else if (unitCount[Unit.TEAM.A].size < unitCount[Unit.TEAM.B].size) {
         winningTeam = Unit.TEAM.B;
         losingTeam = Unit.TEAM.A;
         break figureresults;
+      }
+
+      // if tied still, count by fuel generation
+      if (game.stats.teamStats[Unit.TEAM.A].fuelGenerated > game.stats.teamStats[Unit.TEAM.B].fuelGenerated) {
+          break figureresults
+      } else if (game.stats.teamStats[Unit.TEAM.A].fuelGenerated < game.stats.teamStats[Unit.TEAM.B].fuelGenerated) {
+        winningTeam = Unit.TEAM.B;
+        losingTeam = Unit.TEAM.A;
+        break figureresults
       }
 
       // if still undecided, for now, go by random choice
