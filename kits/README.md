@@ -6,6 +6,8 @@ This folder contains all official kits provided by the Lux AI team or the Lux AI
 
 This section details the general API each kit adheres to. It follows the conventions of Python but other kits are exactly the same, differing only in syntax and naming conventions. Any individual difference should be noted in the comments in the kits themselves.
 
+Some methods you may notice are for generating an action, e.g. moving a unit, transferring resources, building units. These action methods always return a string, which should be added to the commands array, of which there are examples of how to do so in the starter kits.
+
 ### game_state
 
 The `game_state` object is provided to you and contains the complete information about the current state of the game at the current turn, `game_state.turn`. Each agent/player in the game has an id, with your bot's id equal to `game_state.id` and the other team's id being `(game_state.id + 1 ) % 2`.
@@ -130,9 +132,19 @@ This contains information on a particular player of a particular team.
 - `researched_coal() - bool` - whether or not this player's team has researched coal and can mine coal.
 - `researched_uranium() - bool` - whether or not this player's team has researched uranium and can mine uranium.
 
+#### Annotate
 
+The annotation object lets you create annotation commands that show up on the visualizer when debug mode is turned on. Note that these commands are stripped by competition servers but are available to see when running matches locally.
 
+**Methods**
 
+- `circle(x: int, y: int) -> str` - returns the draw circle annotation action. Will draw a unit sized circle on the visualizer at the current turn centered at the cell at the given x, y coordinates
+
+- `x(x: int, y: int) -> str` - returns the draw X annotation action. Will draw a unit sized X on the visualizer at the current turn centered at the cell at the given x, y coordinates
+
+- `line(x1: int, y1: int, x2: int, y2: int)` - returns the draw line annotation action. Will draw a line from the center of the cell at (x1, y1) to the center of the cell at (x2, y2).
+
+Note that all of these will be colored according to the team that created the annotation.
 
 
 

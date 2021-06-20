@@ -8,29 +8,29 @@ using namespace std;
 using namespace lux;
 int main()
 {
-  kit::Agent agent = kit::Agent();
+  kit::Agent gameState = kit::Agent();
   // initialize
-  agent.initialize();
+  gameState.initialize();
 
   while (true)
   {
     /** Do not edit! **/
     // wait for updates
-    agent.update();
+    gameState.update();
 
     vector<string> commands = vector<string>();
 
     /** AI Code Goes Below! **/
 
-    Player player = agent.players[agent.id];
-    Player opponent = agent.players[(agent.id + 1) % 2];
+    Player player = gameState.players[gameState.id];
+    Player opponent = gameState.players[(gameState.id + 1) % 2];
 
-    GameMap gameMap = agent.map;
+    GameMap gameMap = gameState.map;
 
     vector<Cell *> resourceTiles = vector<Cell *>();
-    for (int y = 0; y < agent.mapHeight; y++)
+    for (int y = 0; y < gameState.mapHeight; y++)
     {
-      for (int x = 0; x < agent.mapWidth; x++)
+      for (int x = 0; x < gameState.mapWidth; x++)
       {
         Cell *cell = gameMap.getCell(x, y);
         if (cell->hasResource())
@@ -145,7 +145,7 @@ int main()
     }
     cout << endl;
     // end turn
-    agent.end_turn();
+    gameState.end_turn();
   }
 
   return 0;
