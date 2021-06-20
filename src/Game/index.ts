@@ -205,6 +205,11 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} tried to build city with cooldown: ${unit.cooldown}`;
               break;
             }
+            if (unit.cargo.wood < this.configs.parameters.CITY_WOOD_COST) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build city with insufficient wood ${unit.cargo.wood}`;
+              break;
+            }
             if (acc.actionsPlaced.has(unitid)) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;

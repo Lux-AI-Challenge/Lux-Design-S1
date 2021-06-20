@@ -12,7 +12,7 @@ The `game_state` object is provided to you and contains the complete information
 
 Additionally in the game state, are the following nested objects, `map` of type [GameMap](#GameMap), and `players` which is a list with two [Player](#Player) objects indexed by the player's team id. The kits will show how to retrieve those objects. The rest of this section details the properties and methods of each type of object used in the kits.
 
-##### GameMap
+#### GameMap
 
 The map is organized such that the top left corner of the map is at `(0, 0)` and the bottom right is at `(width, height)`
 
@@ -27,7 +27,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 - `get_cell_by_pos(pos: Position)` - returns the Cell at the given pos
 - `get_cell(x: int, y: int)` - returns the Cell at the given x, y coordinates
 
-##### Position
+#### Position
 
 **Properties:**
 
@@ -46,7 +46,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 
 - `direction_to(target_pos: Position) -> DIRECTIONS` - returns the direction that would move you closest to `target_pos` from this position if you took a single step. In particular, will return `DIRECTIONS.CENTER` if this position is equal to the `target_pos`. Note that this does not check for potential collisions with other units but serves as a basic pathfinding method
 
-##### Cell
+#### Cell
 
 **Properties:**
 
@@ -59,7 +59,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 
 - `has_resource() -> bool` - returns true if this cell has a non-depleted resource, false otherwise
 
-##### City
+#### City
 
 **Properties:**
 
@@ -72,7 +72,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 
 - `get_light_upkeep() -> float` - returns the light upkeep per turn of the city. Fuel in the city is subtracted by the light upkeep each turn of night.
 
-##### CityTile
+#### CityTile
 
 **Properties:**
 
@@ -83,15 +83,15 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 
 **Methods:**
 
-`can_act() -> bool` - whether this city can perform an action this turn, which is when the cooldown is less than 1
+- `can_act() -> bool` - whether this city can perform an action this turn, which is when the cooldown is less than 1
 
-`research() -> str` - returns the research action
+- `research() -> str` - returns the research action
 
-`build_worker() -> str` - returns the build worker action. When applied and requirements are met, a worker will be built at the city.
+- `build_worker() -> str` - returns the build worker action. When applied and requirements are met, a worker will be built at the city.
 
-`build_cart() -> str` - returns the build cart action. When applied and requirements are met, a cart will be built at the city.
+- `build_cart() -> str` - returns the build cart action. When applied and requirements are met, a cart will be built at the city.
 
-##### Unit
+#### Unit
 
 **Properties:**
 
@@ -113,7 +113,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 - `build_city(): str` - returns the build city action. When applied, unit will try to build a city right under itself provided it is an empty tile with no city or resources and the [TODO] worker is carrying sufficient wood.
 - `pillage(): str` - returns the pillage action. When applied, unit will pillage the tile it is currently on top of and remove 0.25 of the cooldown.
 
-##### Player
+#### Player
 
 This contains information on a particular player of a particular team.
 

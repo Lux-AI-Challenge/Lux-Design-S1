@@ -28,7 +28,6 @@ export class City {
     this.id = 'c_' + idcount;
   }
 
-  // TODO: Add adjacency bonuses
   getLightUpkeep(): number {
     return (
       this.citycells.length * this.configs.parameters.LIGHT_UPKEEP.CITY -

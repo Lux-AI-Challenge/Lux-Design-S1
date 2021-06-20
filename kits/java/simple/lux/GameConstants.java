@@ -15,8 +15,8 @@ public final class GameConstants {
         static final int WORKER = 4;
         static final int CART = 10;
       }
-      static final int CITY_PENALTY_FACTOR = 10;
       static final int CITY_ADJACENCY_BONUS = 10;
+      static final int CITY_WOOD_COST = 100;
       static class RESOURCE_CAPACITY {
         static final int WORKER = 100;
         static final int CART = 2000;

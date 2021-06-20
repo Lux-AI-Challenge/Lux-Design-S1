@@ -34,8 +34,8 @@ namespace lux
           "WORKER": 4,
           "CART": 10
         },
-        "CITY_PENALTY_FACTOR": 10,
         "CITY_ADJACENCY_BONUS": 10,
+        "CITY_WOOD_COST": 100,
         "RESOURCE_CAPACITY": {
           "WORKER": 100,
           "CART": 2000

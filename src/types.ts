@@ -77,6 +77,8 @@ export interface LuxMatchConfigs {
     };
     /** How much lower fuel cost a city has during night if it has adjacent city tiles */
     CITY_ADJACENCY_BONUS: number;
+    /** wood resource cost for a worker to build a city */
+    CITY_WOOD_COST: number;
     /** Number of research points required to unlock the mining of the following resources */
     RESEARCH_REQUIREMENTS: {
       COAL: number;

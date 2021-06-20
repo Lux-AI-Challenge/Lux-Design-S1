@@ -32,8 +32,6 @@ namespace lux
             return this->x == pos.x && this->y == pos.y;
         }
 
-        // TODO: implement
-
         Position translate(const DIRECTIONS &direction, int units)
         {
             switch (direction)
