@@ -162,6 +162,11 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} tried to pillage tile with invalid/unowned unit id: ${unitid}`;
               break;
             }
+            if (!(unit.cooldown < 1)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to pillage tile with cooldown: ${unit.cooldown}`;
+              break;
+            }
             if (acc.actionsPlaced.has(unitid)) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
@@ -193,6 +198,11 @@ export class Game {
             if (cell.hasResource()) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to build city on non-empty resource tile`;
+              break;
+            }
+            if (!(unit.cooldown < 1)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to build city with cooldown: ${unit.cooldown}`;
               break;
             }
             if (acc.actionsPlaced.has(unitid)) {
@@ -381,6 +391,11 @@ export class Game {
             if (!teamState.units.has(destID)) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} does not own destination unit: ${srcID} for transfer`;
+              break;
+            }
+            if (!(teamState.units.get(srcID).cooldown < 1)) {
+              valid = false;
+              errormsg = `Agent ${cmd.agentID} tried to transfer resources with cooldown: ${teamState.units.get(srcID).cooldown}`;
               break;
             }
             if (acc.actionsPlaced.has(srcID)) {
@@ -647,6 +662,12 @@ export class Game {
       });
 
       originalCell.resource.amount -= amountDistributed;
+
+      // fixes a rare bug where sometimes JS will subtract a floating point (caused by a division somewhere) 
+      // and cause a 0 value to equal to the floating point approx equal to 7e-15
+      if (originalCell.resource.amount < 1e-10) {
+        originalCell.resource.amount = 0;
+      }
     }
   }
 

@@ -54,7 +54,7 @@ public class Agent {
           String type = updates[1];
           int x = Integer.parseInt(updates[2]);
           int y = Integer.parseInt(updates[3]);
-          int amt = Integer.parseInt(updates[4]);
+          int amt = (int)(Double.parseDouble(updates[4]));
           this.gameState.map._setResource(type, x, y, amt);
         } else if (inputIdentifier.equals(IOConstants.UNITS.str)) {
           int i = 1;

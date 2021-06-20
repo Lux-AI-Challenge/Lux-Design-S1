@@ -34,7 +34,10 @@ class Cell {
     this.pos = new Position(x, y);
     this.resource = null;
     this.citytile = null;
-    this.cooldown = 1;
+    this.cooldown = 0;
+  }
+  hasResource() {
+    return this.resource !== null && this.resource.amount > 0;
   }
 }
 
@@ -65,6 +68,8 @@ class Position {
         return new Position(this.x, this.y + units);
       case DIRECTIONS.WEST:
         return new Position(this.x - units, this.y);
+      case DIRECTIONS.CENTER:
+        return new Position(this.x, this.y);
     }
   }
 
@@ -83,7 +88,7 @@ class Position {
       DIRECTIONS.SOUTH,
       DIRECTIONS.WEST,
     ];
-    let closestDirection = null;
+    let closestDirection = DIRECTIONS.CENTER;
     let closestDist = this.distanceTo(targetPos);
     checkDirections.forEach((dir) => {
       const newpos = this.translate(dir, 1);

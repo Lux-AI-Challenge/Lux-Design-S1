@@ -13,17 +13,17 @@ const luxdim = Dimensions.create(design, {
   activateStation: false,
 });
 
-const js = './kits/js/bot.js';
+const js = './kits/js/simple/main.js';
 const testjs = './tests/bots/js/bot.js'; // deterministic
 const spamjs = './tests/bots/spam/bot.js'; // has randomness
 const bugjs = './kits/bug/bot.js';
-const cpp = './kits/cpp/simple/main.cpp';
+const cppSimple = './kits/cpp/simple/main.cpp';
 const cppOrganic = './kits/cpp/organic/main.cpp';
 const javaSimple = './kits/java/simple/Bot.java';
-const cppTranspiled = './kits/cpp/main.js';
+const cppSimpleTranspiled = './kits/cpp/simple/main.js';
 const cppOrganicTranspiled = './kits/cpp/organic/main.js';
 const botList = [
-  { file: cpp, name: 'test1', existingID: 'abc' },
+  { file: cppSimple, name: 'test1', existingID: 'abc' },
   { file: cppOrganic, name: 'cppjs', existingID: 'def' },
 ];
 const run = async () => {

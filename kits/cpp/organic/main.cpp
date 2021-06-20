@@ -27,8 +27,6 @@ int main()
 
     GameMap gameMap = agent.map;
 
-    commands.push_back(lux::Annotate::line(0, 0, 14, 2));
-
     vector<Cell *> resourceTiles = vector<Cell *>();
     for (int y = 0; y < agent.mapHeight; y++)
     {
@@ -118,7 +116,7 @@ int main()
             if (closestCityTile != nullptr)
             {
               auto dir = unit.pos.directionTo(closestCityTile->pos);
-
+              cerr << agent.turn << " | " << citiesToBuild << " | " << unit.pos.isAdjacent(closestCityTile->pos) << " | " << unit.canBuild(gameMap) << "\n";
               if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile->pos) && unit.canBuild(gameMap))
               {
                 commands.push_back(unit.buildCity());

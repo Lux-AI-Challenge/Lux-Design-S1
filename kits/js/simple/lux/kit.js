@@ -80,8 +80,6 @@ class Agent {
     let mapInfo = (await this.getLine());
     let width = mapInfo.nextInt();
     let height = mapInfo.nextInt();
-    this.mapWidth = width;
-    this.mapHeight = height;
     const map = new GameMap(width, height);
     const players = [new Player(0), new Player(1)];
 
@@ -90,7 +88,7 @@ class Agent {
       map,
       players,
       turn: 0,
-    }
+    };
   }
   /**
    * Updates agent's own known state of `Match`
@@ -103,7 +101,7 @@ class Agent {
   }
 
   resetPlayerStates() {
-    players = this.gameState.players
+    let players = this.gameState.players;
     players[0].units = [];
     players[0].cities = new Map();
     players[0].cityTileCount = 0;
@@ -114,7 +112,7 @@ class Agent {
   async retrieveUpdates() {
     this.resetPlayerStates();
     // TODO: this can be optimized. we only reset because some resources get removed
-    this.gameState.map = new GameMap(this.mapWidth, this.mapHeight);
+    this.gameState.map = new GameMap(this.gameState.map.width, this.gameState.map.height);
     while (true) {
       let update = (await this.getLine());
       if (update.str === INPUT_CONSTANTS.DONE) {
