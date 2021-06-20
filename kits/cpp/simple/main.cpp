@@ -44,12 +44,22 @@ int main()
     for (auto it : player.cities)
     {
       City *city = it.second;
-      if (city->getLightUpkeep() < city->fuel + 200)
+      // if our city has enough fuel to survive the whole night and 1000 extra fuel, lets increment citiesToBuild and let our workers know we have room for more city tiles
+      if (city->fuel > city->getLightUpkeep() * (int) GAME_CONSTANTS["PARAMETERS"]["NIGHT_LENGTH"] + 1000)
       {
         citiesToBuild += 1;
       }
+      for (auto citytile : city->citytiles)
+      {
+        if (citytile->canAct()) {
+          // you can use the following to get the citytile to research or build a worker
+          // commands.push_back(citytile.research());
+          // commands.push_back(citytile.buildWorker());
+        }
+      }
     }
 
+    // we iterate over all our units and do something with them
     for (int i = 0; i < player.units.size(); i++)
     {
       Unit unit = player.units[i];
@@ -57,6 +67,7 @@ int main()
       {
         if (unit.getCargoSpaceLeft() > 0)
         {
+          // if the unit is a worker and we have space in cargo, lets find the nearest resource tile and try to mine it
           Cell *closestResourceTile;
           float closestDist = 9999999;
           for (auto it = resourceTiles.begin(); it != resourceTiles.end(); it++)
@@ -77,7 +88,7 @@ int main()
         }
         else
         {
-          // if we have cities, return to them
+          // if unit is a worker and there is no cargo space left, and we have cities, lets return to them
           if (player.cities.size() > 0)
           {
             auto city_iter = player.cities.begin();
@@ -100,6 +111,7 @@ int main()
 
               if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile->pos) && unit.canBuild(gameMap))
               {
+                // here we consider building city tiles provided we are adjacent to a city tile and we can build
                 commands.push_back(unit.buildCity());
               }
               else

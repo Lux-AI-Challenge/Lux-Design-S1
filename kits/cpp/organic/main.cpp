@@ -44,7 +44,7 @@ int main()
     for (auto it : player.cities)
     {
       City *city = it.second;
-      if (city->getLightUpkeep() < city->fuel + 200)
+      if (city->fuel > city->getLightUpkeep() * (int) GAME_CONSTANTS["PARAMETERS"]["NIGHT_LENGTH"] + 1000)
       {
         citiesToBuild += 1;
       }

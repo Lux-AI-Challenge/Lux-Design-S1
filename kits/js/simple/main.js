@@ -31,15 +31,25 @@ agent.initialize().then(async () => {
 
     let citiesToBuild = 0;
     player.cities.forEach((city) => {
-      if (city.getLightUpkeep() < city.fuel + 200) {
+      // if our city has enough fuel to survive the whole night and 1000 extra fuel, lets increment citiesToBuild and let our workers know we have room for more city tiles
+      if (city.fuel > city.getLightUpkeep() * GAME_CONSTANTS.PARAMETERS.NIGHT_LENGTH + 1000) {
         citiesToBuild += 1;
       }
+      city.citytiles.forEach((citytile) => {
+        if (citytile.canAct()) {   
+          // you can use the following to get the citytile to research or build a worker
+          // commands.push(citytile.research());
+          // commands.push(citytile.buildWorker());
+        }
+      });
     });
 
+    // we iterate over all our units and do something with them
     for (let i = 0; i < player.units.length; i++) {
       const unit = player.units[i];
       if (unit.isWorker()) {
         if (unit.getCargoSpaceLeft() > 0) {
+          // if the unit is a worker and we have space in cargo, lets find the nearest resource tile and try to mine it
           let closestResourceTile = null;
           let closestDist = 9999999;
           resourceTiles.forEach((cell) => {
@@ -51,10 +61,11 @@ agent.initialize().then(async () => {
           })
           if (closestResourceTile != null) {
             const dir = unit.pos.directionTo(closestResourceTile.pos);
+            // move the unit in the direction towards the closest resource tile's position.
             commands.push(unit.move(dir));
           }
         } else {
-          // if we have cities, return to them
+          // if unit is a worker and there is no cargo space left, and we have cities, lets return to them
           if (player.cities.size > 0) {
             const city = player.cities.values().next().value
             let closestDist = 999999;
@@ -70,6 +81,7 @@ agent.initialize().then(async () => {
             if (closestCityTile != null) {
               const dir = unit.pos.directionTo(closestCityTile.pos);
               if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile.pos) && unit.canBuild(gameMap)) {
+                // here we consider building city tiles provided we are adjacent to a city tile and we can build
                 commands.push(unit.buildCity());
               } else {
                 commands.push(unit.move(dir));

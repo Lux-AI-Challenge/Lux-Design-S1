@@ -2,47 +2,47 @@ package lux;
 
 // TODO: automate converting json to this format
 public final class GameConstants {
-    static class UNIT_TYPES { 
-      static final int WORKER = 0;
-      static final int CART = 1;
+    public static class UNIT_TYPES { 
+      public static final int WORKER = 0;
+      public static final int CART = 1;
     }
-    static class PARAMETERS {
-      static final int DAY_LENGTH = 20;
-      static final int NIGHT_LENGTH = 5;
-      static final int MAX_DAYS = 200;
-      static class LIGHT_UPKEEP {
-        static final int CITY = 40;
-        static final int WORKER = 4;
-        static final int CART = 10;
+    public static class PARAMETERS {
+      public static final int DAY_LENGTH = 30;
+      public static final int NIGHT_LENGTH = 10;
+      public static final int MAX_DAYS = 360;
+      public static class LIGHT_UPKEEP {
+        public static final int CITY = 40;
+        public static final int WORKER = 4;
+        public static final int CART = 10;
       }
-      static final int CITY_ADJACENCY_BONUS = 10;
-      static final int CITY_WOOD_COST = 100;
-      static class RESOURCE_CAPACITY {
-        static final int WORKER = 100;
-        static final int CART = 2000;
+      public static final int CITY_ADJACENCY_BONUS = 10;
+      public static final int CITY_WOOD_COST = 100;
+      public static class RESOURCE_CAPACITY {
+        public static final int WORKER = 100;
+        public static final int CART = 2000;
       }
-      static class WORKER_COLLECTION_RATE {
-        static final int WOOD = 20;
-        static final int COAL = 10;
-        static final int URANIUM = 1;
+      public static class WORKER_COLLECTION_RATE {
+        public static final int WOOD = 20;
+        public static final int COAL = 10;
+        public static final int URANIUM = 1;
       }
-      static class RESOURCE_TO_FUEL_RATE {
-        static final int WOOD = 1;
-        static final int COAL = 5;
-        static final int URANIUM = 25;
+      public static class RESOURCE_TO_FUEL_RATE {
+        public static final int WOOD = 1;
+        public static final int COAL = 5;
+        public static final int URANIUM = 25;
       } 
-      static class RESEARCH_REQUIREMENTS {
-        static final int COAL = 40;
-        static final int URANIUM = 100;
+      public static class RESEARCH_REQUIREMENTS {
+        public static final int COAL = 40;
+        public static final int URANIUM = 100;
       }
-      static final int CITY_ACTION_COOLDOWN = 10;
-      static class UNIT_ACTION_COOLDOWN {
-        static final int CART = 3;
-        static final int WORKER = 2;
+      public static final int CITY_ACTION_COOLDOWN = 10;
+      public static class UNIT_ACTION_COOLDOWN {
+        public static final int CART = 3;
+        public static final int WORKER = 2;
       }
-      static final double MAX_CELL_COOLDOWN = 6;
-      static final double MIN_CELL_COOLDOWN = 0;
-      static final double CART_ROAD_DEVELOPMENT_RATE = 0.5;
-      static final double PILLAGE_RATE = 0.25;
+      public static final double MAX_CELL_COOLDOWN = 6;
+      public static final double MIN_CELL_COOLDOWN = 0;
+      public static final double CART_ROAD_DEVELOPMENT_RATE = 0.5;
+      public static final double PILLAGE_RATE = 0.25;
     }
 }

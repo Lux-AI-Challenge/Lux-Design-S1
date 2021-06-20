@@ -13,7 +13,7 @@ const luxdim = Dimensions.create(design, {
   activateStation: false,
 });
 
-const js = './kits/js/simple/main.js';
+const jsSimple = './kits/js/simple/main.js';
 const testjs = './tests/bots/js/bot.js'; // deterministic
 const spamjs = './tests/bots/spam/bot.js'; // has randomness
 const bugjs = './kits/bug/bot.js';

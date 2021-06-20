@@ -26,16 +26,16 @@ namespace lux
         "CENTER": "c"
       },
       "PARAMETERS": {
-        "DAY_LENGTH": 20,
-        "NIGHT_LENGTH": 5,
-        "MAX_DAYS": 200,
+        "DAY_LENGTH": 30,
+        "NIGHT_LENGTH": 10,
+        "MAX_DAYS": 360,
         "LIGHT_UPKEEP": {
           "CITY": 40,
           "WORKER": 4,
           "CART": 10
         },
-        "CITY_ADJACENCY_BONUS": 10,
         "CITY_WOOD_COST": 100,
+        "CITY_ADJACENCY_BONUS": 10,
         "RESOURCE_CAPACITY": {
           "WORKER": 100,
           "CART": 2000

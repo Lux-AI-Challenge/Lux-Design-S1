@@ -16,9 +16,9 @@
     "CENTER": "c"
   },
   "PARAMETERS": {
-    "DAY_LENGTH": 20,
-    "NIGHT_LENGTH": 5,
-    "MAX_DAYS": 200,
+    "DAY_LENGTH": 30,
+    "NIGHT_LENGTH": 10,
+    "MAX_DAYS": 360,
     "LIGHT_UPKEEP": {
       "CITY": 40,
       "WORKER": 4,
