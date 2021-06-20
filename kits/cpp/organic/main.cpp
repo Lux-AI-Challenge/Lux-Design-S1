@@ -116,7 +116,6 @@ int main()
             if (closestCityTile != nullptr)
             {
               auto dir = unit.pos.directionTo(closestCityTile->pos);
-              cerr << agent.turn << " | " << citiesToBuild << " | " << unit.pos.isAdjacent(closestCityTile->pos) << " | " << unit.canBuild(gameMap) << "\n";
               if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile->pos) && unit.canBuild(gameMap))
               {
                 commands.push_back(unit.buildCity());
