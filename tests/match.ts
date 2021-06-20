@@ -21,7 +21,7 @@ const javaSimple = './kits/java/simple/Bot.java';
 const cppSimpleTranspiled = './kits/cpp/simple/main.js';
 const cppOrganicTranspiled = './kits/cpp/organic/main.js';
 const botList = [
-  { file: javaSimple, name: 'test1', existingID: 'abc' },
+  { file: jsSimple, name: 'test1', existingID: 'abc' },
   { file: cppOrganic, name: 'cppjs', existingID: 'def' },
 ];
 const run = async () => {
@@ -29,7 +29,7 @@ const run = async () => {
     storeErrorLogs: true,
     storeReplay: true,
     compressReplay: false,
-    seed: 1111,
+    seed: 999,
     debug: false,
     runProfiler: true,
     debugDelay: 150,
