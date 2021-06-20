@@ -35,6 +35,7 @@ const main = async () => {
         agentOptions: { detached: true },
         storeReplay: false,
         storeErrorLogs: false,
+        seed: parseInt(json.config.seed),
         mapType: json.config.mapType,
         parameters: {
           MAX_DAYS: json.config.episodeSteps - 2,
