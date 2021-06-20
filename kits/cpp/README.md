@@ -12,7 +12,7 @@ To setup, make sure to follow the instructions here https://emscripten.org/docs/
 
 After setting up and running the `source ./emsdk_env.sh` (or `emsdk_env.bat` on Windows) command provided in the instructions, you should now have a program called `emcc` that you can run. 
 
-Now copy one of the folders, `organic` or `simple` which are two starting strategies provided by us along with the necessary infrastructure to compete in the competition. You may edit anything you want, but make sure to always have a `main.cpp` file that follows the structure given by us. 
+Now copy one of the folders, `organic` or `simple` which are two starting strategies provided by us along with the necessary infrastructure to compete in the competition. You may edit anything you want, but make sure to always have a `main.cpp` file that follows the structure given by us and refrain from editing `main.py`
 
 ## Running Matches and Submission to Competition
 

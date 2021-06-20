@@ -20,12 +20,12 @@
     "NIGHT_LENGTH": 10,
     "MAX_DAYS": 360,
     "LIGHT_UPKEEP": {
-      "CITY": 40,
+      "CITY": 30,
       "WORKER": 4,
       "CART": 10
     },
     "CITY_WOOD_COST": 100,
-    "CITY_ADJACENCY_BONUS": 10,
+    "CITY_ADJACENCY_BONUS": 5,
     "RESOURCE_CAPACITY": {
       "WORKER": 100,
       "CART": 2000
@@ -41,8 +41,8 @@
       "URANIUM": 25
     },
     "RESEARCH_REQUIREMENTS": {
-      "COAL": 40,
-      "URANIUM": 100
+      "COAL": 50,
+      "URANIUM": 200
     },
     "CITY_ACTION_COOLDOWN": 10,
     "UNIT_ACTION_COOLDOWN": {

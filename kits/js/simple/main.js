@@ -11,7 +11,7 @@ agent.initialize().then(async () => {
     // wait for updates
     await agent.update();
 
-    const commands = [];
+    const actions = [];
     const gameState = agent.gameState;
     /** AI Code Goes Below! **/
 
@@ -62,7 +62,7 @@ agent.initialize().then(async () => {
           if (closestResourceTile != null) {
             const dir = unit.pos.directionTo(closestResourceTile.pos);
             // move the unit in the direction towards the closest resource tile's position.
-            commands.push(unit.move(dir));
+            actions.push(unit.move(dir));
           }
         } else {
           // if unit is a worker and there is no cargo space left, and we have cities, lets return to them
@@ -82,9 +82,9 @@ agent.initialize().then(async () => {
               const dir = unit.pos.directionTo(closestCityTile.pos);
               if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile.pos) && unit.canBuild(gameMap)) {
                 // here we consider building city tiles provided we are adjacent to a city tile and we can build
-                commands.push(unit.buildCity());
+                actions.push(unit.buildCity());
               } else {
-                commands.push(unit.move(dir));
+                actions.push(unit.move(dir));
               }
             }
           }
@@ -94,7 +94,7 @@ agent.initialize().then(async () => {
     /** AI Code Goes Above! **/
 
     /** Do not edit! **/
-    console.log(commands.join(","));
+    console.log(actions.join(","));
     // end turn
     agent.endTurn();
     }

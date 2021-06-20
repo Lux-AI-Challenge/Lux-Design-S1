@@ -11,11 +11,11 @@ public final class GameConstants {
       public static final int NIGHT_LENGTH = 10;
       public static final int MAX_DAYS = 360;
       public static class LIGHT_UPKEEP {
-        public static final int CITY = 40;
+        public static final int CITY = 30;
         public static final int WORKER = 4;
         public static final int CART = 10;
       }
-      public static final int CITY_ADJACENCY_BONUS = 10;
+      public static final int CITY_ADJACENCY_BONUS = 5;
       public static final int CITY_WOOD_COST = 100;
       public static class RESOURCE_CAPACITY {
         public static final int WORKER = 100;
@@ -32,8 +32,8 @@ public final class GameConstants {
         public static final int URANIUM = 25;
       } 
       public static class RESEARCH_REQUIREMENTS {
-        public static final int COAL = 40;
-        public static final int URANIUM = 100;
+        public static final int COAL = 50;
+        public static final int URANIUM = 200;
       }
       public static final int CITY_ACTION_COOLDOWN = 10;
       public static class UNIT_ACTION_COOLDOWN {

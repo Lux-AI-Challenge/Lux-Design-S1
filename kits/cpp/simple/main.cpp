@@ -18,7 +18,7 @@ int main()
     // wait for updates
     gameState.update();
 
-    vector<string> commands = vector<string>();
+    vector<string> actions = vector<string>();
     
     /** AI Code Goes Below! **/
 
@@ -53,8 +53,8 @@ int main()
       {
         if (citytile->canAct()) {
           // you can use the following to get the citytile to research or build a worker
-          // commands.push_back(citytile.research());
-          // commands.push_back(citytile.buildWorker());
+          // actions.push_back(citytile.research());
+          // actions.push_back(citytile.buildWorker());
         }
       }
     }
@@ -83,7 +83,7 @@ int main()
           if (closestResourceTile != nullptr)
           {
             auto dir = unit.pos.directionTo(closestResourceTile->pos);
-            commands.push_back(unit.move(dir));
+            actions.push_back(unit.move(dir));
           }
         }
         else
@@ -112,11 +112,11 @@ int main()
               if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile->pos) && unit.canBuild(gameMap))
               {
                 // here we consider building city tiles provided we are adjacent to a city tile and we can build
-                commands.push_back(unit.buildCity());
+                actions.push_back(unit.buildCity());
               }
               else
               {
-                commands.push_back(unit.move(dir));
+                actions.push_back(unit.move(dir));
               }
             }
           }
@@ -127,11 +127,11 @@ int main()
     /** AI Code Goes Above! **/
 
     /** Do not edit! **/
-    for (int i = 0; i < commands.size(); i++)
+    for (int i = 0; i < actions.size(); i++)
     {
       if (i != 0)
         cout << ",";
-      cout << commands[i];
+      cout << actions[i];
     }
     cout << endl;
     // end turn

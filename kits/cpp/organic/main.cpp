@@ -18,7 +18,7 @@ int main()
     // wait for updates
     gameState.update();
 
-    vector<string> commands = vector<string>();
+    vector<string> actions = vector<string>();
 
     /** AI Code Goes Below! **/
 
@@ -50,9 +50,13 @@ int main()
       }
       for (auto citytile : city->citytiles)
       {
-        if (player.units.size() < player.cityTileCount)
-        {
-          commands.push_back(citytile->buildWorker());
+        if (citytile->canAct()) {
+          if (player.units.size() < player.cityTileCount)
+          {
+            actions.push_back(citytile->buildWorker());
+          } else {
+            actions.push_back(citytile->research());
+          }
         }
       }
     }
@@ -72,6 +76,12 @@ int main()
           for (auto it = resourceTiles.begin(); it != resourceTiles.end(); it++)
           {
             auto cell = *it;
+            if (cell->resource.type == ResourceType::coal && !player.researchedCoal()) {
+              continue;
+            }
+            if (cell->resource.type == ResourceType::uranium && !player.researchedUranium()) {
+              continue;
+            }
             if (targetedResources.find(cell) == targetedResources.end())
             {
               float dist = cell->pos.distanceTo(unit.pos);
@@ -89,7 +99,7 @@ int main()
             auto newCell = gameMap.getCellByPos(unit.pos.translate(dir, 1));
             if (movedOnTiles.find(newCell) == movedOnTiles.end())
             {
-              commands.push_back(unit.move(dir));
+              actions.push_back(unit.move(dir));
               movedOnTiles.insert(newCell);
             }
           }
@@ -118,13 +128,13 @@ int main()
               auto dir = unit.pos.directionTo(closestCityTile->pos);
               if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile->pos) && unit.canBuild(gameMap))
               {
-                commands.push_back(unit.buildCity());
+                actions.push_back(unit.buildCity());
               }
               else
               {
                 auto newcell = gameMap.getCellByPos(unit.pos.translate(dir, 1));
                 if (movedOnTiles.find(newcell) == movedOnTiles.end()) {
-                  commands.push_back(unit.move(dir));
+                  actions.push_back(unit.move(dir));
                   movedOnTiles.insert(newcell);
                 }
               }
@@ -137,11 +147,11 @@ int main()
     /** AI Code Goes Above! **/
 
     /** Do not edit! **/
-    for (int i = 0; i < commands.size(); i++)
+    for (int i = 0; i < actions.size(); i++)
     {
       if (i != 0)
         cout << ",";
-      cout << commands[i];
+      cout << actions[i];
     }
     cout << endl;
     // end turn

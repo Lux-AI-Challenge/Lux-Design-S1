@@ -12,7 +12,7 @@ public class Bot {
       // wait for updates
       agent.update();
 
-      ArrayList<String> commands = new ArrayList<>();
+      ArrayList<String> actions = new ArrayList<>();
       GameState gameState = agent.gameState;
       /** AI Code Goes Below! **/
 
@@ -39,8 +39,8 @@ public class Bot {
         for (CityTile citytile : city.citytiles) {
           if (citytile.canAct()) {
             // you can use the following to get the citytile to research or build a worker
-            // commands.add(citytile.buildWorker());
-            // commands.add(citytile.research());
+            // actions.add(citytile.buildWorker());
+            // actions.add(citytile.research());
           }
         }
       }
@@ -63,7 +63,7 @@ public class Bot {
             if (closestResourceTile != null) {
               Direction dir = unit.pos.directionTo(closestResourceTile.pos);
               // move the unit in the direction towards the closest resource tile's position.
-              commands.add(unit.move(dir));
+              actions.add(unit.move(dir));
             }
           } else {
             // if unit is a worker and there is no cargo space left, and we have cities, lets return to them
@@ -82,9 +82,9 @@ public class Bot {
                 Direction dir = unit.pos.directionTo(closestCityTile.pos);
                 if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile.pos) && unit.canBuild(gameMap)) {
                   // here we consider building city tiles provided we are adjacent to a city tile and we can build
-                  commands.add(unit.buildCity());
+                  actions.add(unit.buildCity());
                 } else {
-                  commands.add(unit.move(dir));
+                  actions.add(unit.move(dir));
                 }
               }
             }
@@ -95,11 +95,11 @@ public class Bot {
 
       /** Do not edit! **/
       StringBuilder commandBuilder = new StringBuilder("");
-      for (int i = 0; i < commands.size(); i++) {
+      for (int i = 0; i < actions.size(); i++) {
         if (i != 0) {
           commandBuilder.append(",");
         }
-        commandBuilder.append(commands.get(i));
+        commandBuilder.append(actions.get(i));
       }
       System.out.println(commandBuilder.toString());
       // end turn

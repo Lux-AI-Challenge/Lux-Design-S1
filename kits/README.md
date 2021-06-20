@@ -2,11 +2,13 @@
 
 This folder contains all official kits provided by the Lux AI team or the Lux AI Challenge Season 1. 
 
+There are 2 kinds of bots provided by us, a `simple` bot strategy and a `organic` bot strategy that work on simple heurstics in each starter kit folder.
+
 ## API
 
 This section details the general API each kit adheres to. It follows the conventions of Python but other kits are exactly the same, differing only in syntax and naming conventions. Any individual difference should be noted in the comments in the kits themselves.
 
-Some methods you may notice are for generating an action, e.g. moving a unit, transferring resources, building units. These action methods always return a string, which should be added to the commands array, of which there are examples of how to do so in the starter kits.
+Some methods you may notice are for generating an **action**, e.g. moving a unit, transferring resources, building units. These action methods always return a string, which should be added to the `actions` array, of which there are examples of how to do so in the starter kits.
 
 ### game_state
 
