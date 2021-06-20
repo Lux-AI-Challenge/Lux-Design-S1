@@ -65,11 +65,6 @@ public class Bot {
             }
             
             if (closestResourceTile != null) {
-              if (gameState.turn > 208 && gameState.turn < 220) {
-                System.err.println(gameState.turn);
-                System.err.println(closestResourceTile.resource.type);
-              }
-              System.err.println(closestResourceTile.resource.type);
               Direction dir = unit.pos.directionTo(closestResourceTile.pos);
               // move the unit in the direction towards the closest resource tile's position.
               actions.add(unit.move(dir));
