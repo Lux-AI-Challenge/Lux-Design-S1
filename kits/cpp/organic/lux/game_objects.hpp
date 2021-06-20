@@ -66,7 +66,7 @@ namespace lux
         /** whether or not the unit can build where it is right now */
         bool canBuild(const GameMap &gameMap) {
             auto cell = gameMap.getCellByPos(this->pos);
-            if (!cell->hasResource()) {
+            if (!cell->hasResource() && this->cooldown < 1) {
                 // TODO: future, check cargo?
                 return true;
             }
