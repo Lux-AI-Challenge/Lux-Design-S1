@@ -144,7 +144,7 @@ The annotation object lets you create annotation commands that show up on the vi
 
 - `line(x1: int, y1: int, x2: int, y2: int)` - returns the draw line annotation action. Will draw a line from the center of the cell at (x1, y1) to the center of the cell at (x2, y2).
 
-Note that all of these will be colored according to the team that created the annotation.
+Note that all of these will be colored according to the team that created the annotation (blue or orange)
 
 
 
