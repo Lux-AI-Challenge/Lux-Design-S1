@@ -662,6 +662,12 @@ export class Game {
       });
 
       originalCell.resource.amount -= amountDistributed;
+
+      // fixes a rare bug where sometimes JS will subtract a floating point (caused by a division somewhere) 
+      // and cause a 0 value to equal to the floating point approx equal to 7e-15
+      if (originalCell.resource.amount < 1e-10) {
+        originalCell.resource.amount = 0;
+      }
     }
   }
 

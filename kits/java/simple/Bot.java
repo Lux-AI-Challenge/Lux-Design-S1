@@ -32,7 +32,6 @@ public class Bot {
 
       int citiesToBuild = 0;
       for (City city : player.cities.values()) {
-        System.err.println("Upkeep " + city.getLightUpkeep() + " fuel " + city.fuel);
         if (city.getLightUpkeep() < city.fuel + 200) {
           citiesToBuild += 1;
         }
