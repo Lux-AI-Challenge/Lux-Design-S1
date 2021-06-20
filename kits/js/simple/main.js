@@ -53,6 +53,8 @@ agent.initialize().then(async () => {
           let closestResourceTile = null;
           let closestDist = 9999999;
           resourceTiles.forEach((cell) => {
+            if (cell.resource.type === GAME_CONSTANTS.RESOURCE_TYPES.COAL && !player.researchedCoal()) return;
+            if (cell.resource.type === GAME_CONSTANTS.RESOURCE_TYPES.URANIUM && !player.researchedUranium()) return;
             const dist = cell.pos.distanceTo(unit.pos);
             if (dist < closestDist) {
               closestDist = dist;

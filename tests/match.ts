@@ -21,7 +21,7 @@ const javaSimple = './kits/java/simple/Bot.java';
 const cppSimpleTranspiled = './kits/cpp/simple/main.js';
 const cppOrganicTranspiled = './kits/cpp/organic/main.js';
 const botList = [
-  { file: jsSimple, name: 'test1', existingID: 'abc' },
+  { file: javaSimple, name: 'test1', existingID: 'abc' },
   { file: cppOrganic, name: 'cppjs', existingID: 'def' },
 ];
 const run = async () => {
@@ -29,10 +29,8 @@ const run = async () => {
     storeErrorLogs: true,
     storeReplay: true,
     compressReplay: false,
-    // seed: 1,
+    seed: 1111,
     debug: false,
-    width: 16,
-    height: 16,
     runProfiler: true,
     debugDelay: 150,
     debugAnnotations: true,
@@ -43,7 +41,6 @@ const run = async () => {
       },
     },
     loggingLevel: Logger.LEVEL.ERROR,
-    mapType: 'debug',
   });
 
   console.log('Created match');

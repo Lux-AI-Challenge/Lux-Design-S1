@@ -1,6 +1,6 @@
 {
   "name": "@lux-ai/2021-challenge",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "The design for the first Lux AI Challenge",
   "main": "lib/es5/index.js",
   "types": "lib/es5/index.d.ts",

@@ -54,13 +54,22 @@ public class Bot {
             Cell closestResourceTile = null;
             double closestDist = 9999999;
             for (Cell cell : resourceTiles) {
+              
+              if (cell.resource.type.equals(GameConstants.RESOURCE_TYPES.COAL) && !player.researchedCoal()) continue;
+              if (cell.resource.type.equals(GameConstants.RESOURCE_TYPES.URANIUM) && !player.researchedUranium()) continue;
               double dist = cell.pos.distanceTo(unit.pos);
               if (dist < closestDist) {
                 closestDist = dist;
                 closestResourceTile = cell;
               }
             }
+            
             if (closestResourceTile != null) {
+              if (gameState.turn > 208 && gameState.turn < 220) {
+                System.err.println(gameState.turn);
+                System.err.println(closestResourceTile.resource.type);
+              }
+              System.err.println(closestResourceTile.resource.type);
               Direction dir = unit.pos.directionTo(closestResourceTile.pos);
               // move the unit in the direction towards the closest resource tile's position.
               actions.add(unit.move(dir));

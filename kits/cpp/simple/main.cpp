@@ -73,6 +73,8 @@ int main()
           for (auto it = resourceTiles.begin(); it != resourceTiles.end(); it++)
           {
             auto cell = *it;
+            if (cell->resource.type == ResourceType::coal && !player.researchedCoal()) continue;
+            if (cell->resource.type == ResourceType::uranium && !player.researchedUranium()) continue;
             float dist = cell->pos.distanceTo(unit.pos);
             if (dist < closestDist)
             {

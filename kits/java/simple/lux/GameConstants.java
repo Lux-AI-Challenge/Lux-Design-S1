@@ -6,6 +6,11 @@ public final class GameConstants {
       public static final int WORKER = 0;
       public static final int CART = 1;
     }
+    public static class RESOURCE_TYPES { 
+      public static final String WOOD = "wood";
+      public static final String COAL = "coal";
+      public static final String URANIUM = "uranium";
+    }
     public static class PARAMETERS {
       public static final int DAY_LENGTH = 30;
       public static final int NIGHT_LENGTH = 10;

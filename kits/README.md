@@ -148,10 +148,9 @@ The annotation object lets you create annotation commands that show up on the vi
 
 Note that all of these will be colored according to the team that created the annotation (blue or orange)
 
+#### GameConstants
 
-
-
-
+This will contain constants on all game parameters like the max turns, the light upkeep of city tiles etc.
 
 
 
