@@ -88,7 +88,7 @@ class Agent {
       map,
       players,
       turn: 0,
-    }
+    };
   }
   /**
    * Updates agent's own known state of `Match`
@@ -101,7 +101,7 @@ class Agent {
   }
 
   resetPlayerStates() {
-    players = this.gameState.players
+    let players = this.gameState.players;
     players[0].units = [];
     players[0].cities = new Map();
     players[0].cityTileCount = 0;

@@ -104,7 +104,7 @@ class Unit {
   /** whether or not the unit can build where it is right now */
   canBuild(gameMap) {
     let cell = gameMap.getCellByPos(this.pos);
-    if (cell.resource === null) {
+    if (!cell.hasResource() && this.cooldown < 1) {
       return true;
     }
     return false;
