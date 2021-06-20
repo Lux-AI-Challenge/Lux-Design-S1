@@ -23,17 +23,11 @@ public class Unit {
   }
   public int getCargoSpaceLeft() {
     int spaceused = this.cargo.wood + this.cargo.coal + this.cargo.uranium;
-    //     def get_cargo_space_left(self):
-//         """
-//         get cargo space left in this unit
-//         """
-//         spaceused = self.cargo.wood + self.cargo.coal + self.cargo.uranium;
-//         if self.type == UNIT_TYPES.WORKER:
-//             return GAME_CONSTANTS["PARAMETERS"]["RESOURCE_CAPACITY"]["WORKER"] - spaceused;
-//         else:
-//             return GAME_CONSTANTS["PARAMETERS"]["RESOURCE_CAPACITY"]["CART"] - spaceused;
-//TODO
-    return spaceused;
+    if (this.type == GameConstants.UNIT_TYPES.WORKER) {
+      return GameConstants.PARAMETERS.RESOURCE_CAPACITY.WORKER - spaceused;
+    } else {
+      return GameConstants.PARAMETERS.RESOURCE_CAPACITY.CART - spaceused;
+    }
   }
   public boolean canBuild(GameMap gameMap) {
     Cell cell = gameMap.getCellByPos(this.pos);

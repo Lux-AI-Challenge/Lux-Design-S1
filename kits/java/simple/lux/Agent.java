@@ -20,8 +20,7 @@ public class Agent {
      */
     public void initialize() {
       // get agent ID
-      gameState.id = scanner.nextInt();
-
+      gameState.id = Integer.parseInt(scanner.nextLine());
       String mapInfo = scanner.nextLine();
       String[] mapInfoSplit = mapInfo.split(" ");
       int mapWidth = Integer.parseInt(mapInfoSplit[0]);

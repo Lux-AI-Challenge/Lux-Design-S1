@@ -16,14 +16,9 @@ public class Player {
     this.cityTileCount = 0;
   }
   public boolean researchedCoal() {
-    // TODO
-    return this.researchPoints > 0;
+    return this.researchPoints >= GameConstants.PARAMETERS.RESEARCH_REQUIREMENTS.COAL;
   }
   public boolean researchedUranium() {
-    return this.researchPoints > 0;
+    return this.researchPoints >= GameConstants.PARAMETERS.RESEARCH_REQUIREMENTS.URANIUM;
   }
-  // def researched_coal(self):
-// return self.researchPoints >= GAME_CONSTANTS["PARAMETERS"]["RESEARCH_REQUIREMENTS"]["COAL"]
-// def researched_uanium(self):
-// return self.researchPoints >= GAME_CONSTANTS["PARAMETERS"]["RESEARCH_REQUIREMENTS"]["URANIUM"]
 }
