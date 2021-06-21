@@ -6,9 +6,23 @@ Make sure to check our discord or the Kaggle forum for announcements if there ar
 
 ## Getting Started
 
-To get started, download the `simple` folder from this repository or via this URL: 
+To get started, download the `simple` or `organic` folder from this repository or via this URL: [TODO]
+
+Then navigate to that folder via command line e.g. `cd simple`
+
+Your main code will go into `main.js` and you can use create other files to help you as well. You should leave `main.py` and the entire `lux` subfolder alone. Read the `main.js` file to get an idea of how a bot is programmed and a feel for the javascript API.
+
+To test run your bot, run 
+
+```
+lux-ai-run main.js main.js
+```
+
+which should produce no errors. If you find some bugs or unfixable errors, please let an admin know via Discord, the forums, or email us.
 
 ## Developing
+
+Now that you have some code and you checked that your code works by trying to submit something, you are now ready to starting programming your bot and having fun!
 
 If you haven't read it already, take a look at the [design specifications for the competition](). This will go through the rules and objectives of the competition. [TODO ADD LINK]
 

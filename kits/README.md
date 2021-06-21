@@ -12,11 +12,11 @@ Some methods you may notice are for generating an **action**, e.g. moving a unit
 
 ### game_state
 
-The `game_state` object is provided to you and contains the complete information about the current state of the game at the current turn, `game_state.turn`. Each agent/player in the game has an id, with your bot's id equal to `game_state.id` and the other team's id being `(game_state.id + 1 ) % 2`.
+The `game_state` object is provided to you and contains the complete information about the current state of the game at the current turn `game_state.turn`. Each agent/player in the game has an id, with your bot's id equal to `game_state.id` and the other team's id being `(game_state.id + 1 ) % 2`.
 
 Additionally in the game state, are the following nested objects, `map` of type [GameMap](#GameMap), and `players` which is a list with two [Player](#Player) objects indexed by the player's team id. The kits will show how to retrieve those objects. The rest of this section details the properties and methods of each type of object used in the kits.
 
-#### GameMap
+#### <u>GameMap</u>
 
 The map is organized such that the top left corner of the map is at `(0, 0)` and the bottom right is at `(width, height)`
 
@@ -31,7 +31,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 - `get_cell_by_pos(pos: Position)` - returns the Cell at the given pos
 - `get_cell(x: int, y: int)` - returns the Cell at the given x, y coordinates
 
-#### Position
+#### <u>Position</u>
 
 **Properties:**
 
@@ -50,7 +50,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 
 - `direction_to(target_pos: Position) -> DIRECTIONS` - returns the direction that would move you closest to `target_pos` from this position if you took a single step. In particular, will return `DIRECTIONS.CENTER` if this position is equal to the `target_pos`. Note that this does not check for potential collisions with other units but serves as a basic pathfinding method
 
-#### Cell
+#### <u>Cell</u>
 
 **Properties:**
 
@@ -63,7 +63,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 
 - `has_resource() -> bool` - returns true if this cell has a non-depleted resource, false otherwise
 
-#### City
+#### <u>City</u>
 
 **Properties:**
 
@@ -76,7 +76,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 
 - `get_light_upkeep() -> float` - returns the light upkeep per turn of the city. Fuel in the city is subtracted by the light upkeep each turn of night.
 
-#### CityTile
+#### <u>CityTile</u>
 
 **Properties:**
 
@@ -95,7 +95,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 
 - `build_cart() -> str` - returns the build cart action. When applied and requirements are met, a cart will be built at the city.
 
-#### Unit
+#### <u>Unit</u>
 
 **Properties:**
 
@@ -117,7 +117,7 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 - `build_city(): str` - returns the build city action. When applied, unit will try to build a city right under itself provided it is an empty tile with no city or resources and the [TODO] worker is carrying sufficient wood.
 - `pillage(): str` - returns the pillage action. When applied, unit will pillage the tile it is currently on top of and remove 0.25 of the cooldown.
 
-#### Player
+#### <u>Player</u>
 
 This contains information on a particular player of a particular team.
 
@@ -134,7 +134,7 @@ This contains information on a particular player of a particular team.
 - `researched_coal() - bool` - whether or not this player's team has researched coal and can mine coal.
 - `researched_uranium() - bool` - whether or not this player's team has researched uranium and can mine uranium.
 
-#### Annotate
+#### <u>Annotate</u>
 
 The annotation object lets you create annotation commands that show up on the visualizer when debug mode is turned on. Note that these commands are stripped by competition servers but are available to see when running matches locally.
 
@@ -148,12 +148,8 @@ The annotation object lets you create annotation commands that show up on the vi
 
 Note that all of these will be colored according to the team that created the annotation (blue or orange)
 
-#### GameConstants
+#### <u>GameConstants</u>
 
 This will contain constants on all game parameters like the max turns, the light upkeep of city tiles etc.
 
-
-
-
-
-
+If there are any changes to the starter kits, typically only this object will change.

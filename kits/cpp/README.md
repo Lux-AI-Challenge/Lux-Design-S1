@@ -6,27 +6,43 @@ Make sure to check our discord or the Kaggle forum for announcements if there ar
 
 ## Getting Started
 
-The kit uses https://emscripten.org/ to transpile C++ to Web Assembly which can be run on our servers and keeps everyone's code in the same language and makes it fair.
+To get started, download the `simple` or `organic` folder from this repository or via this URL: [TODO]
+
+Then navigate to that folder via command line e.g. `cd simple`
+
+Your main code will go into `main.cpp` and you can use create other files to help you as well. You should leave `main.py, compile.sh, package-lock.json, package.json` and the entire `lux` and `internals` subfolders alone. Read the `main.cpp` file to get an idea of how a bot is programmed and a feel for the C++ API.
+
+The kit uses https://emscripten.org/ to transpile C++ to Web Assembly which can then be run on our servers.
 
 To setup, make sure to follow the instructions here https://emscripten.org/docs/getting_started/downloads.html. This will show you how to setup emscripten for Windows, Linux, or MacOS
 
 After setting up and running the `source ./emsdk_env.sh` (or `emsdk_env.bat` on Windows) command provided in the instructions, you should now have a program called `emcc` that you can run. 
 
-Now copy one of the folders, `organic` or `simple` which are two starting strategies provided by us along with the necessary infrastructure to compete in the competition. You may edit anything you want, but make sure to always have a `main.cpp` file that follows the structure given by us and refrain from editing `main.py`
+To then test your installation and setup, run 
 
-## Running Matches and Submission to Competition
+```
+sh compile.sh
+```
 
-We **highly recommend** you read this section first before starting to code your bot
+or if you are on windows, run
 
-First navigate to the bot folder you are working in. Run the `compile.sh` or `compile.bat` program. This should automatically generate some transpiled Web Assembly (.wasm) and Javascript (.js) code in your folder. 
+```
+TODO
+```
 
-To test your setup is working correctly, we will run a single match of your bot against itself. If you haven't already, make sure you follow the getting started instructions for the overall competition.
+and this should generate a main.wasm and main.js file in your bot folder. To now test your transpiled bot, run
 
+```
+lux-ai-run main.js main.js
+```
 
-Now test your submission on the competition by going to [INSERT KAGGLE COMPETITION SUBMISSION LINK] and click ....
+You can also test the untranspiled version of your bot via
 
-Zip your folder....
+```
+lux-ai-run main.cpp main.cpp
+```
 
+which will compile your C++ normally. However, note that your submission must include the transpiled version of the bot.
 
 ## Developing
 
@@ -36,7 +52,7 @@ If you haven't read it already, take a look at the [design specifications for th
 
 All of our kits follow a common API through which you can use to access various functions and properties that will help you develop your strategy and bot.
 
-The online version is hosted here: [ADD API LINK], the markdown version is here: [ADD HERE]
+The online version is hosted here: [ADD API LINK], the markdown version is here: https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/kits/README.md
 
 ## FAQ
 
