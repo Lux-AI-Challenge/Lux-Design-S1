@@ -1,11 +1,19 @@
-from .lux.game import Game
-from .lux.game_map import Cell
-from .lux.constants import Constants
-from .lux.game_constants import GAME_CONSTANTS
+import sys
+if __package__ == "":
+    # not sure how to fix this atm
+    from lux.game import Game
+    from lux.game_map import Cell, RESOURCE_TYPES
+    from lux.constants import Constants
+    from lux.game_constants import GAME_CONSTANTS
+else:
+    from .lux.game import Game
+    from .lux.game_map import Cell, RESOURCE_TYPES
+    from .lux.constants import Constants
+    from .lux.game_constants import GAME_CONSTANTS
 DIRECTIONS = Constants.DIRECTIONS
 game_state = None
 
-def organic_agent(observation, configuration):
+def agent(observation, configuration):
     global game_state
 
     ### Do not edit ###

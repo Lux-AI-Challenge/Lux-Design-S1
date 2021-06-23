@@ -3,6 +3,7 @@ import { LuxDesign } from './design';
 import * as Dimension from 'dimensions-ai';
 import yargs from 'yargs';
 import { MatchDestroyedError } from 'dimensions-ai/lib/main/DimensionError';
+import { Logger } from 'dimensions-ai';
 yargs.options({
   'seed': {
     alias: 's',
@@ -19,6 +20,16 @@ yargs.options({
   'storelogs': {
     describe: 'whether to store error logs as files',
     default: 'true'
+  },
+  'compressreplay': {
+    describe: 'whether to compress the replay',
+    default: 'false',
+  },
+  'width': {
+    describe: "set a specific width of the map",
+  },
+  'height': {
+    describe: "set a specific height of the map"
   }
 }).help()
 const argv: any = yargs.argv;
@@ -42,16 +53,30 @@ if (argv["storelogs"] === 'false') {
   storelogs = false;
 }
 
-if (argv["log"]) {
-  loglevel = parseInt(argv["log"]);
-  if (isNaN(loglevel)) {
-    throw Error('log argument is not a number')
-  }
-}
-let seed: any = Math.floor(Math.random() * 1000000);
+// if (argv["log"]) {
+//   loglevel = parseInt(argv["log"]);
+//   if (isNaN(loglevel)) {
+//     throw Error('log argument is not a number')
+//   }
+// }
+let seed: any = Math.floor(Math.random() * 1e9);
 if (argv["seed"]) {
   seed = argv["seed"];
 }
+
+let compressReplay = false;
+if (argv["compressReplay"] == "true") {
+  compressReplay = true;
+}
+
+let width = undefined;
+let height = undefined;
+if (argv["width"]) {
+  width = parseInt(argv["width"])
+}
+if (argv["height"]) {
+  height = parseInt(argv["height"])
+} 
 
 const lux2021 = new LuxDesign('lux_ai_2021', {
   engineOptions: {
@@ -62,7 +87,7 @@ const lux2021 = new LuxDesign('lux_ai_2021', {
   }
 });
 const dim = Dimension.create(lux2021, {
-  loggingLevel: loglevel,
+  loggingLevel: Logger.LEVEL.NONE,
   activateStation: false,
   observe: false,
   defaultMatchConfigs: {
@@ -76,10 +101,10 @@ dim.runMatch(
   [{ file: file1, name: file1}, { file: file2, name: file2} ], {
     seed: seed,
     storeReplay: true,
-    compressReplay: false,
+    compressReplay,
     debug: false,
-    width: 16,
-    height: 16,
+    width,
+    height,
     runProfiler: false,
     debugDelay: 150,
     debugAnnotations: true,
@@ -89,7 +114,7 @@ dim.runMatch(
         active: true,
       },
     },
-    mapType: 'debug',
+    mapType: 'random',
     loggingLevel: loglevel
   }
 ).then((r) => console.log(r)).catch((err) => {

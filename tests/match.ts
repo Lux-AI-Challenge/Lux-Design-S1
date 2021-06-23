@@ -7,13 +7,15 @@ const luxdim = Dimensions.create(design, {
   name: 'luxdimension',
   id: 'luxdim',
   defaultMatchConfigs: {},
-  loggingLevel: Logger.LEVEL.INFO,
+  loggingLevel: Logger.LEVEL.NONE,
   secureMode: false,
   observe: false,
   activateStation: false,
 });
 
 const jsSimple = './kits/js/simple/main.js';
+const pySimple = './kits/python/simple/main.py';
+// const pySimple = 'kits.python.simple.main';
 const bugjs = './kits/bug/bot.js';
 const cppSimple = './kits/cpp/simple/main.cpp';
 const cppOrganic = './kits/cpp/organic/main.cpp';
@@ -21,15 +23,15 @@ const javaSimple = './kits/java/simple/Bot.java';
 const cppSimpleTranspiled = './kits/cpp/simple/main.js';
 const cppOrganicTranspiled = './kits/cpp/organic/main.js';
 const botList = [
-  { file: jsSimple, name: 'test1', existingID: 'abc' },
-  { file: jsSimple, name: 'cppjs', existingID: 'def' },
+  { file: pySimple, name: 'test1', existingID: 'abc' },
+  { file: pySimple, name: 'cppjs', existingID: 'def' },
 ];
 const run = async () => {
   const match = await luxdim.createMatch(botList, {
     storeErrorLogs: true,
     storeReplay: true,
     compressReplay: false,
-    seed: 903713851,
+    seed: 189546085,
     debug: false,
     runProfiler: true,
     debugDelay: 150,
@@ -40,7 +42,7 @@ const run = async () => {
         active: true,
       },
     },
-    loggingLevel: Logger.LEVEL.ERROR,
+    loggingLevel: Logger.LEVEL.WARN,
   });
 
   console.log('Created match');
