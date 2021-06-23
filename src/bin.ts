@@ -6,8 +6,7 @@ import { MatchDestroyedError } from 'dimensions-ai/lib/main/DimensionError';
 import { Logger } from 'dimensions-ai';
 yargs.options({
   'seed': {
-    alias: 's',
-    describe: 'seed for match'
+    describe: 'a seed that randomly generates a initial match state'
   },
   'supress': {
     describe: 'supress all logs',
@@ -30,12 +29,15 @@ yargs.options({
   },
   'height': {
     describe: "set a specific height of the map"
-  }
+  },
 }).help()
 const argv: any = yargs.argv;
 // take in two files
 const file1 = argv._[0];
 const file2 = argv._[1];
+if (!file1 || !file2) {
+  throw Error("Need two paths to agents")
+}
 let maxtime = 1200;
 if (argv["maxtime"]) {
   maxtime = parseInt(argv["maxtime"]);
@@ -43,8 +45,8 @@ if (argv["maxtime"]) {
     throw Error('maxtime argument is not a number')
   }
 }
-let loglevel = Dimension.Logger.LEVEL.WARN;
-if (argv["supress"]) {
+let loglevel = Dimension.Logger.LEVEL.INFO;
+if (argv["supress"] == "true") {
   loglevel = Dimension.Logger.LEVEL.NONE;
 }
 
@@ -53,15 +55,9 @@ if (argv["storelogs"] === 'false') {
   storelogs = false;
 }
 
-// if (argv["log"]) {
-//   loglevel = parseInt(argv["log"]);
-//   if (isNaN(loglevel)) {
-//     throw Error('log argument is not a number')
-//   }
-// }
 let seed: any = Math.floor(Math.random() * 1e9);
-if (argv["seed"]) {
-  seed = argv["seed"];
+if (argv["seed"] !== undefined) {
+  seed = parseInt(argv["seed"]);
 }
 
 let compressReplay = false;
@@ -87,6 +83,7 @@ const lux2021 = new LuxDesign('lux_ai_2021', {
   }
 });
 const dim = Dimension.create(lux2021, {
+  name: "Lux",
   loggingLevel: Logger.LEVEL.NONE,
   activateStation: false,
   observe: false,
@@ -97,6 +94,8 @@ const dim = Dimension.create(lux2021, {
     storeErrorLogs: storelogs
   }
 });
+// dim.log.level = Logger.LEVEL.INFO
+// dim.log.info("Starting Match")
 dim.runMatch(
   [{ file: file1, name: file1}, { file: file2, name: file2} ], {
     seed: seed,
@@ -117,7 +116,17 @@ dim.runMatch(
     mapType: 'random',
     loggingLevel: loglevel
   }
-).then((r) => console.log(r)).catch((err) => {
+).then((r) => {
+  r.ranks.forEach((info) => {
+    if (info.agentID == 0) {
+      info.name = file1
+    } else {
+      info.name = file2
+    }
+  });
+  r.seed = seed
+  console.log(r);
+}).catch((err) => {
   if (err instanceof MatchDestroyedError) {
     // ignore;
   }
