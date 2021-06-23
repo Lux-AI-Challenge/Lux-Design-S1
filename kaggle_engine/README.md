@@ -11,3 +11,7 @@ npm run build
 ```
 
 Then copy over the contents of the `dist` folder into `kaggle_environments/envs/lux_ai_2021/dimensions/` in the Kaggle Environments repository.
+
+## Known issues
+
+On the rare ocassion, when using this, kaggle envs will spit out a lot of gibberish. I suspect race condition but not sure.

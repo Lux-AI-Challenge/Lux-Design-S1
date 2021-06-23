@@ -10,7 +10,7 @@ Season 1 Specifications: TODO
 
 Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits
 
-
+Competition Page: Not yet released
 
 ## Getting Started
 
