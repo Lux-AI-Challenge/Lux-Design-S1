@@ -15,8 +15,6 @@ const luxdim = Dimensions.create(design, {
 
 const jsSimple = './kits/js/simple/main.js';
 const pySimple = './kits/python/simple/main.py';
-// const pySimple = 'kits.python.simple.main';
-const bugjs = './kits/bug/bot.js';
 const cppSimple = './kits/cpp/simple/main.cpp';
 const cppOrganic = './kits/cpp/organic/main.cpp';
 const javaSimple = './kits/java/simple/Bot.java';
@@ -24,14 +22,14 @@ const cppSimpleTranspiled = './kits/cpp/simple/main.js';
 const cppOrganicTranspiled = './kits/cpp/organic/main.js';
 const botList = [
   { file: pySimple, name: 'test1', existingID: 'abc' },
-  { file: pySimple, name: 'cppjs', existingID: 'def' },
+  { file: cppOrganic, name: 'cppjs', existingID: 'def' },
 ];
 const run = async () => {
   const match = await luxdim.createMatch(botList, {
     storeErrorLogs: true,
     storeReplay: true,
     compressReplay: false,
-    seed: 189546085,
+    // seed: 189546085,
     debug: false,
     runProfiler: true,
     debugDelay: 150,
