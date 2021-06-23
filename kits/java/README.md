@@ -21,7 +21,7 @@ javac Bot
 and this should produce a bunch of .class files which is comprise your compiled bot. To then test run your bot, run
 
 ```
-lux-ai-run Bot.java Bot.java
+lux-ai-2021 Bot.java Bot.java
 ```
 
 which should produce no errors. If you find some bugs or unfixable errors, please let an admin know via Discord, the forums, or email us.

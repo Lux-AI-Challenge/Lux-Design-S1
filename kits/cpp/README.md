@@ -33,13 +33,13 @@ TODO
 and this should generate a main.wasm and main.js file in your bot folder. To now test your transpiled bot, run
 
 ```
-lux-ai-run main.js main.js
+lux-ai-2021 main.js main.js
 ```
 
 You can also test the untranspiled version of your bot via
 
 ```
-lux-ai-run main.cpp main.cpp
+lux-ai-2021 main.cpp main.cpp
 ```
 
 which will compile your C++ normally. However, note that your submission must include the transpiled version of the bot.

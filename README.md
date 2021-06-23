@@ -23,7 +23,7 @@ npm install -g @lux-ai/2021-challenge
 To run a match from command line (CLI), simply run
 
 ```
-lux-ai-run path/to/botfile path/to/otherbotfile
+lux-ai-2021 path/to/botfile path/to/otherbotfile
 ```
 
 and the match will run with some logging and store error logs and a replay in a new `errorlogs` folder and `replays` folder
@@ -31,7 +31,7 @@ and the match will run with some logging and store error logs and a replay in a 
 For a full list of commands from the CLI, run
 
 ```
-lux-ai-run --help
+lux-ai-2021 --help
 ```
 
 The `kits` folder in this repository holds all of the available starter its you can use to start competing and building an AI agent and show you how to get started with your language of choice and run a match with that bot. You can also follow the following direct links
