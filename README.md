@@ -1,57 +1,42 @@
-# LuxDesign
+# Lux AI Challenge: Season 1
 
-This repository will hold the game logic file (the Design), all the public Docker images bots are run on, and starter kits for every language
+Welcome to the season 1 of the Lux AI Challenge! This repository is the entire codebase that runs the game engine for your bots to compete on. 
 
-Change this name some time later
+This was built by the Lux AI Challenge team, using the [Dimensions](https://github.com/StoneT2000/Dimensions) package.
+
+Here are some important links:
+
+Season 1 Specifications: TODO
+
+Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits
+
+
 
 ## Getting Started
 
 Install the design with
 
 ```
-npm install -g lux-ai-challenge-2021
+npm install -g @lux-ai/2021-challenge
 ```
 
-To run a match from command line, simply run
+To run a match from command line (CLI), simply run
 
 ```
-lux-ai-run path/to/bot path/to/otherbot
+lux-ai-run path/to/botfile path/to/otherbotfile
 ```
 
 and the match will run with some logging and store error logs and a replay in a new `errorlogs` folder and `replays` folder
 
-The `kits` folder in this repository holds all of the available starter its you can use to start competing and building an AI agent.
-
-
-## Development
-
-First install all necessary dependencies via
+For a full list of commands from the CLI, run
 
 ```
-npm install
+lux-ai-run --help
 ```
 
-To run tests, run
+The `kits` folder in this repository holds all of the available starter its you can use to start competing and building an AI agent and show you how to get started with your language of choice and run a match with that bot. You can also follow the following direct links
 
-```
-npm test
-```
-
-## Publishing
-
-Whenever a change is made to game logic, first build the new package via
-
-```
-npm run build
-```
-
-
-Then a few places need to be updated. First, the Lux Design package hosted on npm needs to be updated. This is done via first changing the package version to a higher one, then running
-
-```
-npm publish
-```
-
-Next, the visualizer needs an update. In the visualizer's repository, make sure to install the latest Lux Design hosted on npm that was just updated, then push that change to master.
-
-Next, Kaggle Environments needs to receive an update. In `kaggle_engine` folder
+- Python: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/python
+- Javascript: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/js
+- C++: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/cpp
+- Java: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/java
