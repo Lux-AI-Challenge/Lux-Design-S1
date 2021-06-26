@@ -32,4 +32,4 @@ The online version is hosted here: https://lux-ai.org/docs-2021, the markdown ve
 
 ## FAQ
 
-As questions come up, this will be populated with frequently asked questions regarding the JS kit.
+As questions come up, this will be populated with frequently asked questions regarding the Python kit.
