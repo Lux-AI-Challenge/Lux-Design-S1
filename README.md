@@ -71,3 +71,5 @@ See the [guide on contributing](https://github.com/Lux-AI-Challenge/Lux-Design-2
 Original design for season 1 concevied by [Bovard](https://github.com/bovard) and [Stone](https://github.com/StoneT2000)
 
 UI/UX Design by [Isa](https://github.com/p-isa)
+
+With balance testing help from [David](https://github.com/holypegasus)
