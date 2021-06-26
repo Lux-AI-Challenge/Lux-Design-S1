@@ -114,8 +114,8 @@ The map is organized such that the top left corner of the map is at `(0, 0)` and
 - `can_move(): bool`  - returns true if the unit can perform an action. False otherwise. Essentially just checks the cooldown of the unit is less than 1
 - `move(dir): str` - returns the move action. When applied, unit will move in the specified direction by one unit, provided there are no other units in the way or opposition cities. (Unit's can stack on top of each other however when over a friendly city)
 - `transfer(dest_id, resourceType, amount): str` - returns the transfer action. Will transfer from the selected resource type by the desired amount to the unit with id `dest_id` provided both units are adjacent at the moment. (This means that a destination unit can receive a transfer of resources by another unit but also move away from that unit)
-- `build_city(): str` - returns the build city action. When applied, unit will try to build a city right under itself provided it is an empty tile with no city or resources and the [TODO] worker is carrying sufficient wood.
-- `pillage(): str` - returns the pillage action. When applied, unit will pillage the tile it is currently on top of and remove 0.25 of the cooldown.
+- `build_city(): str` - returns the build city action. When applied, unit will try to build a city right under itself provided it is an empty tile with no city or resources and the worker is carrying 100 wood.
+- `pillage(): str` - returns the pillage action. When applied, unit will pillage the tile it is currently on top of and remove 0.25 of the road level.
 
 #### <u>Player</u>
 

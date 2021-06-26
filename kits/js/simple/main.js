@@ -3,6 +3,7 @@ const GAME_CONSTANTS = require('./lux/game_constants');
 const DIRECTIONS = GAME_CONSTANTS.DIRECTIONS;
 // create a new agent
 const agent = new kit.Agent();
+const annotate = kit.annotate;
 
 // first initialize the agent, and then proceed to go in a loop waiting for updates and running the AI
 agent.initialize().then(async () => {
@@ -93,6 +94,10 @@ agent.initialize().then(async () => {
         }
       }
     }
+
+    // you can add debug annotations using the functions in the annotate object
+    // actions.push(annotate.circle(0, 0))
+    
     /** AI Code Goes Above! **/
 
     /** Do not edit! **/

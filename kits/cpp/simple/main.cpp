@@ -126,6 +126,9 @@ int main()
       }
     }
 
+    // you can add debug annotations using the methods of the Annotate class.
+    // actions.push_back(Annotate::circle(0, 0));
+
     /** AI Code Goes Above! **/
 
     /** Do not edit! **/

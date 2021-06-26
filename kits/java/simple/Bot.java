@@ -95,6 +95,10 @@ public class Bot {
           }
         }
       }
+
+      // you can add debug annotations using the static methods of the Annotate class.
+      // actions.add(Annotate.circle(0, 0));
+
       /** AI Code Goes Above! **/
 
       /** Do not edit! **/

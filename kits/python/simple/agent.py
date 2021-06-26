@@ -5,11 +5,13 @@ if __package__ == "":
     from lux.game_map import Cell, RESOURCE_TYPES
     from lux.constants import Constants
     from lux.game_constants import GAME_CONSTANTS
+    from lux import annotate
 else:
     from .lux.game import Game
     from .lux.game_map import Cell, RESOURCE_TYPES
     from .lux.constants import Constants
     from .lux.game_constants import GAME_CONSTANTS
+    from .lux import annotate
 DIRECTIONS = Constants.DIRECTIONS
 game_state = None
 
@@ -84,5 +86,8 @@ def agent(observation, configuration):
                             actions.append(unit.build_city())        
                         else:
                             actions.append(unit.move(move_dir))
+
+    # you can add debug annotations using the functions in the annotate object
+    # actions.append(annotate.circle(0, 0))
     
     return actions
