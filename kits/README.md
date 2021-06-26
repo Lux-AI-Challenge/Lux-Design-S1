@@ -20,108 +20,108 @@ Additionally in the game state, are the following nested objects, `map` of type 
 
 The map is organized such that the top left corner of the map is at `(0, 0)` and the bottom right is at `(width, height)`
 
-**Properties:**
+Properties:
 
 - `height: int` - the height of the map (along the y direction)
 - `width: int` - the width of the map (along the x direction)
 - `map: List[List[Cell]]` - A 2D array of Cell objects, defining the current state of the map.
 
-**Methods:**
+Methods:
 
 - `get_cell_by_pos(pos: Position)` - returns the Cell at the given pos
 - `get_cell(x: int, y: int)` - returns the Cell at the given x, y coordinates
 
 ### <u>Position</u>
 
-**Properties:**
+Properties:
 
-- `x: int` - the x coordinate of the position
-- `y: int` - the y coordinate of the position
+- `x: int` - the x coordinate of the Position
+- `y: int` - the y coordinate of the Position
 
-**Methods:**
+Methods:
 
-- `is_adjacent(pos: Position) -> bool` - returns true if this position is adjacent to `pos`. False otherwise
+- `is_adjacent(pos: Position) -> bool` - returns true if this Position is adjacent to `pos`. False otherwise
 
-- `equals(pos: Position) -> bool` - returns true if this position is equal to the other `pos` object by checking x, y coordinates. False otherwise
+- `equals(pos: Position) -> bool` - returns true if this Position is equal to the other `pos` object by checking x, y coordinates. False otherwise
 
-- `translate(direction: DIRECTIONS, units: int) -> Position` - returns the position equal to going in a `direction` `units` number of times from this position
+- `translate(direction: DIRECTIONS, units: int) -> Position` - returns the Position equal to going in a `direction` `units` number of times from this Position
 
-- `distance_to(pos: Position) -> float` - returns the [Euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance) from this position to `pos`
+- `distance_to(pos: Position) -> float` - returns the [Euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance) from this Position to `pos`
 
-- `direction_to(target_pos: Position) -> DIRECTIONS` - returns the direction that would move you closest to `target_pos` from this position if you took a single step. In particular, will return `DIRECTIONS.CENTER` if this position is equal to the `target_pos`. Note that this does not check for potential collisions with other units but serves as a basic pathfinding method
+- `direction_to(target_pos: Position) -> DIRECTIONS` - returns the direction that would move you closest to `target_pos` from this Position if you took a single step. In particular, will return `DIRECTIONS.CENTER` if this Position is equal to the `target_pos`. Note that this does not check for potential collisions with other units but serves as a basic pathfinding method
 
 ### <u>Cell</u>
 
-**Properties:**
+Properties:
 
 - `pos: Position`
-- `resource: Resource` - contains details of a resource at this cell. This may be equal to `None` or `null` equivalents in other languages. You should always use the function `has_resource` to check if this cell has a resource or not
-- `cooldown: float` - the amount of cooldown subtracted from a unit's cooldown whenever they perform an action on this tile. If there are roads, the more developed the road, the higher this cooldown value is. Note that a unit will aways gain a base cooldown amount whenever any action is performed.
-- `citytile: CityTile` - the citytile that is on this cell. Equal to `none` or `null` equivalents in other languages if there is no city tile here.
+- `resource: Resource` - contains details of a Resource at this Cell. This may be equal to `None` or `null` equivalents in other languages. You should always use the function `has_resource` to check if this Cell has a Resource or not
+- `cooldown: float` - the amount of Cooldown subtracted from a unit's Cooldown whenever they perform an action on this tile. If there are roads, the more developed the road, the higher this Cooldown value is. Note that a unit will aways gain a base Cooldown amount whenever any action is performed.
+- `citytile: CityTile` - the citytile that is on this Cell. Equal to `none` or `null` equivalents in other languages if there is no CityTile here.
 
-**Methods:**
+Methods:
 
-- `has_resource() -> bool` - returns true if this cell has a non-depleted resource, false otherwise
+- `has_resource() -> bool` - returns true if this Cell has a non-depleted Resource, false otherwise
 
 ### <u>City</u>
 
-**Properties:**
+Properties:
 
-- `cityid: str` - the id of this city. Each city id in the game is unique and will never be reused by new cities
-- `team: int` - the id of the team this city belongs to. 
-- `fuel: float` - the fuel stored in this city. This fuel is consumed by all city tiles in this city during each turn of night.
-- `citytiles: list[CityTile]` - a list of city tile objects that form this one city collectively. A city defined as all city tiles that are connected via adjacent city tiles. 
+- `cityid: str` - the id of this City. Each City id in the game is unique and will never be reused by new cities
+- `team: int` - the id of the team this City belongs to. 
+- `fuel: float` - the fuel stored in this City. This fuel is consumed by all CityTiles in this City during each turn of night.
+- `citytiles: list[CityTile]` - a list of CityTile objects that form this one City collectively. A City defined as all CityTiles that are connected via adjacent CityTiles.
 
-**Methods:**
+Methods:
 
-- `get_light_upkeep() -> float` - returns the light upkeep per turn of the city. Fuel in the city is subtracted by the light upkeep each turn of night.
+- `get_light_upkeep() -> float` - returns the light upkeep per turn of the City. Fuel in the City is subtracted by the light upkeep each turn of night.
 
 ### <u>CityTile</u>
 
-**Properties:**
+Properties:
 
-- `cityid: str` - the id of the city this city tile is a part of. Each city id in the game is unique and will never be reused by new cities
-- `team: int` - the id of the team this city tile belongs to. 
-- `pos: Position` - the position of this city on the map
-- `cooldown: int` - the current cooldown of this city. 
+- `cityid: str` - the id of the City this CityTile is a part of. Each City id in the game is unique and will never be reused by new cities
+- `team: int` - the id of the team this CityTile belongs to. 
+- `pos: Position` - the Position of this City on the map
+- `cooldown: float` - the current Cooldown of this City. 
 
-**Methods:**
+Methods:
 
-- `can_act() -> bool` - whether this city can perform an action this turn, which is when the cooldown is less than 1
+- `can_act() -> bool` - whether this City can perform an action this turn, which is when the Cooldown is less than 1
 
 - `research() -> str` - returns the research action
 
-- `build_worker() -> str` - returns the build worker action. When applied and requirements are met, a worker will be built at the city.
+- `build_worker() -> str` - returns the build worker action. When applied and requirements are met, a worker will be built at the City.
 
-- `build_cart() -> str` - returns the build cart action. When applied and requirements are met, a cart will be built at the city.
+- `build_cart() -> str` - returns the build cart action. When applied and requirements are met, a cart will be built at the City.
 
 ### <u>Unit</u>
 
-**Properties:**
+Properties:
 
-- `pos: Position` - the position of this unit on the map
+- `pos: Position` - the Position of this unit on the map
 - `team: int` - the id of the team this unit belongs to. 
-- `id: int` - the id of this unit. This is unique and cannot be repeated by any other unit or city
-- `cooldown: int` - the current cooldown of this unit. Note that when this is less than 1, the unit can perform an action
+- `id: int` - the id of this unit. This is unique and cannot be repeated by any other unit or City
+- `cooldown: float` - the current Cooldown of this unit. Note that when this is less than 1, the unit can perform an action
 - `cargo.wood: int` - the amount of wood held by this unit
 - `cargo.coal: int` - the amount of coal held by this unit
 - `cargo.uranium: int` - the amount of uranium held by this unit
 
-**Methods:**
+Methods:
 
-- `get_cargo_space_left(): int` - returns the amount of space left in the cargo of this unit. Note that any resource takes up the same space, e.g. 70 wood takes up as much space as 70 uranium, but 70 uranium would produce much more fuel than wood when deposited at a city
-- `can_build(): bool` - returns true if the unit can build a city on the tile it is on now. False otherwise. Checks that the tile does not have a resource over it still and the unit has a cooldown of less than 1
-- `can_move(): bool`  - returns true if the unit can perform an action. False otherwise. Essentially just checks the cooldown of the unit is less than 1
-- `move(dir): str` - returns the move action. When applied, unit will move in the specified direction by one unit, provided there are no other units in the way or opposition cities. (Unit's can stack on top of each other however when over a friendly city)
-- `transfer(dest_id, resourceType, amount): str` - returns the transfer action. Will transfer from the selected resource type by the desired amount to the unit with id `dest_id` provided both units are adjacent at the moment. (This means that a destination unit can receive a transfer of resources by another unit but also move away from that unit)
-- `build_city(): str` - returns the build city action. When applied, unit will try to build a city right under itself provided it is an empty tile with no city or resources and the worker is carrying 100 wood.
+- `get_cargo_space_left(): int` - returns the amount of space left in the cargo of this unit. Note that any Resource takes up the same space, e.g. 70 wood takes up as much space as 70 uranium, but 70 uranium would produce much more fuel than wood when deposited at a City
+- `can_build(): bool` - returns true if the unit can build a City on the tile it is on now. False otherwise. Checks that the tile does not have a Resource over it still and the unit has a Cooldown of less than 1
+- `can_move(): bool`  - returns true if the unit can perform an action. False otherwise. Essentially just checks the Cooldown of the unit is less than 1
+- `move(dir): str` - returns the move action. When applied, unit will move in the specified direction by one unit, provided there are no other units in the way or opposition cities. (Unit's can stack on top of each other however when over a friendly City)
+- `transfer(dest_id, resourceType, amount): str` - returns the transfer action. Will transfer from the selected Resource type by the desired amount to the unit with id `dest_id` provided both units are adjacent at the moment. (This means that a destination unit can receive a transfer of resources by another unit but also move away from that unit)
+- `build_city(): str` - returns the build City action. When applied, unit will try to build a City right under itself provided it is an empty tile with no City or resources and the worker is carrying 100 wood.
 - `pillage(): str` - returns the pillage action. When applied, unit will pillage the tile it is currently on top of and remove 0.25 of the road level.
 
 ### <u>Player</u>
 
 This contains information on a particular player of a particular team.
 
-**Properties:**
+Properties:
 
 - `team: int` - the team id of this player
 
@@ -129,7 +129,7 @@ This contains information on a particular player of a particular team.
 - `units: list[Unit]` - a list of every unit owned by this player's team.
 - `cities: Dict[str, City]` - a dictionary / map mapping City id to each separate City owned by this player's team. To get the individual CityTiles, you will need to access the `citytiles` property of the `City`.
 
-**Methods:**
+Methods:
 
 - `researched_coal() - bool` - whether or not this player's team has researched coal and can mine coal.
 - `researched_uranium() - bool` - whether or not this player's team has researched uranium and can mine uranium.
@@ -138,18 +138,18 @@ This contains information on a particular player of a particular team.
 
 The annotation object lets you create annotation commands that show up on the visualizer when debug mode is turned on. Note that these commands are stripped by competition servers but are available to see when running matches locally.
 
-**Methods**
+Methods
 
-- `circle(x: int, y: int) -> str` - returns the draw circle annotation action. Will draw a unit sized circle on the visualizer at the current turn centered at the cell at the given x, y coordinates
+- `circle(x: int, y: int) -> str` - returns the draw circle annotation action. Will draw a unit sized circle on the visualizer at the current turn centered at the Cell at the given x, y coordinates
 
-- `x(x: int, y: int) -> str` - returns the draw X annotation action. Will draw a unit sized X on the visualizer at the current turn centered at the cell at the given x, y coordinates
+- `x(x: int, y: int) -> str` - returns the draw X annotation action. Will draw a unit sized X on the visualizer at the current turn centered at the Cell at the given x, y coordinates
 
-- `line(x1: int, y1: int, x2: int, y2: int)` - returns the draw line annotation action. Will draw a line from the center of the cell at (x1, y1) to the center of the cell at (x2, y2).
+- `line(x1: int, y1: int, x2: int, y2: int) -> str` - returns the draw line annotation action. Will draw a line from the center of the Cell at (x1, y1) to the center of the Cell at (x2, y2).
 
 Note that all of these will be colored according to the team that created the annotation (blue or orange)
 
 ### <u>GameConstants</u>
 
-This will contain constants on all game parameters like the max turns, the light upkeep of city tiles etc.
+This will contain constants on all game parameters like the max turns, the light upkeep of CityTiles etc.
 
 If there are any changes to the starter kits, typically only this object will change.
