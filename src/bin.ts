@@ -20,9 +20,9 @@ yargs.options({
     describe: 'whether to store error logs as files',
     default: 'true'
   },
-  'compressreplay': {
-    describe: 'whether to compress the replay',
-    default: 'false',
+  'storereplay': {
+    describe: 'whether to store the replay or not',
+    default: 'true'
   },
   'width': {
     describe: "set a specific width of the map",
@@ -54,15 +54,14 @@ let storelogs = true;
 if (argv["storelogs"] === 'false') {
   storelogs = false;
 }
+let storereplay = true;
+if (argv["storereplay"] === 'false') {
+  storereplay = false;
+}
 
 let seed: any = Math.floor(Math.random() * 1e9);
 if (argv["seed"] !== undefined) {
   seed = parseInt(argv["seed"]);
-}
-
-let compressReplay = false;
-if (argv["compressReplay"] == "true") {
-  compressReplay = true;
 }
 
 let width = undefined;
@@ -99,8 +98,7 @@ const dim = Dimension.create(lux2021, {
 dim.runMatch(
   [{ file: file1, name: file1}, { file: file2, name: file2} ], {
     seed: seed,
-    storeReplay: true,
-    compressReplay,
+    storeReplay: storereplay,
     debug: false,
     width,
     height,
