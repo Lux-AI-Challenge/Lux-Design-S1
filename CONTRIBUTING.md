@@ -4,6 +4,8 @@ If you find a bug or have a feature request, please open an issue [here](https:/
 
 Want to make an contribution? Make a pull request to this repository with your contribution! If you aren't sure about what to contribute on, check out our [open issues](https://github.com/Lux-AI-Challenge/Lux-Design-2021/issues)
 
+And of course, please be aware of and read the [Code Of Conduct](https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/CODE_OF_CONDUCT.md)
+
 ## Development Setup
 
 First clone this repository. Navigate to the cloned repository and run
@@ -24,6 +26,4 @@ This repository is organized as follows
 ## Contributing Starter Kits
 
 If you are interested in contributing a starter kit for a language that is not currently supported, please message us on Discord or post on the forums. We are more than happy to work with you to integrate kits for new languages!
-
-
 
