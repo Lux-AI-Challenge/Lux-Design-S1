@@ -6,11 +6,11 @@ This was built by the Lux AI Challenge team, using the [Dimensions](https://gith
 
 Here are some important links:
 
-Season 1 Specifications: TODO
+Season 1 Specifications: https://lux-ai.org/specs-2021
 
 Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits
 
-Competition Page: Not yet released
+Competition Leaderboard: Not yet released
 
 ## Getting Started
 
@@ -20,7 +20,7 @@ Install the design with
 npm install -g @lux-ai/2021-challenge
 ```
 
-To run a match from command line (CLI), simply run
+To run a match from the command line (CLI), simply run
 
 ```
 lux-ai-2021 path/to/botfile path/to/otherbotfile
