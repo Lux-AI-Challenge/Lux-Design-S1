@@ -17,7 +17,7 @@ describe('Test kit consistency', () => {
   });
   const bots = {
     js: {
-      file: './kits/js/bot.js',
+      file: './kits/js/simple/main.js',
       name: 'js',
     },
     cpp: {
@@ -33,12 +33,9 @@ describe('Test kit consistency', () => {
     storeErrorLogs: false,
     storeReplay: false,
     compressReplay: false,
-    // seed: 1,
+    seed: 0,
     debug: false,
-    width: 16,
-    height: 16,
     debugAnnotations: true,
-    // runProfiler: true,
     loggingLevel: Logger.LEVEL.NONE,
     mapType: 'debug',
     engineOptions: {

@@ -83,6 +83,7 @@ describe('Test Game', () => {
     });
     it('should validate build cities', () => {
       const worker = game.spawnWorker(0, 4, 5);
+      worker.cargo.wood = 100;
       game.spawnCityTile(0, 1, 5);
       const workerOnCity = game.spawnWorker(0, 1, 5);
       game.map.getCell(6, 6).setResource(Resource.Types.COAL, 100);
@@ -195,7 +196,7 @@ describe('Test Game', () => {
       } catch (err) {}
       if (valid) fail('malformed command');
 
-      citytile23.cooldown = 0.2;
+      citytile23.cooldown = 1.2;
       valid = false;
       try {
         game.validateCommand({
@@ -269,7 +270,7 @@ describe('Test Game', () => {
       } catch (err) {}
       if (valid) fail('malformed command');
 
-      citytile23.cooldown = 0.2;
+      citytile23.cooldown = 1.2;
       valid = false;
       try {
         game.validateCommand({
@@ -320,7 +321,7 @@ describe('Test Game', () => {
       } catch (err) {}
       if (valid) fail('malformed command');
 
-      citytile23.cooldown = 0.2;
+      citytile23.cooldown = 1.2;
       valid = false;
       try {
         game.validateCommand({
@@ -397,7 +398,7 @@ describe('Test Game', () => {
       if (valid) fail('can not move a unit onto enemy city');
 
       valid = false;
-      worker.cooldown = 0.1;
+      worker.cooldown = 1.1;
       try {
         game.validateCommand({
           command: `m ${worker.id} n`,
@@ -531,6 +532,7 @@ describe('Test Game', () => {
     it('should not allow duplicate commands for build cities', () => {
       const init = game._genInitialAccumulatedActionStats();
       const worker = game.spawnWorker(0, 4, 5);
+      worker.cargo.wood = 100;
       game.spawnCityTile(0, 1, 5);
       game.validateCommand(
         {
