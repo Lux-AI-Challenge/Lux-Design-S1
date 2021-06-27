@@ -163,7 +163,7 @@ export class LuxDesignLogic {
 
     for (let y = 0; y < game.map.height; y++) {
       for (let x = 0; x < game.map.width; x++) {
-        const cd = game.map.getCell(x, y).cooldown;
+        const cd = game.map.getCell(x, y).getTileCooldown();
         promises.push(match.sendAll(`ccd ${x} ${y} ${cd}`));
       }
     }
