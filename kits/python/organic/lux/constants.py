@@ -5,7 +5,7 @@ class Constants:
         UNITS = "u"
         CITY = "c"
         CITY_TILES = "ct"
-        CELL_COOLDOWN = "cd"
+        CELL_COOLDOWN = "ccd"
         DONE = "D_DONE"
     class DIRECTIONS:
         NORTH = "n"
