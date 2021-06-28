@@ -88,7 +88,7 @@ const dim = Dimension.create(lux2021, {
   observe: false,
   defaultMatchConfigs: {
     agentOptions: {
-      runCommands: {'.py': ['python3']}
+      runCommands: {'.py': ['python']}
     },
     storeErrorLogs: storelogs
   }
