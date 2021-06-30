@@ -54,7 +54,7 @@ def agent(observation, configuration):
 
     # we iterate over all our units and do something with them
     for unit in player.units:
-        if unit.is_worker():
+        if unit.is_worker() and unit.can_act():
             closest_dist = 999999999
             closest_resource_tile = None
             if unit.get_cargo_space_left() > 0:

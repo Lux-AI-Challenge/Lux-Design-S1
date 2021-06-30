@@ -48,7 +48,7 @@ public class Bot {
       // we iterate over all our units and do something with them
       for (int i = 0; i < player.units.size(); i++) {
         Unit unit = player.units.get(i);
-        if (unit.isWorker()) {
+        if (unit.isWorker() && unit.canAct()) {
           if (unit.getCargoSpaceLeft() > 0) {
             // if the unit is a worker and we have space in cargo, lets find the nearest resource tile and try to mine it
             Cell closestResourceTile = null;

@@ -63,7 +63,7 @@ int main()
     for (int i = 0; i < player.units.size(); i++)
     {
       Unit unit = player.units[i];
-      if (unit.isWorker())
+      if (unit.isWorker() && unit.canAct())
       {
         if (unit.getCargoSpaceLeft() > 0)
         {

@@ -101,7 +101,7 @@ class Unit:
             return True
         return False
 
-    def can_move(self):
+    def can_act(self):
         """
         whether or not the unit can move or not. This does not check for potential collisions into other units or enemy cities
         """
