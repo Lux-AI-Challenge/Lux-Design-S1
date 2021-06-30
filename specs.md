@@ -12,7 +12,7 @@ In the Lux AI Challenge Season 1, both teams control a team of [Units](#Units) a
 
 The world of Lux is represented as a 2d grid. Coordinates increase east (right) and south (down). The map width and height range can be 12, 16, 24, or 32 tiles long. The (0, 0) coordinate is at the top left.
 
-The map has various features including [Resources](#Resources) (Wood, Coal, Uranium), Units ([Workers](#Workers), [Carts](#Carts)), [CityTiles](#CityTiles), and [Road](#Roads).
+The map has various features including [Resources](#Resources) (Wood, Coal, Uranium), [Units](#Units) ([Workers](#Workers), [Carts](#Carts)), [CityTiles](#CityTiles), and [Road](#Roads).
 
 In order to prevent maps from favoring one player over another, it is guaranteed that maps are always symmetric by vertical or horizontal reflection.
 
@@ -67,7 +67,7 @@ There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing 
 
 #### Collection Mechanics
 
-At the end of each turn, units automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current formula:
+At the end of each turn, [Units](#Units) automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current formula:
 
 - Uranium, coal, then wood tiles do the following in order:
   - Determine the number of eligible workers (adjacent and have required research level)
@@ -88,11 +88,11 @@ Actions
 
 There are two unit types, [Workers](#Workers), and [Carts](#Carts). Every unit can perform a single action once they have a [Cooldown](#Cooldown) &lt; 1.
 
-All units can choose the move action and move in any of 5 directions, North, East, South, West, Center. Moreover, all mobile units can carry raw resources gained from automatic mining or resource transfer. [Workers](#Workers) are capped at 100 units of resources and [Carts](#Carts) are capped at 2000 units of resources.
+All units can choose the move action and move in any of 5 directions, North, East, South, West, Center. Moreover, all units can carry raw resources gained from automatic mining or resource transfer. [Workers](#Workers) are capped at 100 units of resources and [Carts](#Carts) are capped at 2000 units of resources.
 
 Whenever a unit moves on top of a friendly [CityTile](#CityTiles), the City that [CityTile](#CityTiles) forms converts all carried resources into fuel.
 
-There can be at most one mobile unit on tiles without a [CityTile](#CityTiles). Moreover, units cannot move on top of the opposing team’s [CityTiles](#CityTiles). However, units can stack on top of each other on a friendly [CityTile](#CityTiles).
+There can be at most one unit on tiles without a [CityTile](#CityTiles). Moreover, units cannot move on top of the opposing team’s [CityTiles](#CityTiles). However, units can stack on top of each other on a friendly [CityTile](#CityTiles).
 
 If two units attempt to move to the same tile that is not a [CityTile](#CityTiles), this is considered a collision and the move action is cancelled.
 
@@ -114,7 +114,7 @@ Actions
 
 ### Cooldown
 
-[CityTiles](#CityTiles), [Workers](#Workers) and [Carts](#Carts) all have a cooldown mechanic after each action. Units can only perform an action when they have &lt; 1 [Cooldown](#Cooldown).
+[CityTiles](#CityTiles), [Workers](#Workers) and [Carts](#Carts) all have a cooldown mechanic after each action. [Units](#Units) can only perform an action when they have &lt; 1 [Cooldown](#Cooldown).
 
 After an action is performed, the unit’s [Cooldown](#Cooldown) will increase by a Base [Cooldown](#Cooldown) and then subtracted by the level of the [Road](#Roads) it ends its turn on. [CityTiles](#CityTiles) however will always get their [Cooldown](#Cooldown) increased by 10.
 
@@ -149,7 +149,7 @@ At the end of each turn, a unit’s cooldown will reduce by 1
 
 ### Roads
 
-As carts travel across the map, they start to create [Road](#Roads) which allow all units to move faster (see [Cooldown](#Cooldown)). Each time a cart travels onto a tile, the [Road](#Roads) level of that tile increases by 0.5. The higher the [Road](#Roads) level, the faster units can move and perform actions. All tiles start with a [Road](#Roads) level of 0, and are capped at 6.
+As carts travel across the map, they start to create [Road](#Roads) which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). Each time a cart travels onto a tile, the [Road](#Roads) level of that tile increases by 0.5. The higher the [Road](#Roads) level, the faster [Units](#Units) can move and perform actions. All tiles start with a [Road](#Roads) level of 0, and are capped at 6.
 
 Moreover, [CityTiles](#CityTiles) automatically have the max [Road](#Roads) level of 6.
 
@@ -159,11 +159,11 @@ Moreover, [CityTiles](#CityTiles) automatically have the max [Road](#Roads) leve
 
 The Day/Night cycle consists of a 40 turn cycle, the first 30 turns being day turns, the last 10 being night turns. There are a total of 360 turns in a match, forming 9 cycles.
 
-During the night, units and Cities need to produce light to survive. Each turn of night, each [Unit](#Units) and [CityTile](#CityTiles) will consume an amount of fuel, see table below for rates. Mobile units in particular will use their carried resources to produce light whereas [CityTiles](#CityTiles) will use their fuel to produce light.
+During the night, [Units](#Units) and Cities need to produce light to survive. Each turn of night, each [Unit](#Units) and [CityTile](#CityTiles) will consume an amount of fuel, see table below for rates. [Units](#Units) in particular will use their carried resources to produce light whereas [CityTiles](#CityTiles) will use their fuel to produce light.
 
-[Workers](#Workers) and [Carts](#Carts) will only need to consume resources if they are not on a [CityTile](#CityTiles). When outside the City, Workers and [Carts](#Carts) must consume whole units of resources to satisfy their night needs, e.g. if a worker carries 1 wood and 5 uranium on them, they will consume a full wood for 1 fuel, then a full uranium to fulfill the last 3 fuel requirements, wasting 22 fuel. Mobile units will always consume the least efficient resources first.
+[Workers](#Workers) and [Carts](#Carts) will only need to consume resources if they are not on a [CityTile](#CityTiles). When outside the City, Workers and [Carts](#Carts) must consume whole units of resources to satisfy their night needs, e.g. if a worker carries 1 wood and 5 uranium on them, they will consume a full wood for 1 fuel, then a full uranium to fulfill the last 3 fuel requirements, wasting 22 fuel. [Units](#Units) will always consume the least efficient resources first.
 
-Lastly, at night, units gain 2x more Base [Cooldown](#Cooldown)
+Lastly, at night, [Units](#Units) gain 2x more Base [Cooldown](#Cooldown)
 
 Should any [Unit](#Units) during the night run out of fuel, they will be removed from the game and disappear into the night forever. Should a City run out of fuel however, the entire City with all of the [CityTiles](#CityTiles) it owns will fall into darkness and be removed from the game.
 
@@ -210,7 +210,7 @@ Actions in the game are first all validated against the current game state to se
 2. [Unit](#Units) actions
 3. [Resource](#Resources) collection
 4. [Resource](#Resources) drops on [CityTiles](#CityTiles)
-5. If night time, make units consume resources and [CityTiles](#CityTiles) consume fuel
+5. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
 
 ### Win Conditions
 
