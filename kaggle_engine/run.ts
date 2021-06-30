@@ -9,6 +9,7 @@ import { DeepPartial } from "dimensions-ai/lib/main/utils/DeepPartial";
 
 const lux2021 = new LuxDesign("lux_ai_2021");
 
+//typescript will complain if dimensions is one version but lux ai is built using another one
 const myDimension = create(lux2021, {
   name: "Lux AI 2021",
   loggingLevel: Logger.LEVEL.NONE,
