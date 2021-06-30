@@ -50,9 +50,7 @@ Now that you have some code and you checked that your code works by trying to su
 
 If you haven't read it already, take a look at the [design specifications for the competition](https://lux-ai.org/specs-2021). This will go through the rules and objectives of the competition.
 
-All of our kits follow a common API through which you can use to access various functions and properties that will help you develop your strategy and bot.
-
-The online version is hosted here: https://lux-ai.org/docs-2021, the markdown version is here: https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/kits/README.md
+All of our kits follow a common API through which you can use to access various functions and properties that will help you develop your strategy and bot. The online version is hosted here: https://lux-ai.org/docs-2021, the markdown version is here: https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/kits/README.md
 
 ## FAQ
 
