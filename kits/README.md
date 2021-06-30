@@ -2,7 +2,7 @@
 
 This folder contains all official kits provided by the Lux AI team or the Lux AI Challenge Season 1. 
 
-There are 2 kinds of bots provided by us, a `simple` bot strategy and a `organic` bot strategy that work on simple heurstics in each starter kit folder.
+In each starter kit folder is a README and a folder called `simple` which gives you all the tools necessary to compete. Make sure to read the README document carefully.
 
 ## API
 
@@ -111,7 +111,7 @@ Methods:
 
 - `get_cargo_space_left(): int` - returns the amount of space left in the cargo of this [Unit](#Unit). Note that any Resource takes up the same space, e.g. 70 wood takes up as much space as 70 uranium, but 70 uranium would produce much more fuel than wood when deposited at a [City](#City)
 - `can_build(): bool` - returns true if the [Unit](#Unit) can build a [City](#City) on the tile it is on now. False otherwise. Checks that the tile does not have a Resource over it still and the [Unit](#Unit) has a Cooldown of less than 1
-- `can_move(): bool`  - returns true if the [Unit](#Unit) can perform an action. False otherwise. Essentially just checks the Cooldown of the [Unit](#Unit) is less than 1
+- `can_act(): bool`  - returns true if the [Unit](#Unit) can perform an action. False otherwise. Essentially checks whether the Cooldown of the [Unit](#Unit) is less than 1
 - `move(dir): str` - returns the move action. When applied, [Unit](#Unit) will move in the specified direction by one [Unit](#Unit), provided there are no other units in the way or opposition cities. ([Units](#Unit) can stack on top of each other however when over a friendly [City](#City))
 - `transfer(dest_id, resourceType, amount): str` - returns the transfer action. Will transfer from this [Unit](#Unit) the selected Resource type by the desired amount to the [Unit](#Unit) with id `dest_id` given that both units are adjacent at the start of the turn. (This means that a destination [Unit](#Unit) can receive a transfer of resources by another [Unit](#Unit) but also move away from that [Unit](#Unit))
 - `build_city(): str` - returns the build [City](#City) action. When applied, [Unit](#Unit) will try to build a [City](#City) right under itself provided it is an empty tile with no [City](#City) or resources and the worker is carrying 100 wood.
@@ -152,4 +152,4 @@ Note that all of these will be colored according to the team that created the an
 
 This will contain constants on all game parameters like the max turns, the light upkeep of CityTiles etc.
 
-If there are any changes to the starter kits, typically only this object will change.
+If there are any crucial changes to the starter kits, typically only this object will change.
