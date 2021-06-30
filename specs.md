@@ -81,7 +81,7 @@ A [CityTile](#CityTiles) is a building that takes up one tile of space. Adjacent
 Actions
 
 - Build Worker - Build [Worker](#Workers) unit on top of [CityTile](#CityTiles) (cannot build a worker if there are more workers + carts than friendly [CityTiles](#CityTiles))
-- Build Cart - Build Cart unit on top of [CityTile](#CityTiles) (cannot build a cart if there are more workers + carts than friendly [CityTiles](#CityTiles))
+- Build Cart - Build [Carts](#Carts) unit on top of [CityTile](#CityTiles) (cannot build a cart if there are more workers + carts than friendly [CityTiles](#CityTiles))
 - Research - Increase your team’s Research Points by 1
 
 ### Units
@@ -149,7 +149,7 @@ At the end of each turn, a unit’s cooldown will reduce by 1
 
 ### Roads
 
-As carts travel across the map, they start to create [Road](#Roads) which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). Each time a cart travels onto a tile, the [Road](#Roads) level of that tile increases by 0.5. The higher the [Road](#Roads) level, the faster [Units](#Units) can move and perform actions. All tiles start with a [Road](#Roads) level of 0, and are capped at 6.
+As [Carts](#Carts) travel across the map, they start to create [Road](#Roads) which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). Each time a [Carts](#Carts) travels onto a tile, the [Road](#Roads) level of that tile increases by 0.5. The higher the [Road](#Roads) level, the faster [Units](#Units) can move and perform actions. All tiles start with a [Road](#Roads) level of 0, and are capped at 6.
 
 Moreover, [CityTiles](#CityTiles) automatically have the max [Road](#Roads) level of 6.
 
