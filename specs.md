@@ -214,11 +214,13 @@ Actions in the game are first all validated against the current game state to se
 
 ### Win Conditions
 
-At the conclusion of 360 turns the winner is whichever team the most [CityTiles](#CityTiles) on the map. If that is a tie, then we run a tiebreaker according to the following:
+At the conclusion of 360 turns the winner is whichever team has the most [CityTiles](#CityTiles) on the map. If that is a tie, then we run a tiebreaker according to the following:
 
 1. Number of [Units](#Units)
 2. Total fuel generated
 3. Coin flip
+
+A game may end early if a team no longer has any more [Units](#Units) or [CityTiles](#CityTiles). Then the other team wins.
 
 Note that the first tiebreaker will never change, however, the next 3 tiebreakers may change or be removed and we may allow ties in the competition.
 
