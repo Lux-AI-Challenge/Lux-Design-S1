@@ -6,11 +6,11 @@ Make sure to check our discord or the Kaggle forum for announcements if there ar
 
 ## Getting Started
 
-To get started, download the `simple` or `organic` folder from this repository or via this URL: [TODO]
+To get started, download the `simple` folder from this repository or via this URL: [TODO]
 
-Then navigate to that folder via command line e.g. `cd simple`
+Then navigate to that folder via command line e.g. `cd simple` or for windows `chdir simple`.
 
-Your main code will go into `agent.py` and you can create and use files to help you as well. You should leave `main.py` and the entire `lux` subfolder alone. Read the `agent.py` file to get an idea of how a bot is programmed and a feel for the python API.
+Your main code will go into `agent.py` and you can create and use files to help you as well. You should leave `main.py` and the entire `lux` subfolder alone. Read the `agent.py` file to get an idea of how a bot is programmed and a feel for the Python API.
 
 To test run your bot, run 
 

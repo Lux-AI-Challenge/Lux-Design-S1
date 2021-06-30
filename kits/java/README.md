@@ -28,6 +28,8 @@ lux-ai-2021 Bot.java Bot.java
 
 which should produce no errors. If you find some bugs or unfixable errors, please let an admin know via Discord, the forums, or email us.
 
+Note that your submitted bot must include the compiled `.class` files with it or else it will not work on the competition servers.
+
 ## Developing
 
 Now that you have some code and you checked that your code works by trying to submit something, you are now ready to starting programming your bot and having fun!
