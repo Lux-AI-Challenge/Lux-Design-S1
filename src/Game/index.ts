@@ -245,13 +245,13 @@ export class Game {
             const citytile = cell.citytile;
             if (acc.actionsPlaced.has(citytile.getTileID())) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} sent an extra command. City can perform only one action at a time`;
+              errormsg = `Agent ${cmd.agentID} sent an extra command. CityTile can perform only one action at a time`;
               break;
             }
             acc.actionsPlaced.add(citytile.getTileID());
             if (!citytile.canBuildUnit()) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
+              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but CityTile still with cooldown of ${citytile.cooldown}`;
               break;
             }
             if (action === Game.ACTIONS.BUILD_CART) {
@@ -316,7 +316,7 @@ export class Game {
                   this.map.getCellByPos(newpos).isCityTile() &&
                   this.map.getCellByPos(newpos).citytile.team !== team
                 ) {
-                  errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} onto opponent city`;
+                  errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} onto opponent CityTile`;
                   valid = false;
                 }
                 break;
@@ -359,18 +359,18 @@ export class Game {
             if (!cell.isCityTile() || cell.citytile.team !== team) {
               // invalid if not a city or not owned
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to run research at tile (${x}, ${y}) that it does not own`;
+              errormsg = `Agent ${cmd.agentID} tried to run research at CityTile (${x}, ${y}) that it does not own`;
               break;
             }
             const citytile = cell.citytile;
             if (!citytile.canResearch()) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to run research at tile (${x}, ${y}) but city still on cooldown ${citytile.cooldown}`;
+              errormsg = `Agent ${cmd.agentID} tried to run research at CityTile (${x}, ${y}) but CityTile still on cooldown ${citytile.cooldown}`;
               break;
             }
             if (acc.actionsPlaced.has(citytile.getTileID())) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} sent an extra command. City can perform only one action at a time`;
+              errormsg = `Agent ${cmd.agentID} sent an extra command. CityTile can perform only one action at a time`;
               break;
             }
             acc.actionsPlaced.add(citytile.getTileID());
