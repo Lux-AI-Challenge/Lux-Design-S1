@@ -55,7 +55,7 @@ class CityTile {
   }
   /** Whether or not this unit can research or build */
   canAct() {
-    return this.cooldown === 0;
+    return this.cooldown < 1;
   }
   /** returns command to ask this tile to research this turn */
   research() {
@@ -110,9 +110,9 @@ class Unit {
     return false;
   }
 
-  /** whether or not the unit can move or not. This does not check for potential collisions into other units or enemy cities */
-  canMove() {
-    return this.cooldown === 0;
+  /** whether or not the unit can act or not. This does not check for potential collisions into other units or enemy cities */
+  canAct() {
+    return this.cooldown < 1;
   }
 
   /** return the command to move unit in the given direction */

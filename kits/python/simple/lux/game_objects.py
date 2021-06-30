@@ -50,7 +50,6 @@ class CityTile:
         returns command to ask this tile to build a worker this turn
         """
         return "bw {} {}".format(self.pos.x, self.pos.y)
-#   /** returns command to ask this tile to build a cart this turn */
     def build_cart(self):
         """
         returns command to ask this tile to build a cart this turn

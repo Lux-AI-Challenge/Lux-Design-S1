@@ -34,7 +34,7 @@ public class Unit {
     if (!cell.hasResource() && this.cooldown < 1 && this.cargo.wood >= GameConstants.PARAMETERS.CITY_WOOD_COST) return true;
     return false;
   }
-  public boolean canMove() {
+  public boolean canAct() {
     return this.cooldown < 1;
   }
   public String move(Direction dir) {

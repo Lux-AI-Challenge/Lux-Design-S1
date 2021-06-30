@@ -57,8 +57,8 @@ namespace lux
             }
         }
 
-        /** whether or not the unit can move or not */
-        bool canMove()
+        /** whether or not the unit can act or not */
+        bool canAct()
         {
             return this->cooldown < 1;
         }

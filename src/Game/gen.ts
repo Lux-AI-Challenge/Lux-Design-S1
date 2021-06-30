@@ -139,10 +139,10 @@ export const generateGame = (
         nx2 = width - nx - 1;
       }
       if (!map.getCell(nx, ny).hasResource()) {
-        map.addResource(nx, ny, Resource.Types.WOOD, 1500);
+        map.addResource(nx, ny, Resource.Types.WOOD, 850);
       }
       if (!map.getCell(nx2, ny2).hasResource()) {
-        map.addResource(nx2, ny2, Resource.Types.WOOD, 1500);
+        map.addResource(nx2, ny2, Resource.Types.WOOD, 850);
       }
 
     }
@@ -179,11 +179,11 @@ const generateAllResources = (rng: seedrandom.prng, symmetry: SYMMETRY, width: n
       resourcesMap[i].push(null);
     }
   }
-  const woodResourcesMap = generateResourceMap(rng, 0.21, 0.02, halfWidth, halfHeight, { deathLimit: 2, birthLimit: 4 });
+  const woodResourcesMap = generateResourceMap(rng, 0.2, 0.02, halfWidth, halfHeight, { deathLimit: 2, birthLimit: 4 });
   woodResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 1250 + Math.floor(rng() * 500);
+        const amt = 800 + Math.floor(rng() * 500);
         resourcesMap[y][x] = {type:Resource.Types.WOOD, amt};
         if (symmetry === SYMMETRY.VERTICAL) {
           resourcesMap[y][width - x - 1] = {amt, type: Resource.Types.WOOD};
@@ -253,7 +253,8 @@ type GOLOptions = {
 };
 
 const simulateGOL = (arr: Array<Array<number>>, options: GOLOptions) => {
-  // low deathlimit, high birthlimit -> more nois looking
+  // high birthlimit = unlikely to deviate from initial random spots
+  // high deathlimit = lots of patches die
   const padding = 1;
   const deathLimit = options.deathLimit;
   const birthLimit = options.birthLimit;
