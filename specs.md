@@ -76,12 +76,12 @@ At the end of each turn, [Units](#Units) automatically receive resources from al
 
 ### CityTiles
 
-A [CityTile](#CityTiles) is a building that takes up one tile of space. Adjacent [CityTiles](#CityTiles) collectively form a City. Each [CityTile](#CityTiles) can perform the following actions provided the [CityTile](#CityTiles) has a cooldown &lt; 1.
+A [CityTile](#CityTiles) is a building that takes up one tile of space. Adjacent CityTiles collectively form a City. Each CityTile can perform the following actions provided the [CityTile](#CityTiles) has a [Cooldown](#Cooldown) &lt; 1.
 
 Actions
 
-- Build Worker - Build [Worker](#Workers) unit on top of [CityTile](#CityTiles) (cannot build a worker if there are more workers + carts than friendly [CityTiles](#CityTiles))
-- Build Cart - Build [Carts](#Carts) unit on top of [CityTile](#CityTiles) (cannot build a cart if there are more workers + carts than friendly [CityTiles](#CityTiles))
+- Build Worker - Build [Worker](#Workers) unit on top of this CityTile (cannot build a worker if there are more workers + carts than friendly CityTile)
+- Build Cart - Build [Carts](#Carts) unit on top of this CityTile (cannot build a cart if there are more workers + carts than friendly CityTile)
 - Research - Increase your team’s Research Points by 1
 
 ### Units
@@ -114,11 +114,11 @@ Actions
 
 ### Cooldown
 
-[CityTiles](#CityTiles), [Workers](#Workers) and [Carts](#Carts) all have a cooldown mechanic after each action. [Units](#Units) can only perform an action when they have &lt; 1 [Cooldown](#Cooldown).
+[CityTiles](#CityTiles), [Workers](#Workers) and [Carts](#Carts) all have a cooldown mechanic after each action. [Units](#Units) and [CityTiles](#CityTiles) can only perform an action when they have &lt; 1 Cooldown.
 
-After an action is performed, the unit’s [Cooldown](#Cooldown) will increase by a Base [Cooldown](#Cooldown) and then subtracted by the level of the [Road](#Roads) it ends its turn on. [CityTiles](#CityTiles) however will always get their [Cooldown](#Cooldown) increased by 10.
+After an action is performed, the unit’s Cooldown will increase by a Base Cooldown and then subtracted by the level of the [Road](#Roads) it ends its turn on. [CityTiles](#CityTiles) however will always get their Cooldown increased by 10.
 
-At the end of each turn, a unit’s cooldown will reduce by 1
+At the end of each turn, a unit’s Cooldown will reduce by 1
 
 <table>
   <tr>
@@ -149,11 +149,11 @@ At the end of each turn, a unit’s cooldown will reduce by 1
 
 ### Roads
 
-As [Carts](#Carts) travel across the map, they start to create [Road](#Roads) which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). Each time a [Carts](#Carts) travels onto a tile, the [Road](#Roads) level of that tile increases by 0.5. The higher the [Road](#Roads) level, the faster [Units](#Units) can move and perform actions. All tiles start with a [Road](#Roads) level of 0, and are capped at 6.
+As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). Each time a [Carts](#Carts) travels onto a tile, the road level of that tile increases by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
 
-Moreover, [CityTiles](#CityTiles) automatically have the max [Road](#Roads) level of 6.
+Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
-[Road](#Roads) can also be destroyed by [Workers](#Workers) via the pillage action.
+Roads can also be destroyed by [Workers](#Workers) via the pillage action.
 
 ### Day/Night Cycle
 
