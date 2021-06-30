@@ -105,8 +105,12 @@ export const generateGame = (
     });
 
     // pick random spawn location of first worker and city near a cluster of wood.
-    const spawnX = Math.floor(rng() * (halfWidth - 1)) + 1;
-    const spawnY = Math.floor(rng() * (halfHeight - 1)) + 1;
+    let spawnX = Math.floor(rng() * (halfWidth - 1)) + 1;
+    let spawnY = Math.floor(rng() * (halfHeight - 1)) + 1;
+    while(map.getCell(spawnX, spawnY).hasResource()) {
+      spawnX = Math.floor(rng() * (halfWidth - 1)) + 1;
+      spawnY = Math.floor(rng() * (halfHeight - 1)) + 1;
+    }
     game.spawnWorker(Unit.TEAM.A, spawnX, spawnY);
     game.spawnCityTile(Unit.TEAM.A, spawnX, spawnY);
     if (symmetry === SYMMETRY.HORIZONTAL) {
