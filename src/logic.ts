@@ -150,7 +150,7 @@ export class LuxDesignLogic {
       );
     });
 
-    
+
     game.cities.forEach((city) => {
       city.citycells.forEach((cell) => {
         promises.push(
@@ -203,13 +203,8 @@ export class LuxDesignLogic {
     }
 
     // check if any agents are terminated and finish game if so
-    const agentsTerminated = [false, false];
-    match.agents.forEach((agent) => {
-      // FRONTEND needs to pass in psuedo isTerminated() function that returns true on the turn an agent terminated itself
-      if (agent.isTerminated()) {
-        agentsTerminated[agent.id] = true;
-      }
-    });
+    // FRONTEND needs to pass in psuedo isTerminated() function that returns true on the turn an agent terminated itself
+    const agentsTerminated = match.agents.map((agent) => agent.isTerminated());
 
     if (agentsTerminated[0] || agentsTerminated[1]) {
       // if at least 1 agent was terminated, destroy the terminated agents' cities and units
