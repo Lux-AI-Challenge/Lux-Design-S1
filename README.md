@@ -12,7 +12,7 @@ Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/
 
 Competition Leaderboard: Not yet released
 
-The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a local copy of the visualize, see https://github.com/Lux-AI-Challenge/LuxViewer2021
+The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a local copy of the visualizer, see https://github.com/Lux-AI-Challenge/LuxViewer2021
 
 ![](./assets/game_replay.gif)
 
