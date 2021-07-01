@@ -17,7 +17,7 @@ Make sure you have Java 11 (higher versions are probably fine too). The competit
 To confirm your setup, in your bot folder run
 
 ```
-javac Bot
+javac Bot.java
 ```
 
 and this should produce a bunch of .class files which comprise your compiled bot. To then test run your bot, run
