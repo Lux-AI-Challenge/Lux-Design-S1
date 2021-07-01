@@ -668,7 +668,7 @@ export class Game {
 
       originalCell.resource.amount -= amountDistributed;
 
-      // fixes a rare bug where sometimes JS will subtract a floating point (caused by a division somewhere) 
+      // fixes a rare bug where sometimes JS will subtract a floating point (caused by a division somewhere)
       // and cause a 0 value to equal to the floating point approx equal to 7e-15
       if (originalCell.resource.amount < 1e-10) {
         originalCell.resource.amount = 0;
@@ -868,14 +868,9 @@ export class Game {
     return prunedActions;
   }
   isNight(): boolean {
-    if (this.state.turn === 0) return false;
-    const dayNightTime =
-      this.configs.parameters.NIGHT_LENGTH + this.configs.parameters.DAY_LENGTH;
-    const mod = this.state.turn % dayNightTime;
-    if (mod > this.configs.parameters.DAY_LENGTH || mod === 0) {
-      return true;
-    }
-    return false;
+    const dayLength = this.configs.parameters.DAY_LENGTH;
+    const cycleLength = dayLength + this.configs.parameters.NIGHT_LENGTH;
+    return game.state.turn % cycleLength >= dayLength;
   }
 }
 export namespace Game {
