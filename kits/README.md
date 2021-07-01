@@ -2,7 +2,7 @@
 
 This folder contains all official kits provided by the Lux AI team or the Lux AI Challenge Season 1. 
 
-In each starter kit folder is a README and a folder called `simple` which gives you all the tools necessary to compete. Make sure to read the README document carefully.
+In each starter kit folder is a README and a folder called `simple` which gives you all the tools necessary to compete. Make sure to read the README document carefully. For debugging, you may log to standard error e.g. `console.error` or `print("hello", file=sys.stderr)`, this will be recorded and saved into a errorlogs folder for the match for each agent. You can also try out the [debug annotations](#Annotate) commands to draw onto the replay.
 
 ## API
 
