@@ -186,28 +186,28 @@ export class Game {
             const unit = this.getUnit(team, unitid);
             if (!unit) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city with invalid/unowned unit id: ${unitid}`;
+              errormsg = `Agent ${cmd.agentID} tried to build CityTile with invalid/unowned unit id: ${unitid}`;
               break;
             }
             const cell = this.map.getCellByPos(unit.pos);
             if (cell.isCityTile()) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city on existing city`;
+              errormsg = `Agent ${cmd.agentID} tried to build CityTile on existing CityTile`;
               break;
             }
             if (cell.hasResource()) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city on non-empty resource tile`;
+              errormsg = `Agent ${cmd.agentID} tried to build CityTile on non-empty resource tile`;
               break;
             }
             if (!(unit.cooldown < 1)) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city with cooldown: ${unit.cooldown}`;
+              errormsg = `Agent ${cmd.agentID} tried to build CityTile with cooldown: ${unit.cooldown}`;
               break;
             }
             if (unit.cargo.wood < this.configs.parameters.CITY_WOOD_COST) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city with insufficient wood ${unit.cargo.wood}`;
+              errormsg = `Agent ${cmd.agentID} tried to build CityTile with insufficient wood ${unit.cargo.wood}`;
               break;
             }
             if (acc.actionsPlaced.has(unitid)) {
@@ -668,7 +668,7 @@ export class Game {
 
       originalCell.resource.amount -= amountDistributed;
 
-      // fixes a rare bug where sometimes JS will subtract a floating point (caused by a division somewhere) 
+      // fixes a rare bug where sometimes JS will subtract a floating point (caused by a division somewhere)
       // and cause a 0 value to equal to the floating point approx equal to 7e-15
       if (originalCell.resource.amount < 1e-10) {
         originalCell.resource.amount = 0;
