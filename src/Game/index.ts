@@ -162,7 +162,7 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} tried to pillage tile with invalid/unowned unit id: ${unitid}`;
               break;
             }
-            if (!(unit.canAct())) {
+            if (!(unit.cooldown < 1)) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to pillage tile with cooldown: ${unit.cooldown}`;
               break;
@@ -200,7 +200,7 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} tried to build city on non-empty resource tile`;
               break;
             }
-            if (!(unit.canAct())) {
+            if (!(unit.cooldown < 1)) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to build city with cooldown: ${unit.cooldown}`;
               break;
@@ -398,7 +398,7 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} does not own destination unit: ${srcID} for transfer`;
               break;
             }
-            if (!(teamState.units.get(srcID).canAct())) {
+            if (!(teamState.units.get(srcID).cooldown < 1)) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to transfer resources with cooldown: ${teamState.units.get(srcID).cooldown}`;
               break;

@@ -53,6 +53,8 @@ export class City {
 export class CityTile extends Actionable {
   /** the id of the city this tile is a part of */
   public cityid: string;
+  /** cooldown for this city tile before it can build or research */
+  public cooldown = 0;
 
   public pos: Position = null;
 
@@ -68,11 +70,11 @@ export class CityTile extends Actionable {
   }
 
   canBuildUnit(): boolean {
-    return this.canAct();
+    return this.cooldown < 1;
   }
 
   canResearch(): boolean {
-    return this.canAct();
+    return this.cooldown < 1;
   }
 
   turn(game: Game): void {

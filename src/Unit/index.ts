@@ -12,6 +12,7 @@ import { Position } from '../GameMap/position';
 
 export abstract class Unit extends Actionable {
   public id: string;
+  public cooldown = 0;
   public cargo: Unit.Cargo = {
     wood: 0,
     coal: 0,
@@ -114,7 +115,7 @@ export class Cart extends Unit {
   }
 
   canMove(): boolean {
-    return this.canAct();
+    return this.cooldown < 1;
   }
 
   turn(game: Game): void {
@@ -171,7 +172,7 @@ export class Worker extends Unit {
   }
 
   canMove(): boolean {
-    return this.canAct();
+    return this.cooldown < 1;
   }
 
   turn(game: Game): void {
