@@ -728,7 +728,7 @@ export class Game {
     const transferAmount = Math.min(
       // the amount requested
       amount,
-      // and as much as we have if we have less than requested
+      // and all that we have if that's less than requested
       srcunit.cargo[resourceType],
       // and no more than destination-unit's remaining cargo-space
       destunit.getCargoSpaceLeft(),
