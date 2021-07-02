@@ -25,6 +25,11 @@ export interface LuxMatchConfigs {
    */
   storeReplay: boolean;
   /**
+   * Whether to generate a stateful replay in addition to the current format
+   * @default false
+   */
+  statefulReplay: boolean;
+  /**
    * Whether to compress replay into a unreadable binary format or leave it as json
    * @default false
    */

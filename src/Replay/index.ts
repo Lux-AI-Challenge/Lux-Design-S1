@@ -4,6 +4,23 @@ import JSZip from 'jszip';
 import path from 'path';
 import { GameMap } from '../GameMap';
 import pkg from '../configs.json';
+import { Game } from '../Game';
+
+export interface TurnState extends Game.State {
+  map: Array<Array<{
+    road: number;
+    resource?: { type: string, amount: number};
+  }>>;
+  stats: Game.Stats
+  cities: Record<string, {
+    cityCells: Array<{x: number, y: number}>;
+    id: string;
+    fuel: number;
+    lightupkeep: number;
+  }>
+
+}
+
 export class Replay {
   public replayFilePath: string = null;
   public data: {
@@ -16,6 +33,7 @@ export class Replay {
       tournamentID: string;
     }>;
     allCommands: Array<Array<MatchEngine.Command>>;
+    stateful?: Array<TurnState>;
     version: string;
   } = {
     seed: 0,
@@ -27,7 +45,7 @@ export class Replay {
     version: pkg.version
   };
   public storeReplay = false;
-  constructor(match: Match, public compressReplay: boolean) {
+  constructor(match: Match, public compressReplay: boolean, public statefulReplay = false) {
     const d = new Date().valueOf();
     let replayFileName = `${d}_${match.id}`;
     if (compressReplay) {
@@ -46,6 +64,13 @@ export class Replay {
       }
       fs.writeFileSync(this.replayFilePath, '');
     }
+    if (this.statefulReplay) {
+      this.data.stateful = [];
+    }
+  }
+  public writeState(game: Game): void {
+    const state = game.toStateObject();
+    this.data.stateful.push(state);
   }
   public writeTeams(agents: Agent[]): void {
     agents.forEach((agent) => {

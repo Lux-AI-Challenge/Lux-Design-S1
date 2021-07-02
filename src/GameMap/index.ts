@@ -3,6 +3,7 @@ import { Unit } from '../Unit';
 import { Resource } from '../Resource';
 import { LuxMatchConfigs } from '../types';
 import { Position } from './position';
+import { TurnState } from '../Replay';
 
 export class GameMap {
   public resources: Array<Cell> = [];
@@ -86,6 +87,24 @@ export class GameMap {
       pos.x >= this.width ||
       pos.y >= this.height
     );
+  }
+
+  toStateObject(): TurnState["map"] {
+    const obj: TurnState["map"] = []
+    for (let y = 0; y < this.height; y++) {
+      obj.push([]);
+      for (let x = 0; x < this.width; x++) {
+        const cell = this.getCell(x, y);
+        obj[y].push({
+          road: cell.cooldown,
+          resource: cell.resource ? {
+            type: cell.resource.type,
+            amount: cell.resource.amount
+          } : undefined
+        })
+      }
+    }
+    return obj;
   }
 
   /**

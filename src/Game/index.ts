@@ -19,7 +19,7 @@ import {
   PillageAction,
 } from '../Actions';
 import { Cell } from '../GameMap/cell';
-import { Replay } from '../Replay';
+import { Replay, TurnState } from '../Replay';
 
 /**
  * Holds basically all game data, including the map.
@@ -872,6 +872,31 @@ export class Game {
     const cycleLength = dayLength + this.configs.parameters.NIGHT_LENGTH;
     return this.state.turn % cycleLength >= dayLength;
   }
+
+  toStateObject(): TurnState {
+    const cities: TurnState["cities"] = {}
+    this.cities.forEach((city) => {
+      cities[city.id] = {
+        id: city.id,
+        fuel: city.fuel,
+        lightupkeep: city.getLightUpkeep(),
+        cityCells: city.citycells.map((cell) => {
+          return {
+            x: cell.pos.x,
+            y: cell.pos.y
+          }
+        })
+      }
+    });
+    const state = {
+      ...this.state,
+      stats: this.stats,
+      map: this.map.toStateObject(),
+      cities,
+    }
+    return state;
+  }
+
 }
 export namespace Game {
   export interface Configs {

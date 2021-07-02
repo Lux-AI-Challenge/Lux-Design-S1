@@ -16,6 +16,10 @@ yargs.options({
     describe: 'max time per turn for the bot',
     default: 1200
   },
+  'statefulReplay': {
+    describe: 'whether to generate stateful replays',
+    default: 'false'
+  },
   'storelogs': {
     describe: 'whether to store error logs as files',
     default: 'true'
@@ -58,6 +62,10 @@ let storereplay = true;
 if (argv["storereplay"] === 'false') {
   storereplay = false;
 }
+let statefulReplay = false;
+if (argv["statefulReplay"] === 'true') {
+  statefulReplay = true;
+}
 
 let seed: any = Math.floor(Math.random() * 1e9);
 if (argv["seed"] !== undefined) {
@@ -99,6 +107,7 @@ dim.runMatch(
   [{ file: file1, name: file1}, { file: file2, name: file2} ], {
     seed: seed,
     storeReplay: storereplay,
+    statefulReplay,
     debug: false,
     width,
     height,

@@ -51,7 +51,7 @@ export class LuxDesignLogic {
 
     state.game = game;
 
-    game.replay = new Replay(match, state.configs.compressReplay);
+    game.replay = new Replay(match, state.configs.compressReplay, state.configs.statefulReplay);
     game.replay.data.seed = state.configs.seed;
     game.replay.data.width = forcedWidth;
     game.replay.data.height = forcedHeight;
@@ -199,6 +199,9 @@ export class LuxDesignLogic {
     }
 
     if (game.replay) {
+      if (game.replay.statefulReplay) {
+        game.replay.writeState(game);
+      }
       game.replay.data.allCommands.push(commands);
     }
 
