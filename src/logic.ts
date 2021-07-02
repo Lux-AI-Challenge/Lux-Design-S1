@@ -150,7 +150,7 @@ export class LuxDesignLogic {
       );
     });
 
-    
+
     game.cities.forEach((city) => {
       city.citycells.forEach((cell) => {
         promises.push(
@@ -370,17 +370,6 @@ export class LuxDesignLogic {
     match.log.detail('Beginning turn ' + game.state.turn);
   }
 
-  static currentTurnIsNight(game: Game): boolean {
-    if (game.state.turn === 0) return false;
-    const dayNightTime =
-      game.configs.parameters.NIGHT_LENGTH + game.configs.parameters.DAY_LENGTH;
-    const mod = game.state.turn % dayNightTime;
-    if (mod > game.configs.parameters.DAY_LENGTH || mod === 0) {
-      return true;
-    }
-    return false;
-  }
-
   static async debugViewer(game: Game): Promise<void> {
     console.clear();
     console.log(game.map.getMapString());
@@ -420,7 +409,7 @@ export class LuxDesignLogic {
     const state: Readonly<LuxMatchState> = match.state;
     const game = state.game;
 
-    if (game.state.turn === state.configs.parameters.MAX_DAYS) {
+    if (game.state.turn === state.configs.parameters.MAX_DAYS - 1) {
       return true;
     }
     // over if at least one team has no units left or city tiles
