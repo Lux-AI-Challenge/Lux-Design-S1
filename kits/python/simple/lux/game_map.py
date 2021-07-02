@@ -1,8 +1,11 @@
-from .constants import Constants
-from typing import List
 import math
+from typing import List
+
+from .constants import Constants
+
 DIRECTIONS = Constants.DIRECTIONS
 RESOURCE_TYPES = Constants.RESOURCE_TYPES
+
 
 class Resource:
     def __init__(self, r_type: str, amount: int):
@@ -18,6 +21,7 @@ class Cell:
         self.road = 0
     def has_resource(self):
         return self.resource is not None and self.resource.amount > 0
+
 
 class GameMap:
     def __init__(self, width, height):
@@ -48,17 +52,25 @@ class Position:
         self.x = x
         self.y = y
 
-    def is_adjacent(self, pos):
-        dx = self.x - pos.x
-        dy = self.y - pos.y
-        if abs(dx) + abs(dy) > 1:
-            return False
-        return True
+    def __sub__(self, pos) -> int:
+        return abs(pos.x - self.x) + abs(pos.y - self.y)
 
-    def equals(self, pos):
+    def distance_to(self, pos):
+        """
+        Returns Manhattan (L1/grid) distance to pos
+        """
+        return self - pos
+
+    def is_adjacent(self, pos):
+        return (self - pos) <= 1
+
+    def __eq__(self, pos) -> bool:
         return self.x == pos.x and self.y == pos.y
 
-    def translate(self, direction, units):
+    def equals(self, pos):
+        return self == pos
+
+    def translate(self, direction, units) -> 'Position':
         if direction == DIRECTIONS.NORTH:
             return Position(self.x, self.y - units)
         elif direction == DIRECTIONS.EAST:
@@ -70,15 +82,7 @@ class Position:
         elif direction == DIRECTIONS.CENTER:
             return Position(self.x, self.y)
 
-    def distance_to(self, pos):
-        """
-        Returns Euclidiean (L2) distance to pos
-        """
-        dx = pos.x - self.x
-        dy = pos.y - self.y
-        return math.sqrt(dx * dx + dy * dy)
-
-    def direction_to(self, target_pos: 'Position'):
+    def direction_to(self, target_pos: 'Position') -> DIRECTIONS:
         """
         Return closest position to target_pos from this position
         """
@@ -97,5 +101,6 @@ class Position:
                 closest_dir = direction
                 closest_dist = dist
         return closest_dir
+
     def __str__(self) -> str:
         return f"({self.x}, {self.y})"

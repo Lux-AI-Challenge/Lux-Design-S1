@@ -46,7 +46,7 @@ Methods:
 
 - `translate(direction: DIRECTIONS, units: int) -> Position` - returns the [Position](#Position) equal to going in a `direction` `units` number of times from this [Position](#Position)
 
-- `distance_to(pos: Position) -> float` - returns the [Euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance) from this [Position](#Position) to `pos`
+- `distance_to(pos: Position) -> float` - returns the [Manhattan (rectilinear) distance](https://en.wikipedia.org/wiki/Taxicab_geometry) from this [Position](#Position) to `pos`
 
 - `direction_to(target_pos: Position) -> DIRECTIONS` - returns the direction that would move you closest to `target_pos` from this [Position](#Position) if you took a single step. In particular, will return `DIRECTIONS.CENTER` if this [Position](#Position) is equal to the `target_pos`. Note that this does not check for potential collisions with other units but serves as a basic pathfinding method
 

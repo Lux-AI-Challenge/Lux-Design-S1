@@ -39,8 +39,8 @@ agent.initialize().then(async () => {
       city.citytiles.forEach((citytile) => {
         if (citytile.canAct()) {   
           // you can use the following to get the citytile to research or build a worker
-          // commands.push(citytile.research());
-          // commands.push(citytile.buildWorker());
+          // actions.push(citytile.research());
+          // actions.push(citytile.buildWorker());
         }
       });
     });

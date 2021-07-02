@@ -74,9 +74,13 @@ At the end of each turn, [Units](#Units) automatically receive resources from al
   - If there is enough resources left, each eligible worker receives up to the collection rate (or up to their carrying capacity)
   - If there aren't enough resources to give to all workers, the resources distributed are evenly divided between workers (rounded down to the nearest integer).
 
+### Actions
+
+There are Units and CityTiles that can perform actions each turn given certain conditions. In general, all actions are simultaneously applied and are validated against the state of the game at the start of a turn. The next few sections describe the Units and CityTiles in detail.
+
 ### CityTiles
 
-A [CityTile](#CityTiles) is a building that takes up one tile of space. Adjacent CityTiles collectively form a City. Each CityTile can perform the following actions provided the [CityTile](#CityTiles) has a [Cooldown](#Cooldown) &lt; 1.
+A CityTile is a building that takes up one tile of space. Adjacent CityTiles collectively form a City. Each CityTile can perform a single action provided the CityTile has a [Cooldown](#Cooldown) &lt; 1.
 
 Actions
 
@@ -149,11 +153,11 @@ At the end of each turn, a unit’s Cooldown will reduce by 1
 
 ### Roads
 
-As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). Each time a [Carts](#Carts) travels onto a tile, the road level of that tile increases by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
+As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). Each turn, any tile that a [Cart](#Carts) starts on will have its road level increased by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
 
 Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
-Roads can also be destroyed by [Workers](#Workers) via the pillage action.
+Roads can also be destroyed by [Workers](#Workers) via the pillage action which reduces road level by 0.25 each time.
 
 ### Day/Night Cycle
 
