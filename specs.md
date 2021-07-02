@@ -120,7 +120,7 @@ Actions
 
 [CityTiles](#CityTiles), [Workers](#Workers) and [Carts](#Carts) all have a cooldown mechanic after each action. [Units](#Units) and [CityTiles](#CityTiles) can only perform an action when they have &lt; 1 Cooldown.
 
-After an action is performed, the unit’s Cooldown will increase by a Base Cooldown and then subtracted by the level of the [Road](#Roads) it started its turn on. [CityTiles](#CityTiles) however will always get their Cooldown increased by 10.
+After an action is performed, the unit’s Cooldown will increase by a Base Cooldown and then decrease by the level of the [Road](#Roads) it ends its turn on. [CityTiles](#CityTiles) however will always get their Cooldown increased by 10.
 
 At the end of each turn, a unit’s Cooldown will reduce by 1
 

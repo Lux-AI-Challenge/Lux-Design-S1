@@ -9,7 +9,7 @@ class INPUT_CONSTANTS {
   static string UNITS;
   static string CITY;
   static string CITY_TILES;
-  static string CELL_COOLDOWN;
+  static string ROADS;
 };
 string INPUT_CONSTANTS::DONE = "D_DONE";
 
@@ -18,4 +18,4 @@ string INPUT_CONSTANTS::RESOURCES ="r" ;
 string INPUT_CONSTANTS::UNITS = "u";
 string INPUT_CONSTANTS::CITY = "c";
 string INPUT_CONSTANTS::CITY_TILES = "ct";
-string INPUT_CONSTANTS::CELL_COOLDOWN = "ccd";
+string INPUT_CONSTANTS::ROADS = "ccd";

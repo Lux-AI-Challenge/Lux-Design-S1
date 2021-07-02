@@ -34,7 +34,7 @@ class Cell {
     this.pos = new Position(x, y);
     this.resource = null;
     this.citytile = null;
-    this.cooldown = 0;
+    this.road = 0;
   }
   hasResource() {
     return this.resource !== null && this.resource.amount > 0;

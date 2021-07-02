@@ -56,7 +56,7 @@ Properties:
 
 - `pos: Position`
 - `resource: Resource` - contains details of a Resource at this [Cell](#Cell). This may be equal to `None` or `null` equivalents in other languages. You should always use the function `has_resource` to check if this [Cell](#Cell) has a Resource or not
-- `cooldown: float` - the amount of Cooldown subtracted from a [Unit's](#Unit) Cooldown whenever they perform an action on this tile. If there are roads, the more developed the road, the higher this Cooldown value is. Note that a [Unit](#Unit) will aways gain a base Cooldown amount whenever any action is performed.
+- `road: float` - the amount of Cooldown subtracted from a [Unit's](#Unit) Cooldown whenever they perform an action on this tile. If there are roads, the more developed the road, the higher this Cooldown rate value is. Note that a [Unit](#Unit) will always gain a base Cooldown amount whenever any action is performed.
 - `citytile: CityTile` - the citytile that is on this [Cell](#Cell). Equal to `none` or `null` equivalents in other languages if there is no [CityTile](#CityTile) here.
 
 Methods:

@@ -87,15 +87,15 @@ public class Agent {
           CityTile citytile = city._add_city_tile(x, y, cooldown);
           this.gameState.map.getCell(x, y).citytile = citytile;
           this.gameState.players[team].cityTileCount += 1;
-        } else if (inputIdentifier.equals(IOConstants.CELL_COOLDOWN.str)) {
+      } else if (inputIdentifier.equals(IOConstants.ROADS.str)) {
           int i = 1;
           int x = Integer.parseInt(updates[i++]);
           int y = Integer.parseInt(updates[i++]);
-          double cooldown = Double.parseDouble(updates[i++]);
+          double road = Double.parseDouble(updates[i++]);
           Cell cell = this.gameState.map.getCell(x, y);
-          cell.cooldown = cooldown;
+          cell.road = road;
         }
-        
+
       }
     }
     /**

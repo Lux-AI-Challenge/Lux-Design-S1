@@ -18,7 +18,7 @@ class Cell:
         self.pos = Position(x, y)
         self.resource: Resource = None
         self.citytile = None
-        self.road_level = 0
+        self.road = 0
     def has_resource(self):
         return self.resource is not None and self.resource.amount > 0
 

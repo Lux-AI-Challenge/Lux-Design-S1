@@ -103,7 +103,7 @@ export class LuxDesignLogic {
    * ...
    *
    *
-   * `ccd x y cd` - cooldown of cell at (x, y). Only sent for any cells with cooldowns not equal to 1.
+   * `ccd x y cd` - road level of cell at (x, y)
    *
    */
   static async sendAllAgentsGameInformation(match: Match): Promise<void> {
@@ -165,7 +165,7 @@ export class LuxDesignLogic {
       });
     });
 
-    // send road info in the form of cooldowns of cells
+    // send road info in the form of cooldown discounts of cells
     for (let y = 0; y < game.map.height; y++) {
       for (let x = 0; x < game.map.width; x++) {
         const cd = game.map.getCell(x, y).getRoad();
