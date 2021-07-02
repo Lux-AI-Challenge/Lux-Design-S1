@@ -39,7 +39,7 @@ const main = async () => {
         seed: parseInt(json.config.seed),
         mapType: json.config.mapType,
         parameters: {
-          MAX_DAYS: json.config.episodeSteps - 2,
+          MAX_DAYS: json.config.episodeSteps,
         },
       };
       match = await myDimension.createMatch(
