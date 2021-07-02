@@ -868,14 +868,9 @@ export class Game {
     return prunedActions;
   }
   isNight(): boolean {
-    if (this.state.turn === 0) return false;
-    const dayNightTime =
-      this.configs.parameters.NIGHT_LENGTH + this.configs.parameters.DAY_LENGTH;
-    const mod = this.state.turn % dayNightTime;
-    if (mod > this.configs.parameters.DAY_LENGTH || mod === 0) {
-      return true;
-    }
-    return false;
+    const dayLength = this.configs.parameters.DAY_LENGTH;
+    const cycleLength = dayLength + this.configs.parameters.NIGHT_LENGTH;
+    return this.state.turn % cycleLength >= dayLength;
   }
 }
 export namespace Game {
