@@ -1,9 +1,8 @@
 import { Cell } from '../GameMap/cell';
 import { Unit } from '../Unit';
 import { Resource } from '../Resource';
-import { LuxMatchConfigs } from '../types';
+import { LuxMatchConfigs, SerializedState } from '../types';
 import { Position } from './position';
-import { TurnState } from '../Replay';
 
 export class GameMap {
   public resources: Array<Cell> = [];
@@ -89,8 +88,8 @@ export class GameMap {
     );
   }
 
-  toStateObject(): TurnState['map'] {
-    const obj: TurnState['map'] = [];
+  toStateObject(): SerializedState['map'] {
+    const obj: SerializedState['map'] = [];
     for (let y = 0; y < this.height; y++) {
       obj.push([]);
       for (let x = 0; x < this.width; x++) {

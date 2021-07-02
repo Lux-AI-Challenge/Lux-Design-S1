@@ -4,7 +4,7 @@ import { Unit } from '../Unit';
 import { City, CityTile } from './city';
 import { GameMap } from '../GameMap';
 import { Cart, Worker } from '../Unit';
-import { LuxMatchConfigs } from '../types';
+import { LuxMatchConfigs, SerializedState } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
 import { MatchWarn } from 'dimensions-ai/lib/main/DimensionError';
 import { MatchEngine, Match } from 'dimensions-ai';
@@ -19,7 +19,7 @@ import {
   PillageAction,
 } from '../Actions';
 import { Cell } from '../GameMap/cell';
-import { Replay, TurnState } from '../Replay';
+import { Replay } from '../Replay';
 import { deepCopy } from '../utils';
 
 /**
@@ -82,7 +82,6 @@ export class Game {
       [Unit.TEAM.A]: {
         researchPoints: 0,
         units: new Map(),
-        fuel: 0,
         researched: {
           wood: true,
           coal: false,
@@ -92,7 +91,6 @@ export class Game {
       [Unit.TEAM.B]: {
         researchPoints: 0,
         units: new Map(),
-        fuel: 0,
         researched: {
           wood: true,
           coal: false,
@@ -493,10 +491,10 @@ export class Game {
 
   spawnWorker(team: Unit.TEAM, x: number, y: number, unitid?: string): Worker {
     const cell = this.map.getCell(x, y);
-    const unit = new Worker(x, y, team, this.configs, this.globalUnitIDCount++);
+    const unit = new Worker(x, y, team, this.configs, this.globalUnitIDCount + 1);
     if (unitid) {
       unit.id = unitid;
-    }
+    } else this.globalUnitIDCount++;
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
     this.stats.teamStats[team].workersBuilt += 1;
@@ -505,10 +503,10 @@ export class Game {
 
   spawnCart(team: Unit.TEAM, x: number, y: number, unitid?: string): Cart {
     const cell = this.map.getCell(x, y);
-    const unit = new Cart(x, y, team, this.configs, this.globalUnitIDCount++);
+    const unit = new Cart(x, y, team, this.configs, this.globalUnitIDCount + 1);
     if (unitid) {
       unit.id = unitid;
-    }
+    } else this.globalUnitIDCount++;
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
     this.stats.teamStats[team].cartsBuilt += 1;
@@ -516,7 +514,7 @@ export class Game {
   }
 
   /**
-   * Spawn city tile for a team at (x, y)
+   * Spawn city tile for a team at (x, y). Can pass cityid to use an existing city id
    */
   spawnCityTile(
     team: Unit.TEAM,
@@ -540,9 +538,11 @@ export class Game {
 
     // if no adjacent city cells of same team, generate new city
     if (adjSameTeamCityTiles.length === 0) {
-      const city = new City(team, this.configs, this.globalCityIDCount++);
+      const city = new City(team, this.configs, this.globalCityIDCount + 1);
       if (cityid) {
         city.id = cityid;
+      } else {
+        this.globalCityIDCount++;
       }
       cell.setCityTile(team, city.id);
       city.addCityTile(cell);
@@ -874,8 +874,8 @@ export class Game {
     return this.state.turn % cycleLength >= dayLength;
   }
 
-  toStateObject(): TurnState {
-    const cities: TurnState['cities'] = {};
+  toStateObject(): SerializedState {
+    const cities: SerializedState['cities'] = {};
     this.cities.forEach((city) => {
       cities[city.id] = {
         id: city.id,
@@ -886,22 +886,40 @@ export class Game {
           return {
             x: cell.pos.x,
             y: cell.pos.y,
+            cooldown: cell.citytile.cooldown
           };
         }),
       };
     });
-    const state = {
-      ...deepCopy(this.state),
+    const state: SerializedState = {
+      turn: this.state.turn,
+      globalCityIDCount: this.globalCityIDCount,
+      globalUnitIDCount: this.globalUnitIDCount,
+      teamStates: {
+        [Unit.TEAM.A]: {
+          researchPoints: 0,
+          units: {},
+          researched: {
+            wood: true,
+            coal: false,
+            uranium: false,
+          },
+        },
+        [Unit.TEAM.B]: {
+          researchPoints: 0,
+          units: {},
+          researched: {
+            wood: true,
+            coal: false,
+            uranium: false,
+          },
+        },
+      },
       stats: deepCopy(this.stats),
       map: this.map.toStateObject(),
       cities,
     };
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    state.teamStates[0].units = {};
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    state.teamStates[1].units = {};
+
     const teams = [Unit.TEAM.A, Unit.TEAM.B];
     teams.forEach((team) => {
       this.state.teamStates[team].units.forEach((unit) => {
@@ -947,7 +965,6 @@ export namespace Game {
     };
   }
   export interface TeamState {
-    fuel: number;
     researchPoints: number;
     units: Map<string, Unit>;
     researched: {

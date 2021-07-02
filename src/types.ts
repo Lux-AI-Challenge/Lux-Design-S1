@@ -1,5 +1,7 @@
 import { Game } from './Game';
 import { GameMap } from './GameMap';
+import { Resource } from './Resource';
+import { Unit } from './Unit';
 
 export interface LuxMatchResults {
   ranks: Array<{ rank: number; agentID: number }>;
@@ -109,4 +111,43 @@ export interface LuxMatchConfigs {
     /** Minimum road level */
     MIN_ROAD: number;
   };
+}
+
+export interface SerializedState {
+  turn: number;
+  globalCityIDCount: number;
+  globalUnitIDCount: number;
+  teamStates: {
+    [x in Unit.TEAM]: {
+      researchPoints: number;
+      units: Record<string, {
+        cargo: Unit["cargo"];
+        cooldown: number;
+        x: number;
+        y: number;
+        type: Unit["type"];
+      }>
+      researched: {
+        [x in Resource.Types]: boolean;
+      };
+      
+    };
+  };
+  map: Array<
+    Array<{
+      road: number;
+      resource?: { type: string; amount: number };
+    }>
+  >;
+  stats: Game.Stats;
+  cities: Record<
+    string,
+    {
+      cityCells: Array<{ x: number; y: number, cooldown: number }>;
+      id: string;
+      fuel: number;
+      lightupkeep: number;
+      team: number;
+    }
+  >;
 }
