@@ -149,9 +149,8 @@ export class Cart extends Unit {
         cell.road + this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE,
         this.configs.parameters.MAX_ROAD
       );
-      game.stats.teamStats[
-        this.team
-      ].roadsBuilt += this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE;
+      game.stats.teamStats[this.team].roadsBuilt +=
+        this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE;
     }
     this.cooldown = Math.max(this.cooldown - 1, 0);
   }

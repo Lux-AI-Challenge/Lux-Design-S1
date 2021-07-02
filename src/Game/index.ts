@@ -401,7 +401,11 @@ export class Game {
             }
             if (!(teamState.units.get(srcID).cooldown < 1)) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to transfer resources with cooldown: ${teamState.units.get(srcID).cooldown}`;
+              errormsg = `Agent ${
+                cmd.agentID
+              } tried to transfer resources with cooldown: ${
+                teamState.units.get(srcID).cooldown
+              }`;
               break;
             }
             if (acc.actionsPlaced.has(srcID)) {
@@ -656,9 +660,8 @@ export class Game {
         amountDistributed += distributeAmount;
 
         // update stats
-        this.stats.teamStats[worker.team].resourcesCollected[
-          type
-        ] += Math.floor(distributeAmount);
+        this.stats.teamStats[worker.team].resourcesCollected[type] +=
+          Math.floor(distributeAmount);
 
         // subtract how much was given.
         amountToDistribute -= distributeAmount;
@@ -872,7 +875,7 @@ export class Game {
   }
 
   toStateObject(): TurnState {
-    const cities: TurnState["cities"] = {}
+    const cities: TurnState['cities'] = {};
     this.cities.forEach((city) => {
       cities[city.id] = {
         id: city.id,
@@ -882,23 +885,23 @@ export class Game {
         cityCells: city.citycells.map((cell) => {
           return {
             x: cell.pos.x,
-            y: cell.pos.y
-          }
-        })
-      }
+            y: cell.pos.y,
+          };
+        }),
+      };
     });
     const state = {
       ...deepCopy(this.state),
       stats: deepCopy(this.stats),
       map: this.map.toStateObject(),
       cities,
-    }
+    };
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    state.teamStates[0].units = {}
+    state.teamStates[0].units = {};
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    state.teamStates[1].units = {}
+    state.teamStates[1].units = {};
     const teams = [Unit.TEAM.A, Unit.TEAM.B];
     teams.forEach((team) => {
       this.state.teamStates[team].units.forEach((unit) => {
@@ -908,13 +911,12 @@ export class Game {
           x: unit.pos.x,
           y: unit.pos.y,
           type: unit.type,
-        }
+        };
       });
     });
-    
+
     return state;
   }
-
 }
 export namespace Game {
   export interface Configs {

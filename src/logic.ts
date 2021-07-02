@@ -51,7 +51,12 @@ export class LuxDesignLogic {
 
     state.game = game;
 
-    game.replay = new Replay(match, state.configs.compressReplay, state.configs.statefulReplay, state.configs.out);
+    game.replay = new Replay(
+      match,
+      state.configs.compressReplay,
+      state.configs.statefulReplay,
+      state.configs.out
+    );
     game.replay.data.seed = state.configs.seed;
     game.replay.data.width = forcedWidth;
     game.replay.data.height = forcedHeight;
@@ -149,7 +154,6 @@ export class LuxDesignLogic {
         )
       );
     });
-
 
     game.cities.forEach((city) => {
       city.citycells.forEach((cell) => {
@@ -491,12 +495,18 @@ export class LuxDesignLogic {
       }
 
       // if tied still, count by fuel generation
-      if (game.stats.teamStats[Unit.TEAM.A].fuelGenerated > game.stats.teamStats[Unit.TEAM.B].fuelGenerated) {
-          break figureresults
-      } else if (game.stats.teamStats[Unit.TEAM.A].fuelGenerated < game.stats.teamStats[Unit.TEAM.B].fuelGenerated) {
+      if (
+        game.stats.teamStats[Unit.TEAM.A].fuelGenerated >
+        game.stats.teamStats[Unit.TEAM.B].fuelGenerated
+      ) {
+        break figureresults;
+      } else if (
+        game.stats.teamStats[Unit.TEAM.A].fuelGenerated <
+        game.stats.teamStats[Unit.TEAM.B].fuelGenerated
+      ) {
         winningTeam = Unit.TEAM.B;
         losingTeam = Unit.TEAM.A;
-        break figureresults
+        break figureresults;
       }
 
       // if still undecided, for now, go by random choice

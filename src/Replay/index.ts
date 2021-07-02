@@ -8,19 +8,23 @@ import { Game } from '../Game';
 import { LuxMatchResults } from '../types';
 
 export interface TurnState extends Game.State {
-  map: Array<Array<{
-    road: number;
-    resource?: { type: string, amount: number};
-  }>>;
-  stats: Game.Stats
-  cities: Record<string, {
-    cityCells: Array<{x: number, y: number}>;
-    id: string;
-    fuel: number;
-    lightupkeep: number;
-    team: number;
-  }>
-
+  map: Array<
+    Array<{
+      road: number;
+      resource?: { type: string; amount: number };
+    }>
+  >;
+  stats: Game.Stats;
+  cities: Record<
+    string,
+    {
+      cityCells: Array<{ x: number; y: number }>;
+      id: string;
+      fuel: number;
+      lightupkeep: number;
+      team: number;
+    }
+  >;
 }
 
 export class Replay {
@@ -45,14 +49,19 @@ export class Replay {
     width: -1,
     height: -1,
     teamDetails: [],
-    version: pkg.version
+    version: pkg.version,
   };
   public storeReplay = false;
-  constructor(match: Match, public compressReplay: boolean, public statefulReplay = false, public out: string) {
+  constructor(
+    match: Match,
+    public compressReplay: boolean,
+    public statefulReplay = false,
+    public out: string
+  ) {
     const d = new Date().valueOf();
     let replayFileName = `${d}_${match.id}`;
     if (statefulReplay) {
-      replayFileName += "_stateful";
+      replayFileName += '_stateful';
     }
     if (compressReplay) {
       replayFileName += '.luxr';

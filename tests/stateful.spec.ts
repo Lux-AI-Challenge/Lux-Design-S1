@@ -2,13 +2,16 @@ import chai from 'chai';
 import 'mocha';
 const expect = chai.expect;
 import fs from 'fs';
-describe("Test stateful replays", () => {
-  it.skip("Stateful replay should be same as action converted to stateful replay", () => {
-
+describe('Test stateful replays', () => {
+  it.skip('Stateful replay should be same as action converted to stateful replay', () => {
     // generated directly
-    const replay_1: any = JSON.parse(`${fs.readFileSync("replays/1625234780996_Xfgw1s4wW4Hb_stateful.json")}`);
+    const replay_1: any = JSON.parse(
+      `${fs.readFileSync('replays/1625234780996_Xfgw1s4wW4Hb_stateful.json')}`
+    );
     // generated from action based using converter
-    const replay_2: any = JSON.parse(`${fs.readFileSync("replays/1625233629286_3qhur0FspkwR_stateful.json")}`);
+    const replay_2: any = JSON.parse(
+      `${fs.readFileSync('replays/1625233629286_3qhur0FspkwR_stateful.json')}`
+    );
     // check commands match
     for (let i = 0; i < replay_1.allCommands.length; i++) {
       const match1_cmds = replay_1.allCommands[i];
@@ -22,4 +25,4 @@ describe("Test stateful replays", () => {
       expect(state1).to.eql(state2);
     }
   });
-})
+});

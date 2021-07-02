@@ -8,19 +8,19 @@ import path from 'path';
 export const converter = async (argv: any): Promise<void> => {
   const replayFile = argv._[0];
   if (!replayFile) {
-    throw Error("Need to provide path to replay file");
+    throw Error('Need to provide path to replay file');
   }
   const replay: any = JSON.parse(`${fs.readFileSync(replayFile)}`);
   const lux2021 = new LuxDesign('lux_ai_2021', {
     engineOptions: {
       noStdErr: false,
       timeout: {
-        max: 1200
-      }
-    }
+        max: 1200,
+      },
+    },
   });
   const myDimension = create(lux2021, {
-    name: "Lux AI 2021",
+    name: 'Lux AI 2021',
     loggingLevel: Logger.LEVEL.NONE,
     activateStation: false,
     observe: false,
@@ -38,12 +38,12 @@ export const converter = async (argv: any): Promise<void> => {
   const match = await myDimension.createMatch(
     [
       {
-        file: "blank",
-        name: "bot1",
+        file: 'blank',
+        name: 'bot1',
       },
       {
-        file: "blank",
-        name: "bot2",
+        file: 'blank',
+        name: 'bot2',
       },
     ],
     configs
@@ -61,7 +61,8 @@ export const converter = async (argv: any): Promise<void> => {
     });
   }
   const state: LuxMatchState = match.state;
-  const newfilename = path.basename(replayFile).split(".")[0] + "_stateful.json";
+  const newfilename =
+    path.basename(replayFile).split('.')[0] + '_stateful.json';
   const newfilepath = path.join(path.dirname(replayFile), newfilename);
   fs.writeFileSync(newfilepath, JSON.stringify(state.game.replay.data));
   console.log(`Converted ${replayFile}. Stateful replay at ${newfilepath}`);
