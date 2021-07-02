@@ -40,6 +40,9 @@ yargs.options({
   'height': {
     describe: "set a specific height of the map"
   },
+  'out': {
+    describe: "where to store the resulting replay file",
+  }
 }).help()
 const argv: any = yargs.argv;
 

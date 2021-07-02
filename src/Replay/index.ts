@@ -5,6 +5,7 @@ import path from 'path';
 import { GameMap } from '../GameMap';
 import pkg from '../configs.json';
 import { Game } from '../Game';
+import { LuxMatchResults } from '../types';
 
 export interface TurnState extends Game.State {
   map: Array<Array<{
@@ -28,6 +29,7 @@ export class Replay {
     width: number;
     height: number;
     mapType: GameMap.Types;
+    results?: LuxMatchResults;
     teamDetails: Array<{
       name: string;
       tournamentID: string;
@@ -45,7 +47,7 @@ export class Replay {
     version: pkg.version
   };
   public storeReplay = false;
-  constructor(match: Match, public compressReplay: boolean, public statefulReplay = false) {
+  constructor(match: Match, public compressReplay: boolean, public statefulReplay = false, public out: string) {
     const d = new Date().valueOf();
     let replayFileName = `${d}_${match.id}`;
     if (statefulReplay) {
@@ -60,6 +62,9 @@ export class Replay {
       match.configs.storeReplayDirectory,
       replayFileName
     );
+    if (out !== undefined) {
+      this.replayFilePath = out;
+    }
     this.storeReplay = match.configs.storeReplay;
     if (fs.existsSync && this.storeReplay) {
       if (!fs.existsSync(match.configs.storeReplayDirectory)) {
@@ -87,7 +92,8 @@ export class Replay {
       });
     });
   }
-  public writeOut(): void {
+  public writeOut(results: LuxMatchResults): void {
+    this.data.results = results;
     if (!fs.appendFileSync || !this.storeReplay) return;
     if (this.compressReplay) {
       const zipper = new JSZip();

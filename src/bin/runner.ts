@@ -39,6 +39,10 @@ export const runner = (argv: any): void => {
   if (argv["seed"] !== undefined) {
     seed = parseInt(argv["seed"]);
   }
+  let out: string;
+  if (argv["out"] !== undefined) {
+    out = argv["out"]
+  }
 
   let width = undefined;
   let height = undefined;
@@ -76,6 +80,7 @@ export const runner = (argv: any): void => {
       seed: seed,
       storeReplay: storereplay,
       statefulReplay,
+      out,
       debug: false,
       width,
       height,

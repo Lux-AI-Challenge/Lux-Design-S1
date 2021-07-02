@@ -30,6 +30,10 @@ export interface LuxMatchConfigs {
    */
   statefulReplay: boolean;
   /**
+   * where to write the replay file. Default will write to a replays folder and name it as so <date>_<match_id>.json
+   */
+  out?: string;
+  /**
    * Whether to compress replay into a unreadable binary format or leave it as json
    * @default false
    */
