@@ -18,6 +18,7 @@ export interface TurnState extends Game.State {
     id: string;
     fuel: number;
     lightupkeep: number;
+    team: number;
   }>
 
 }

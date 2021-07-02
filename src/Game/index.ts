@@ -881,6 +881,7 @@ export class Game {
         id: city.id,
         fuel: city.fuel,
         lightupkeep: city.getLightUpkeep(),
+        team: city.team,
         cityCells: city.citycells.map((cell) => {
           return {
             x: cell.pos.x,
