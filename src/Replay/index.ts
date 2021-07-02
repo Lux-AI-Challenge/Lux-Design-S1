@@ -3,7 +3,7 @@ import fs from 'fs';
 import JSZip from 'jszip';
 import path from 'path';
 import { GameMap } from '../GameMap';
-
+import pkg from '../../package.json'
 export class Replay {
   public replayFilePath: string = null;
   public data: {
@@ -16,6 +16,7 @@ export class Replay {
       tournamentID: string;
     }>;
     allCommands: Array<Array<MatchEngine.Command>>;
+    version: string;
   } = {
     seed: 0,
     allCommands: [],
@@ -23,8 +24,9 @@ export class Replay {
     width: -1,
     height: -1,
     teamDetails: [],
+    version: pkg.version
   };
-  public storeReplay: boolean = false;
+  public storeReplay = false;
   constructor(match: Match, public compressReplay: boolean) {
     const d = new Date().valueOf();
     let replayFileName = `${d}_${match.id}`;
