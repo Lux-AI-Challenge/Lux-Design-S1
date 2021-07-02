@@ -5,7 +5,7 @@ import { LuxMatchConfigs } from '../types';
 import { GameMap } from '../GameMap';
 import seedrandom from 'seedrandom';
 
-const mapSizes = [12, 16, 24, 32]
+const mapSizes = [12, 16, 24, 32];
 export const generateGame = (
   matchconfigs: Partial<LuxMatchConfigs> = {}
 ): Game => {
@@ -92,13 +92,27 @@ export const generateGame = (
     } else {
       halfHeight = height / 2;
     }
-    let resourcesMap = generateAllResources(rng, symmetry, width, height, halfWidth, halfHeight);
-    while(!validateResourcesMap(resourcesMap)) {
-      resourcesMap = generateAllResources(rng, symmetry, width, height, halfWidth, halfHeight);
+    let resourcesMap = generateAllResources(
+      rng,
+      symmetry,
+      width,
+      height,
+      halfWidth,
+      halfHeight
+    );
+    while (!validateResourcesMap(resourcesMap)) {
+      resourcesMap = generateAllResources(
+        rng,
+        symmetry,
+        width,
+        height,
+        halfWidth,
+        halfHeight
+      );
     }
     resourcesMap.forEach((row, y) => {
       row.forEach((val, x) => {
-        if (val !== null ) {
+        if (val !== null) {
           map.addResource(x, y, val.type, val.amt);
         }
       });
@@ -107,7 +121,7 @@ export const generateGame = (
     // pick random spawn location of first worker and city near a cluster of wood.
     let spawnX = Math.floor(rng() * (halfWidth - 1)) + 1;
     let spawnY = Math.floor(rng() * (halfHeight - 1)) + 1;
-    while(map.getCell(spawnX, spawnY).hasResource()) {
+    while (map.getCell(spawnX, spawnY).hasResource()) {
       spawnX = Math.floor(rng() * (halfWidth - 1)) + 1;
       spawnY = Math.floor(rng() * (halfHeight - 1)) + 1;
     }
@@ -121,11 +135,11 @@ export const generateGame = (
       game.spawnCityTile(Unit.TEAM.B, width - spawnX - 1, spawnY);
     }
     // add at least 3 wood deposits near spawns
-    const deltaIndex = Math.floor(rng() * MOVE_DELTAS.length)
+    const deltaIndex = Math.floor(rng() * MOVE_DELTAS.length);
     const woodSpawnsDeltas = [
       MOVE_DELTAS[deltaIndex],
       MOVE_DELTAS[(deltaIndex + 1) % MOVE_DELTAS.length],
-      MOVE_DELTAS[(deltaIndex + 2) % MOVE_DELTAS.length]
+      MOVE_DELTAS[(deltaIndex + 2) % MOVE_DELTAS.length],
     ];
     for (const delta of woodSpawnsDeltas) {
       const nx = spawnX + delta[0];
@@ -134,8 +148,7 @@ export const generateGame = (
       let ny2 = ny;
       if (symmetry === SYMMETRY.HORIZONTAL) {
         ny2 = height - ny - 1;
-      }
-      else {
+      } else {
         nx2 = width - nx - 1;
       }
       if (!map.getCell(nx, ny).hasResource()) {
@@ -144,7 +157,6 @@ export const generateGame = (
       if (!map.getCell(nx2, ny2).hasResource()) {
         map.addResource(nx2, ny2, Resource.Types.WOOD, 850);
       }
-
     }
 
     return game;
@@ -155,14 +167,16 @@ export const generateGame = (
 
 enum SYMMETRY {
   HORIZONTAL,
-  VERTICAL
+  VERTICAL,
 }
-const validateResourcesMap = (resourcesMap: Array<{amt: number, type: Resource.Types} | any>) => {
-  const data = {"wood": 0, "coal": 0, "uranium": 0};
+const validateResourcesMap = (
+  resourcesMap: Array<{ amt: number; type: Resource.Types } | any>
+) => {
+  const data = { wood: 0, coal: 0, uranium: 0 };
   resourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
-      if (val !== null ) {
-        data[resourcesMap[y][x].type] += resourcesMap[y][x].amt
+      if (val !== null) {
+        data[resourcesMap[y][x].type] += resourcesMap[y][x].amt;
       }
     });
   });
@@ -170,67 +184,107 @@ const validateResourcesMap = (resourcesMap: Array<{amt: number, type: Resource.T
   if (data.coal < 4000) return false;
   if (data.uranium < 600) return false;
   return true;
-}
-const generateAllResources = (rng: seedrandom.prng, symmetry: SYMMETRY, width: number, height: number, halfWidth: number, halfHeight: number) => {
-  const resourcesMap: Array<{amt: number, type: Resource.Types} | any> = [];
+};
+const generateAllResources = (
+  rng: seedrandom.prng,
+  symmetry: SYMMETRY,
+  width: number,
+  height: number,
+  halfWidth: number,
+  halfHeight: number
+) => {
+  const resourcesMap: Array<{ amt: number; type: Resource.Types } | any> = [];
   for (let i = 0; i < height; i++) {
     resourcesMap.push([]);
     for (let j = 0; j < width; j++) {
       resourcesMap[i].push(null);
     }
   }
-  const woodResourcesMap = generateResourceMap(rng, 0.2, 0.02, halfWidth, halfHeight, { deathLimit: 2, birthLimit: 4 });
+  const woodResourcesMap = generateResourceMap(
+    rng,
+    0.2,
+    0.02,
+    halfWidth,
+    halfHeight,
+    { deathLimit: 2, birthLimit: 4 }
+  );
   woodResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
         const amt = 800 + Math.floor(rng() * 500);
-        resourcesMap[y][x] = {type:Resource.Types.WOOD, amt};
+        resourcesMap[y][x] = { type: Resource.Types.WOOD, amt };
         if (symmetry === SYMMETRY.VERTICAL) {
-          resourcesMap[y][width - x - 1] = {amt, type: Resource.Types.WOOD};
+          resourcesMap[y][width - x - 1] = { amt, type: Resource.Types.WOOD };
         } else {
-          resourcesMap[height - y - 1][x] = {amt, type: Resource.Types.WOOD};
+          resourcesMap[height - y - 1][x] = { amt, type: Resource.Types.WOOD };
         }
       }
     });
   });
-  const coalResourcesMap = generateResourceMap(rng, 0.1, 0.02, halfWidth, halfHeight, { deathLimit: 2, birthLimit: 4 });
+  const coalResourcesMap = generateResourceMap(
+    rng,
+    0.1,
+    0.02,
+    halfWidth,
+    halfHeight,
+    { deathLimit: 2, birthLimit: 4 }
+  );
   coalResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
         const amt = 300 + Math.floor(rng() * 150);
-        resourcesMap[y][x] = {type:Resource.Types.COAL, amt };
+        resourcesMap[y][x] = { type: Resource.Types.COAL, amt };
         if (symmetry === SYMMETRY.VERTICAL) {
-          resourcesMap[y][width - x - 1] = {amt, type: Resource.Types.COAL};
+          resourcesMap[y][width - x - 1] = { amt, type: Resource.Types.COAL };
         } else {
-          resourcesMap[height - y - 1][x] = {amt, type: Resource.Types.COAL};
+          resourcesMap[height - y - 1][x] = { amt, type: Resource.Types.COAL };
         }
       }
     });
   });
-  const uraniumResourcesMap = generateResourceMap(rng, 0.05, 0.04, halfWidth, halfHeight, { deathLimit: 1, birthLimit: 6 });
+  const uraniumResourcesMap = generateResourceMap(
+    rng,
+    0.05,
+    0.04,
+    halfWidth,
+    halfHeight,
+    { deathLimit: 1, birthLimit: 6 }
+  );
   uraniumResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
         const amt = 250 + Math.floor(rng() * 100);
-        resourcesMap[y][x] = {type:Resource.Types.URANIUM, amt};
+        resourcesMap[y][x] = { type: Resource.Types.URANIUM, amt };
         if (symmetry === SYMMETRY.VERTICAL) {
-          resourcesMap[y][width - x - 1] = {amt, type: Resource.Types.URANIUM};
+          resourcesMap[y][width - x - 1] = {
+            amt,
+            type: Resource.Types.URANIUM,
+          };
         } else {
-          resourcesMap[height - y - 1][x] = {amt, type: Resource.Types.URANIUM};
+          resourcesMap[height - y - 1][x] = {
+            amt,
+            type: Resource.Types.URANIUM,
+          };
         }
       }
     });
   });
   return resourcesMap;
-}
-const generateResourceMap = (rng: seedrandom.prng, density, densityRange, width, height, golOptions: GOLOptions = { deathLimit: 2, birthLimit: 4 }): number[][] => {
+};
+const generateResourceMap = (
+  rng: seedrandom.prng,
+  density,
+  densityRange,
+  width,
+  height,
+  golOptions: GOLOptions = { deathLimit: 2, birthLimit: 4 }
+): number[][] => {
   // width, height should represent half of the map
   const DENSITY = density - densityRange / 2 + densityRange * rng();
   const arr = [];
   for (let y = 0; y < height; y++) {
     arr.push([]);
     for (let x = 0; x < width; x++) {
-      
       let type = 0;
       if (rng() < DENSITY) {
         type = 1;
@@ -244,9 +298,18 @@ const generateResourceMap = (rng: seedrandom.prng, density, densityRange, width,
     simulateGOL(arr, golOptions);
   }
   return arr;
-}
+};
 
-const MOVE_DELTAS = [[0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1], [1, 0], [1, 1]];
+const MOVE_DELTAS = [
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [-1, -1],
+  [0, -1],
+  [1, -1],
+  [1, 0],
+  [1, 1],
+];
 type GOLOptions = {
   deathLimit: number;
   birthLimit: number;
@@ -263,31 +326,28 @@ const simulateGOL = (arr: Array<Array<number>>, options: GOLOptions) => {
       let alive = 0;
       for (let k = 0; k < MOVE_DELTAS.length; k++) {
         const delta = MOVE_DELTAS[k];
-        const ny= i + delta[1];
-        const nx =j + delta[0];
+        const ny = i + delta[1];
+        const nx = j + delta[0];
         if (arr[ny][nx] === 1) {
           alive++;
         }
       }
       if (arr[i][j] == 1) {
         if (alive < deathLimit) {
-            arr[i][j] = 0;
+          arr[i][j] = 0;
+        } else {
+          arr[i][j] = 1;
         }
-        else {
-            arr[i][j] = 1;
-        }
-      }
-      else {
+      } else {
         if (alive > birthLimit) {
-            arr[i][j] = 1;
-        }
-        else {
-            arr[i][j] = 0;
+          arr[i][j] = 1;
+        } else {
+          arr[i][j] = 0;
         }
       }
     }
   }
-}
+};
 
 export interface GenerationConfigs {
   width: number;

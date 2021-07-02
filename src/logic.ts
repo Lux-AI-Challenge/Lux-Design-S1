@@ -51,7 +51,12 @@ export class LuxDesignLogic {
 
     state.game = game;
 
-    game.replay = new Replay(match, state.configs.compressReplay);
+    game.replay = new Replay(
+      match,
+      state.configs.compressReplay,
+      state.configs.statefulReplay,
+      state.configs.out
+    );
     game.replay.data.seed = state.configs.seed;
     game.replay.data.width = forcedWidth;
     game.replay.data.height = forcedHeight;
@@ -163,8 +168,7 @@ export class LuxDesignLogic {
     // send road info in the form of cooldown discounts of cells
     for (let y = 0; y < game.map.height; y++) {
       for (let x = 0; x < game.map.width; x++) {
-        const cd = game.map.getCell(x, y).getTileCooldown();
-        // Only sent for any cells with no CityTile and with cooldown rates more than the minimum?
+        const cd = game.map.getCell(x, y).getRoad();
         promises.push(match.sendAll(`ccd ${x} ${y} ${cd}`));
       }
     }
@@ -199,6 +203,9 @@ export class LuxDesignLogic {
     }
 
     if (game.replay) {
+      if (game.replay.statefulReplay) {
+        game.replay.writeState(game);
+      }
       game.replay.data.allCommands.push(commands);
     }
 
@@ -230,7 +237,7 @@ export class LuxDesignLogic {
         await this.debugViewer(game);
       }
       if (game.configs.storeReplay) {
-        game.replay.writeOut();
+        game.replay.writeOut(this.getResults(match));
       }
       return 'finished' as Match.Status.FINISHED;
     }
@@ -353,7 +360,7 @@ export class LuxDesignLogic {
 
     if (this.matchOver(match)) {
       if (game.replay) {
-        game.replay.writeOut();
+        game.replay.writeOut(this.getResults(match));
       }
       return 'finished' as Match.Status.FINISHED;
     }
@@ -368,17 +375,6 @@ export class LuxDesignLogic {
     }
     game.state.turn++;
     match.log.detail('Beginning turn ' + game.state.turn);
-  }
-
-  static currentTurnIsNight(game: Game): boolean {
-    if (game.state.turn === 0) return false;
-    const dayNightTime =
-      game.configs.parameters.NIGHT_LENGTH + game.configs.parameters.DAY_LENGTH;
-    const mod = game.state.turn % dayNightTime;
-    if (mod > game.configs.parameters.DAY_LENGTH || mod === 0) {
-      return true;
-    }
-    return false;
   }
 
   static async debugViewer(game: Game): Promise<void> {
@@ -420,7 +416,7 @@ export class LuxDesignLogic {
     const state: Readonly<LuxMatchState> = match.state;
     const game = state.game;
 
-    if (game.state.turn === state.configs.parameters.MAX_DAYS) {
+    if (game.state.turn === state.configs.parameters.MAX_DAYS - 1) {
       return true;
     }
     // over if at least one team has no units left or city tiles
@@ -464,5 +460,72 @@ export class LuxDesignLogic {
         }
       });
     });
+  }
+  static getResults(match: Match): any {
+    // calculate results
+    const state: LuxMatchState = match.state;
+    const game = state.game;
+    let winningTeam = Unit.TEAM.A;
+    let losingTeam = Unit.TEAM.B;
+    figureresults: {
+      // count city tiles
+      const cityTileCount = [0, 0];
+      game.cities.forEach((city) => {
+        cityTileCount[city.team] += city.citycells.length;
+      });
+      if (cityTileCount[Unit.TEAM.A] > cityTileCount[Unit.TEAM.B]) {
+        break figureresults;
+      } else if (cityTileCount[Unit.TEAM.A] < cityTileCount[Unit.TEAM.B]) {
+        winningTeam = Unit.TEAM.B;
+        losingTeam = Unit.TEAM.A;
+        break figureresults;
+      }
+
+      // if tied, count by units
+      const unitCount = [
+        game.getTeamsUnits(Unit.TEAM.A),
+        game.getTeamsUnits(Unit.TEAM.B),
+      ];
+      if (unitCount[Unit.TEAM.A].size > unitCount[Unit.TEAM.B].size) {
+        break figureresults;
+      } else if (unitCount[Unit.TEAM.A].size < unitCount[Unit.TEAM.B].size) {
+        winningTeam = Unit.TEAM.B;
+        losingTeam = Unit.TEAM.A;
+        break figureresults;
+      }
+
+      // if tied still, count by fuel generation
+      if (
+        game.stats.teamStats[Unit.TEAM.A].fuelGenerated >
+        game.stats.teamStats[Unit.TEAM.B].fuelGenerated
+      ) {
+        break figureresults;
+      } else if (
+        game.stats.teamStats[Unit.TEAM.A].fuelGenerated <
+        game.stats.teamStats[Unit.TEAM.B].fuelGenerated
+      ) {
+        winningTeam = Unit.TEAM.B;
+        losingTeam = Unit.TEAM.A;
+        break figureresults;
+      }
+
+      // if still undecided, for now, go by random choice
+      if (state.rng() > 0.5) {
+        winningTeam = Unit.TEAM.B;
+        losingTeam = Unit.TEAM.A;
+      }
+    }
+
+    const results = {
+      ranks: [
+        { rank: 1, agentID: winningTeam },
+        { rank: 2, agentID: losingTeam },
+      ],
+      replayFile: null,
+    };
+    if (game.configs.storeReplay) {
+      results.replayFile = game.replay.replayFilePath;
+    }
+    return results;
   }
 }
