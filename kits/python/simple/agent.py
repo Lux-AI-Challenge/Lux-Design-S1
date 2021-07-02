@@ -1,4 +1,5 @@
-import sys
+import math, sys
+
 if __package__ == "":
     # not sure how to fix this atm
     from lux.game import Game
@@ -12,8 +13,10 @@ else:
     from .lux.constants import Constants
     from .lux.game_constants import GAME_CONSTANTS
     from .lux import annotate
+
 DIRECTIONS = Constants.DIRECTIONS
 game_state = None
+
 
 def agent(observation, configuration):
     global game_state
@@ -44,7 +47,7 @@ def agent(observation, configuration):
     for k, city in player.cities.items():
         if (city.fuel > city.get_light_upkeep() * GAME_CONSTANTS["PARAMETERS"]["NIGHT_LENGTH"] + 1000):
             # if our city has enough fuel to survive the whole night and 1000 extra fuel, lets increment citiesToBuild and let our workers know we have room for more city tiles
-            cities_to_build += 1;
+            cities_to_build += 1
         for citytile in city.citytiles:
             if citytile.can_act():
                 # you can use the following to get the citytile to research or build a worker
@@ -55,13 +58,13 @@ def agent(observation, configuration):
     # we iterate over all our units and do something with them
     for unit in player.units:
         if unit.is_worker() and unit.can_act():
-            closest_dist = 999999999
+            closest_dist = math.inf
             closest_resource_tile = None
             if unit.get_cargo_space_left() > 0:
                 # if the unit is a worker and we have space in cargo, lets find the nearest resource tile and try to mine it
                 for resource_tile in resource_tiles:
                     if resource_tile.resource.type == Constants.RESOURCE_TYPES.COAL and not player.researched_coal(): continue
-                    if resource_tile.resource.type == Constants.RESOURCE_TYPES.URANIUM and not player.researched_uanium(): continue
+                    if resource_tile.resource.type == Constants.RESOURCE_TYPES.URANIUM and not player.researched_uranium(): continue
                     dist = resource_tile.pos.distance_to(unit.pos)
                     if dist < closest_dist:
                         closest_dist = dist
@@ -71,7 +74,7 @@ def agent(observation, configuration):
             else:
                 # if unit is a worker and there is no cargo space left, and we have cities, lets return to them
                 if len(player.cities) > 0:
-                    closest_dist = 999999
+                    closest_dist = math.inf
                     closest_city_tile = None
                     for k, city in player.cities.items():
                         for city_tile in city.citytiles:
