@@ -724,13 +724,13 @@ export class Game {
   ): void {
     const srcunit = this.getUnit(team, srcID);
     const destunit = this.getUnit(team, destID);
-    // the amount to actually transfer
+    // the amount to actually transfer is the minimum of:
     const transferAmount = Math.min(
       // the amount requested
       amount,
-      // when resources is below specified amount, we can only transfer as much as we can hold
+      // and as much as we have if we have less than requested
       srcunit.cargo[resourceType],
-      // if we want to transferr more than there is space, we can only transfer what space is left
+      // and no more than destination-unit's remaining cargo-space
       destunit.getCargoSpaceLeft(),
     );
     srcunit.cargo[resourceType] -= transferAmount;
