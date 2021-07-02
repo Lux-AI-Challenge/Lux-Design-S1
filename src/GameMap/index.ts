@@ -137,7 +137,7 @@ export class GameMap {
                 return `▩`.red;
               }
             }
-            const cd = cell.getRoad();
+            const cd = cell.getTileCooldown();
             if (cd < 1.1) {
               return '0';
             } else if (cd < 2.1) {

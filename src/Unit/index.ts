@@ -128,7 +128,7 @@ export class Cart extends Unit {
         game.moveUnit(action.team, action.unitid, action.direction);
         this.cooldown +=
           this.configs.parameters.UNIT_ACTION_COOLDOWN.CART * cooldownSpeed;
-        this.cooldown -= cell.getRoad();
+        this.cooldown -= cell.getTileCooldown();
       } else if (action instanceof TransferAction) {
         game.transferResources(
           action.team,
@@ -139,15 +139,15 @@ export class Cart extends Unit {
         );
         this.cooldown +=
           this.configs.parameters.UNIT_ACTION_COOLDOWN.CART * cooldownSpeed;
-        this.cooldown -= cell.getRoad();
+        this.cooldown -= cell.getTileCooldown();
       }
     }
 
     // auto create roads by increasing the cooldown value of a cell
-    if (cell.getRoad() < this.configs.parameters.MAX_ROAD) {
-      cell.road = Math.min(
-        cell.road + this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE,
-        this.configs.parameters.MAX_ROAD
+    if (cell.getTileCooldown() < this.configs.parameters.MAX_CELL_COOLDOWN) {
+      cell.cooldown = Math.min(
+        cell.cooldown + this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE,
+        this.configs.parameters.MAX_CELL_COOLDOWN
       );
       game.stats.teamStats[
         this.team
@@ -195,9 +195,9 @@ export class Worker extends Unit {
       } else if (action instanceof SpawnCityAction) {
         game.spawnCityTile(action.team, this.pos.x, this.pos.y);
       } else if (action instanceof PillageAction) {
-        cell.road = Math.max(
-          cell.road - this.configs.parameters.PILLAGE_RATE,
-          this.configs.parameters.MIN_ROAD
+        cell.cooldown = Math.max(
+          cell.cooldown - this.configs.parameters.PILLAGE_RATE,
+          this.configs.parameters.MIN_CELL_COOLDOWN
         );
       } else {
         acted = false;
@@ -205,7 +205,7 @@ export class Worker extends Unit {
       if (acted) {
         this.cooldown +=
           this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER * cooldownSpeed;
-        this.cooldown -= cell.getRoad();
+        this.cooldown -= cell.getTileCooldown();
       }
     }
     this.cooldown = Math.max(this.cooldown - 1, 0);

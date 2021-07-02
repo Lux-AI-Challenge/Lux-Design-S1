@@ -18,11 +18,11 @@ export class Cell {
   public units: Map<string, Unit> = new Map();
   public pos: Position;
   /** How much a unit's cooldown goes down on this tile. This is higher if there are more developed roads */
-  public road = 0;
+  public cooldown = 0;
   constructor(x: number, y: number, public configs: Readonly<LuxMatchConfigs>) {
     this.pos = new Position(x, y);
     // Start with minimum cooldown rate, i.e., no roads
-    this.road = this.configs.parameters.MIN_ROAD;
+    this.cooldown = this.configs.parameters.MIN_CELL_COOLDOWN;
   }
   /**
    * Set resource at cell and the amount of it
@@ -52,11 +52,11 @@ export class Cell {
     return this.units.size !== 0;
   }
 
-  getRoad(): number {
+  getTileCooldown(): number {
     if (this.isCityTile()) {
-      return this.configs.parameters.MAX_ROAD;
+      return this.configs.parameters.MAX_CELL_COOLDOWN;
     } else {
-      return this.road;
+      return this.cooldown;
     }
   }
 }
