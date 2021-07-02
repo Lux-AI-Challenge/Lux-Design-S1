@@ -49,4 +49,4 @@ public class Unit {
   public String pillage() {
     return String.format("p %s", this.id);
   }
-}}
+}
