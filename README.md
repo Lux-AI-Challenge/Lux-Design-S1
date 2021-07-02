@@ -10,6 +10,8 @@ Season 1 Specifications: https://lux-ai.org/specs-2021
 
 Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits
 
+Competition Discord (for announcements, strategy talk etc.): https://discord.com/invite/DZSm47VHMz
+
 Competition Leaderboard: Not yet released
 
 The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a local copy of the visualizer, see https://github.com/Lux-AI-Challenge/LuxViewer2021
@@ -48,6 +50,8 @@ The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits)
 - Javascript: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/js
 - C++: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/cpp
 - Java: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/java
+
+To stay up to date on changes and updates to the competition and the engine, see https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/ChangeLog.md or watch for announcements on the forums or the [Discord](https://discord.com/invite/DZSm47VHMz)
 
 ## CLI Usage
 
