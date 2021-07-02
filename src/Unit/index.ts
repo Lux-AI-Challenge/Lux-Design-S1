@@ -120,13 +120,13 @@ export class Cart extends Unit {
   turn(game: Game): void {
     const cell = game.map.getCellByPos(this.pos);
     const isNight = game.isNight();
-    const cooldownSpeed = isNight ? 2 : 1;
+    const cooldownMultiplier = isNight ? 2 : 1;
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       if (action instanceof MoveAction) {
         game.moveUnit(action.team, action.unitid, action.direction);
         this.cooldown +=
-          this.configs.parameters.UNIT_ACTION_COOLDOWN.CART * cooldownSpeed;
+          this.configs.parameters.UNIT_ACTION_COOLDOWN.CART * cooldownMultiplier;
         this.cooldown -= cell.getTileCooldown();
       } else if (action instanceof TransferAction) {
         game.transferResources(
@@ -137,7 +137,7 @@ export class Cart extends Unit {
           action.amount
         );
         this.cooldown +=
-          this.configs.parameters.UNIT_ACTION_COOLDOWN.CART * cooldownSpeed;
+          this.configs.parameters.UNIT_ACTION_COOLDOWN.CART * cooldownMultiplier;
         this.cooldown -= cell.getTileCooldown();
       }
     }
@@ -177,7 +177,7 @@ export class Worker extends Unit {
   turn(game: Game): void {
     const cell = game.map.getCellByPos(this.pos);
     const isNight = game.isNight();
-    const cooldownSpeed = isNight ? 2 : 1;
+    const cooldownMultiplier = isNight ? 2 : 1;
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       let acted = true;
@@ -203,7 +203,7 @@ export class Worker extends Unit {
       }
       if (acted) {
         this.cooldown +=
-          this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER * cooldownSpeed;
+          this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER * cooldownMultiplier;
         this.cooldown -= cell.getTileCooldown();
       }
     }

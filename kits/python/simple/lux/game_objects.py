@@ -91,13 +91,13 @@ class Unit:
             return GAME_CONSTANTS["PARAMETERS"]["RESOURCE_CAPACITY"]["WORKER"] - spaceused;
         else:
             return GAME_CONSTANTS["PARAMETERS"]["RESOURCE_CAPACITY"]["CART"] - spaceused;
-    
+
     def can_build(self, game_map):
         """
         whether or not the unit can build where it is right now
         """
         cell = game_map.get_cell_by_pos(self.pos)
-        if not cell.has_resource() and self.cooldown < 1 and self.cargo.wood >= GAME_CONSTANTS["PARAMETERS"]["CITY_WOOD_COST"]:
+        if not cell.has_resource() and self.canAct() and self.cargo.wood >= GAME_CONSTANTS["PARAMETERS"]["CITY_WOOD_COST"]:
             return True
         return False
 
