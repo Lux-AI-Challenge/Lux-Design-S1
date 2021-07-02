@@ -3,7 +3,7 @@ import fs from 'fs';
 import JSZip from 'jszip';
 import path from 'path';
 import { GameMap } from '../GameMap';
-import pkg from '../../package.json'
+import pkg from '../configs.json';
 export class Replay {
   public replayFilePath: string = null;
   public data: {
