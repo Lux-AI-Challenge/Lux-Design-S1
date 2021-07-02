@@ -34,7 +34,6 @@ class Game():
         self.map = GameMap(self.map_width, self.map_height)
         self.turn += 1
         self._reset_player_states()
-        
 
         for update in messages:
             if update == "D_DONE":
@@ -77,10 +76,8 @@ class Game():
                 citytile = city._add_city_tile(x, y, cooldown)
                 self.map.get_cell(x, y).citytile = citytile
                 self.players[team].city_tile_count += 1;
-            elif input_identifier == INPUT_CONSTANTS.CELL_COOLDOWN:
+            elif input_identifier == INPUT_CONSTANTS.ROADS:
                 x = int(strs[1])
                 y = int(strs[2])
-                cooldown = float(strs[3])
-                self.map.get_cell(x, y).cooldown = cooldown
-                
-
+                road = float(strs[3])
+                self.map.get_cell(x, y).road = road

@@ -91,13 +91,13 @@ export interface LuxMatchConfigs {
       CART: number;
       WORKER: number;
     };
-    /** Maximum tile cooldown, before road can no longer be developed further */
-    MAX_CELL_COOLDOWN: number;
+    /** Maximum tile cooldown discount, before road can no longer be developed further */
+    MAX_ROAD: number;
     /** how fast carts develop roads, specifically value is equal to how much to increase cooldown reduction of a tile */
     CART_ROAD_DEVELOPMENT_RATE: number;
     /** how fast workers pillage roads, specifically value is equal to how much to decrease cooldown reduction of a tile  */
     PILLAGE_RATE: number;
-    /** Minimum tile cooldown */
-    MIN_CELL_COOLDOWN: number;
+    /** Minimum tile cooldown discount */
+    MIN_ROAD: number;
   };
 }
