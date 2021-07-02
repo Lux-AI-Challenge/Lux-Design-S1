@@ -20,6 +20,7 @@ import {
 } from '../Actions';
 import { Cell } from '../GameMap/cell';
 import { Replay, TurnState } from '../Replay';
+import { deepCopy } from '../utils';
 
 /**
  * Holds basically all game data, including the map.
@@ -889,11 +890,30 @@ export class Game {
       }
     });
     const state = {
-      ...this.state,
-      stats: this.stats,
+      ...deepCopy(this.state),
+      stats: deepCopy(this.stats),
       map: this.map.toStateObject(),
       cities,
     }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    state.teamStates[0].units = {}
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    state.teamStates[1].units = {}
+    const teams = [Unit.TEAM.A, Unit.TEAM.B];
+    teams.forEach((team) => {
+      this.state.teamStates[team].units.forEach((unit) => {
+        state.teamStates[team].units[unit.id] = {
+          cargo: unit.cargo,
+          cooldown: unit.cooldown,
+          x: unit.pos.x,
+          y: unit.pos.y,
+          type: unit.type,
+        }
+      });
+    });
+    
     return state;
   }
 

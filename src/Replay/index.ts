@@ -48,6 +48,9 @@ export class Replay {
   constructor(match: Match, public compressReplay: boolean, public statefulReplay = false) {
     const d = new Date().valueOf();
     let replayFileName = `${d}_${match.id}`;
+    if (statefulReplay) {
+      replayFileName += "_stateful";
+    }
     if (compressReplay) {
       replayFileName += '.luxr';
     } else {
