@@ -1,25 +1,27 @@
 from .constants import Constants
 from .game_map import GameMap
 from .game_objects import Player, Unit, City, CityTile
+
 INPUT_CONSTANTS = Constants.INPUT_CONSTANTS
 
-class Game():
-    def __init__(self):
-        pass
+
+class Game:
     def _initialize(self, messages):
         """
         initialize state
         """
         self.id = int(messages[0])
-        self.turn = 0;
+        self.turn = 0
         # get some other necessary initial input
         mapInfo = messages[1].split(" ")
         self.map_width = int(mapInfo[0])
         self.map_height = int(mapInfo[1])
         self.map = GameMap(self.map_width, self.map_height)
         self.players = [Player(0), Player(1)]
+
     def _end_turn(self):
         print("D_FINISH")
+
     def _reset_player_states(self):
         self.players[0].units = []
         self.players[0].cities = {}
@@ -27,6 +29,7 @@ class Game():
         self.players[1].units = []
         self.players[1].cities = {}
         self.players[1].city_tile_count = 0
+
     def _update(self, messages):
         """
         update state
@@ -34,7 +37,6 @@ class Game():
         self.map = GameMap(self.map_width, self.map_height)
         self.turn += 1
         self._reset_player_states()
-        
 
         for update in messages:
             if update == "D_DONE":
@@ -76,11 +78,9 @@ class Game():
                 city = self.players[team].cities[cityid]
                 citytile = city._add_city_tile(x, y, cooldown)
                 self.map.get_cell(x, y).citytile = citytile
-                self.players[team].city_tile_count += 1;
+                self.players[team].city_tile_count += 1
             elif input_identifier == INPUT_CONSTANTS.CELL_COOLDOWN:
                 x = int(strs[1])
                 y = int(strs[2])
                 cooldown = float(strs[3])
-                self.map.get_cell(x, y).cooldown = cooldown
-                
-
+                self.map.get_cell(x, y).road_level = cooldown
