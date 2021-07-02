@@ -534,9 +534,6 @@ export class Game {
       return false;
     });
 
-    // set cooldown to minimum as city auto gives max cooldown to units and once city is gone it should default to min cell cooldown
-    cell.cooldown = this.configs.parameters.MAX_CELL_COOLDOWN;
-
     // if no adjacent city cells of same team, generate new city
     if (adjSameTeamCityTiles.length === 0) {
       const city = new City(team, this.configs, this.globalCityIDCount++);
@@ -748,7 +745,7 @@ export class Game {
     this.cities.delete(cityID);
     city.citycells.forEach((cell) => {
       cell.citytile = null;
-      cell.cooldown = this.configs.parameters.MIN_CELL_COOLDOWN;
+      cell.road = this.configs.parameters.MIN_ROAD;
     });
   }
 

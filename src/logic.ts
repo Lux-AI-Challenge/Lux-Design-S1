@@ -164,7 +164,7 @@ export class LuxDesignLogic {
     // send road info in the form of cooldowns of cells
     for (let y = 0; y < game.map.height; y++) {
       for (let x = 0; x < game.map.width; x++) {
-        const cd = game.map.getCell(x, y).getTileCooldown();
+        const cd = game.map.getCell(x, y).getRoad();
         promises.push(match.sendAll(`ccd ${x} ${y} ${cd}`));
       }
     }
