@@ -72,11 +72,9 @@ class Position:
 
     def distance_to(self, pos):
         """
-        Returns Euclidiean (L2) distance to pos
+        Returns Manhattan (L1) distance to pos
         """
-        dx = pos.x - self.x
-        dy = pos.y - self.y
-        return math.sqrt(dx * dx + dy * dy)
+        return math.abs(pos.x - self.x) + math.abs(pos.y - self.y)
 
     def direction_to(self, target_pos: 'Position'):
         """
