@@ -12,7 +12,6 @@ import { Position } from '../GameMap/position';
 
 export abstract class Unit extends Actionable {
   public id: string;
-  public cooldown = 0;
   public cargo: Unit.Cargo = {
     wood: 0,
     coal: 0,
@@ -115,13 +114,13 @@ export class Cart extends Unit {
   }
 
   canMove(): boolean {
-    return this.cooldown < 1;
+    return this.canAct();
   }
 
   turn(game: Game): void {
     const cell = game.map.getCellByPos(this.pos);
     const isNight = game.isNight();
-    const cooldownSpeed = isNight ? 2 : 1;
+    const cooldownMultiplier = isNight ? 2 : 1;
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       if (action instanceof MoveAction) {
@@ -171,13 +170,13 @@ export class Worker extends Unit {
   }
 
   canMove(): boolean {
-    return this.cooldown < 1;
+    return this.canAct();
   }
 
   turn(game: Game): void {
     const cell = game.map.getCellByPos(this.pos);
     const isNight = game.isNight();
-    const cooldownSpeed = isNight ? 2 : 1;
+    const cooldownMultiplier = isNight ? 2 : 1;
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       let acted = true;
