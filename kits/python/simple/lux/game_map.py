@@ -57,7 +57,7 @@ class Position:
 
     def distance_to(self, pos):
         """
-        Returns Manhattan (grid) distance to pos
+        Returns Manhattan (L1/grid) distance to pos
         """
         return self - pos
 
