@@ -2,7 +2,7 @@
 
 If you find a bug or have a feature request, please open an issue [here](https://github.com/Lux-AI-Challenge/Lux-Design-2021/issues) or let us know on our discord, the forums etc.
 
-Want to make an contribution? Make a pull request to this repository with your contribution! If you aren't sure about what to contribute on, check out our [open issues](https://github.com/Lux-AI-Challenge/Lux-Design-2021/issues)
+Want to make an contribution? Make a pull request to this repository with your contribution! If you aren't sure about what to contribute on, check out our [open issues](https://github.com/Lux-AI-Challenge/Lux-Design-2021/issues). Make sure before you start contributing that you fork the repository and use the latest version branch (they are labeled as vx.y.z where e.g v4.2.x would be considered above v4.1.x)
 
 And of course, please be aware of and read the [Code Of Conduct](https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/CODE_OF_CONDUCT.md)
 
