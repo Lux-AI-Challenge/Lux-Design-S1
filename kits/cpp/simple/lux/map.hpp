@@ -24,7 +24,7 @@ namespace lux
         Position pos = Position(-1, -1);
         Resource resource;
         lux::CityTile * citytile;
-        float cooldown = 1.0;
+        float road = 0.0;
         Cell(){};
         Cell(int x, int y)
         {

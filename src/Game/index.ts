@@ -19,7 +19,8 @@ import {
   PillageAction,
 } from '../Actions';
 import { Cell } from '../GameMap/cell';
-import { Replay } from '../Replay';
+import { Replay, TurnState } from '../Replay';
+import { deepCopy } from '../utils';
 
 /**
  * Holds basically all game data, including the map.
@@ -186,28 +187,28 @@ export class Game {
             const unit = this.getUnit(team, unitid);
             if (!unit) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city with invalid/unowned unit id: ${unitid}`;
+              errormsg = `Agent ${cmd.agentID} tried to build CityTile with invalid/unowned unit id: ${unitid}`;
               break;
             }
             const cell = this.map.getCellByPos(unit.pos);
             if (cell.isCityTile()) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city on existing city`;
+              errormsg = `Agent ${cmd.agentID} tried to build CityTile on existing CityTile`;
               break;
             }
             if (cell.hasResource()) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city on non-empty resource tile`;
+              errormsg = `Agent ${cmd.agentID} tried to build CityTile on non-empty resource tile`;
               break;
             }
             if (!(unit.canAct())) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city with cooldown: ${unit.cooldown}`;
+              errormsg = `Agent ${cmd.agentID} tried to build CityTile with cooldown: ${unit.cooldown}`;
               break;
             }
             if (unit.cargo.wood < this.configs.parameters.CITY_WOOD_COST) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build city with insufficient wood ${unit.cargo.wood}`;
+              errormsg = `Agent ${cmd.agentID} tried to build CityTile with insufficient wood ${unit.cargo.wood}`;
               break;
             }
             if (acc.actionsPlaced.has(unitid)) {
@@ -400,7 +401,11 @@ export class Game {
             }
             if (!(teamState.units.get(srcID).canAct())) {
               valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to transfer resources with cooldown: ${teamState.units.get(srcID).cooldown}`;
+              errormsg = `Agent ${
+                cmd.agentID
+              } tried to transfer resources with cooldown: ${
+                teamState.units.get(srcID).cooldown
+              }`;
               break;
             }
             if (acc.actionsPlaced.has(srcID)) {
@@ -533,9 +538,6 @@ export class Game {
       return false;
     });
 
-    // set cooldown to minimum as city auto gives max cooldown to units and once city is gone it should default to min cell cooldown
-    cell.cooldown = this.configs.parameters.MAX_CELL_COOLDOWN;
-
     // if no adjacent city cells of same team, generate new city
     if (adjSameTeamCityTiles.length === 0) {
       const city = new City(team, this.configs, this.globalCityIDCount++);
@@ -658,9 +660,8 @@ export class Game {
         amountDistributed += distributeAmount;
 
         // update stats
-        this.stats.teamStats[worker.team].resourcesCollected[
-          type
-        ] += Math.floor(distributeAmount);
+        this.stats.teamStats[worker.team].resourcesCollected[type] +=
+          Math.floor(distributeAmount);
 
         // subtract how much was given.
         amountToDistribute -= distributeAmount;
@@ -668,7 +669,7 @@ export class Game {
 
       originalCell.resource.amount -= amountDistributed;
 
-      // fixes a rare bug where sometimes JS will subtract a floating point (caused by a division somewhere) 
+      // fixes a rare bug where sometimes JS will subtract a floating point (caused by a division somewhere)
       // and cause a 0 value to equal to the floating point approx equal to 7e-15
       if (originalCell.resource.amount < 1e-10) {
         originalCell.resource.amount = 0;
@@ -747,7 +748,7 @@ export class Game {
     this.cities.delete(cityID);
     city.citycells.forEach((cell) => {
       cell.citytile = null;
-      cell.cooldown = this.configs.parameters.MIN_CELL_COOLDOWN;
+      cell.road = this.configs.parameters.MIN_ROAD;
     });
   }
 
@@ -868,14 +869,53 @@ export class Game {
     return prunedActions;
   }
   isNight(): boolean {
-    if (this.state.turn === 0) return false;
-    const dayNightTime =
-      this.configs.parameters.NIGHT_LENGTH + this.configs.parameters.DAY_LENGTH;
-    const mod = this.state.turn % dayNightTime;
-    if (mod > this.configs.parameters.DAY_LENGTH || mod === 0) {
-      return true;
-    }
-    return false;
+    const dayLength = this.configs.parameters.DAY_LENGTH;
+    const cycleLength = dayLength + this.configs.parameters.NIGHT_LENGTH;
+    return this.state.turn % cycleLength >= dayLength;
+  }
+
+  toStateObject(): TurnState {
+    const cities: TurnState['cities'] = {};
+    this.cities.forEach((city) => {
+      cities[city.id] = {
+        id: city.id,
+        fuel: city.fuel,
+        lightupkeep: city.getLightUpkeep(),
+        team: city.team,
+        cityCells: city.citycells.map((cell) => {
+          return {
+            x: cell.pos.x,
+            y: cell.pos.y,
+          };
+        }),
+      };
+    });
+    const state = {
+      ...deepCopy(this.state),
+      stats: deepCopy(this.stats),
+      map: this.map.toStateObject(),
+      cities,
+    };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    state.teamStates[0].units = {};
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    state.teamStates[1].units = {};
+    const teams = [Unit.TEAM.A, Unit.TEAM.B];
+    teams.forEach((team) => {
+      this.state.teamStates[team].units.forEach((unit) => {
+        state.teamStates[team].units[unit.id] = {
+          cargo: unit.cargo,
+          cooldown: unit.cooldown,
+          x: unit.pos.x,
+          y: unit.pos.y,
+          type: unit.type,
+        };
+      });
+    });
+
+    return state;
   }
 }
 export namespace Game {

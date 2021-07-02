@@ -35,7 +35,7 @@ describe('Test kits', () => {
     py: {
       file: './kits/python/simple/main.py',
       name: 'py',
-    }
+    },
   };
   const options = {
     storeErrorLogs: false,
@@ -54,13 +54,16 @@ describe('Test kits', () => {
       },
     },
   };
-  const verifyCommands = (cmds1: MatchEngine.Command[][], cmds2: MatchEngine.Command[][]) => {
+  const verifyCommands = (
+    cmds1: MatchEngine.Command[][],
+    cmds2: MatchEngine.Command[][]
+  ) => {
     for (let turn = 0; turn < cmds1.length; turn++) {
       const match1_cmds = cmds1[turn];
       const match2_cmds = cmds2[turn];
       expect(match1_cmds).to.eql(match2_cmds);
     }
-  }
+  };
   it('c++ consistency test', async () => {
     let botList = [bots.js, bots.cppTranspiled];
     const match = await luxdim.createMatch(botList, options);
@@ -90,7 +93,7 @@ describe('Test kits', () => {
     const cmds2 = state2.game.replay.data.allCommands;
     verifyCommands(cmds1, cmds2);
   }).timeout(10000);
-  
+
   it('should run java', async () => {
     let botList = [bots.js, bots.java];
     const match = await luxdim.createMatch(botList, options);

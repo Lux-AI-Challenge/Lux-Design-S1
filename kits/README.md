@@ -1,6 +1,6 @@
 # Lux AI Season 1 Kits
 
-This folder contains all official kits provided by the Lux AI team or the Lux AI Challenge Season 1. 
+This folder contains all official kits provided by the Lux AI team or the Lux AI Challenge Season 1.
 
 In each starter kit folder is a README and a folder called `simple` which gives you all the tools necessary to compete. Make sure to read the README document carefully. For debugging, you may log to standard error e.g. `console.error` or `print("hello", file=sys.stderr)`, this will be recorded and saved into a errorlogs folder for the match for each agent. You can also try out the [debug annotations](#Annotate) commands to draw onto the replay.
 
@@ -46,7 +46,7 @@ Methods:
 
 - `translate(direction: DIRECTIONS, units: int) -> Position` - returns the [Position](#Position) equal to going in a `direction` `units` number of times from this [Position](#Position)
 
-- `distance_to(pos: Position) -> float` - returns the [Euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance) from this [Position](#Position) to `pos`
+- `distance_to(pos: Position) -> float` - returns the [Manhattan (rectilinear) distance](https://en.wikipedia.org/wiki/Taxicab_geometry) from this [Position](#Position) to `pos`
 
 - `direction_to(target_pos: Position) -> DIRECTIONS` - returns the direction that would move you closest to `target_pos` from this [Position](#Position) if you took a single step. In particular, will return `DIRECTIONS.CENTER` if this [Position](#Position) is equal to the `target_pos`. Note that this does not check for potential collisions with other units but serves as a basic pathfinding method
 
@@ -56,7 +56,7 @@ Properties:
 
 - `pos: Position`
 - `resource: Resource` - contains details of a Resource at this [Cell](#Cell). This may be equal to `None` or `null` equivalents in other languages. You should always use the function `has_resource` to check if this [Cell](#Cell) has a Resource or not
-- `cooldown: float` - the amount of Cooldown subtracted from a [Unit's](#Unit) Cooldown whenever they perform an action on this tile. If there are roads, the more developed the road, the higher this Cooldown value is. Note that a [Unit](#Unit) will aways gain a base Cooldown amount whenever any action is performed.
+- `road: float` - the amount of Cooldown subtracted from a [Unit's](#Unit) Cooldown whenever they perform an action on this tile. If there are roads, the more developed the road, the higher this Cooldown rate value is. Note that a [Unit](#Unit) will always gain a base Cooldown amount whenever any action is performed.
 - `citytile: CityTile` - the citytile that is on this [Cell](#Cell). Equal to `none` or `null` equivalents in other languages if there is no [CityTile](#CityTile) here.
 
 Methods:
@@ -68,7 +68,7 @@ Methods:
 Properties:
 
 - `cityid: str` - the id of this [City](#City). Each [City](#City) id in the game is unique and will never be reused by new cities
-- `team: int` - the id of the team this [City](#City) belongs to. 
+- `team: int` - the id of the team this [City](#City) belongs to.
 - `fuel: float` - the fuel stored in this [City](#City). This fuel is consumed by all CityTiles in this [City](#City) during each turn of night.
 - `citytiles: list[CityTile]` - a list of [CityTile](#CityTile) objects that form this one [City](#City) collectively. A [City](#City) is defined as all CityTiles that are connected via adjacent CityTiles.
 
@@ -81,9 +81,9 @@ Methods:
 Properties:
 
 - `cityid: str` - the id of the [City](#City) this [CityTile](#CityTile) is a part of. Each [City](#City) id in the game is unique and will never be reused by new cities
-- `team: int` - the id of the team this [CityTile](#CityTile) belongs to. 
+- `team: int` - the id of the team this [CityTile](#CityTile) belongs to.
 - `pos: Position` - the [Position](#Position) of this [City](#City) on the map
-- `cooldown: float` - the current Cooldown of this [City](#City). 
+- `cooldown: float` - the current Cooldown of this [City](#City).
 
 Methods:
 
@@ -100,7 +100,7 @@ Methods:
 Properties:
 
 - `pos: Position` - the [Position](#Position) of this [Unit](#Unit) on the map
-- `team: int` - the id of the team this [Unit](#Unit) belongs to. 
+- `team: int` - the id of the team this [Unit](#Unit) belongs to.
 - `id: int` - the id of this [Unit](#Unit). This is unique and cannot be repeated by any other [Unit](#Unit) or [City](#City)
 - `cooldown: float` - the current Cooldown of this [Unit](#Unit). Note that when this is less than 1, the [Unit](#Unit) can perform an action
 - `cargo.wood: int` - the amount of wood held by this [Unit](#Unit)
