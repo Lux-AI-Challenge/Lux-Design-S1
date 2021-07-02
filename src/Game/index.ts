@@ -870,7 +870,7 @@ export class Game {
   isNight(): boolean {
     const dayLength = this.configs.parameters.DAY_LENGTH;
     const cycleLength = dayLength + this.configs.parameters.NIGHT_LENGTH;
-    return game.state.turn % cycleLength >= dayLength;
+    return this.state.turn % cycleLength >= dayLength;
   }
 }
 export namespace Game {

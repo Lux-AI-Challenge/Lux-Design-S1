@@ -409,7 +409,7 @@ export class LuxDesignLogic {
     const state: Readonly<LuxMatchState> = match.state;
     const game = state.game;
 
-    if (game.state.turn === state.configs.parameters.MAX_DAYS) {
+    if (game.state.turn === state.configs.parameters.MAX_DAYS - 1) {
       return true;
     }
     // over if at least one team has no units left or city tiles
