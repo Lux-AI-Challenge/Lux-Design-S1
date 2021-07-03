@@ -211,8 +211,8 @@ export class Game {
       case Game.ACTIONS.BUILD_CART:
       case Game.ACTIONS.BUILD_WORKER: {
         check((args.length !== 2), malformedMsg, false);
-        const x: number = +args[0];
-        const y: number = +args[1];
+        const x: number = parseInt(args[0]);
+        const y: number = parseInt(args[1]);
 
         check((isNaN(x) || isNaN(y) || !this.map.inMap(new Position(x, y))),
           `Agent ${cmd.agentID} tried to build unit with invalid coordinates`);
@@ -290,8 +290,8 @@ export class Game {
 
       case Game.ACTIONS.RESEARCH: {
         check((args.length !== 2), malformedMsg, false);
-        const x: number = +args[0];
-        const y: number = +args[1];
+        const x: number = parseInt(args[0]);
+        const y: number = parseInt(args[1]);
 
         check((isNaN(x) || isNaN(y)),
           `Agent ${cmd.agentID} tried to run research at invalid coordinates`);
