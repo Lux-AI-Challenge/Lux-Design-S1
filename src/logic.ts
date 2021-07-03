@@ -343,12 +343,14 @@ export class LuxDesignLogic {
     const miningOrder = [
       Resource.Types.URANIUM,
       Resource.Types.COAL,
-      Resource.Types.WOOD
+      Resource.Types.WOOD,
     ];
     for (const curType of miningOrder) {
       game.map.resources
-        .filter(cell => cell.resource.type === curType)
-        .forEach((cell) => { game.handleResourceRelease(cell); });
+        .filter((cell) => cell.resource.type === curType)
+        .forEach((cell) => {
+          game.handleResourceRelease(cell);
+        });
     }
 
     // now we make all units with cargo drop all resources on the city they are standing on
@@ -388,7 +390,7 @@ export class LuxDesignLogic {
       const etime = new Date().valueOf();
       state.profile.updateStage.push(etime - stime);
     }
-    
+
     match.log.detail('Beginning turn ' + game.state.turn);
   }
 
@@ -561,7 +563,7 @@ export class LuxDesignLogic {
     const state: LuxMatchState = match.state;
     const game = state.game;
     if (serializedState instanceof Array) {
-      throw new Error("not supported yet");
+      throw new Error('not supported yet');
     } else {
       // update map first
       const height = serializedState.map.length;
@@ -578,13 +580,18 @@ export class LuxDesignLogic {
         for (let x = 0; x < width; x++) {
           const cellinfo = serializedState.map[y][x];
           if (cellinfo.resource) {
-            game.map.addResource(x, y, cellinfo.resource.type as Resource.Types, cellinfo.resource.amount);
+            game.map.addResource(
+              x,
+              y,
+              cellinfo.resource.type as Resource.Types,
+              cellinfo.resource.amount
+            );
           }
           const cell = game.map.getCell(x, y);
           cell.road = cellinfo.road;
         }
       }
-      
+
       // spawn in cities
       game.cities = new Map();
       for (const cityid of Object.keys(serializedState.cities)) {

@@ -151,10 +151,16 @@ export const generateGame = (
       } else {
         nx2 = width - nx - 1;
       }
-      if (!map.getCell(nx, ny).hasResource() && map.getCell(nx, ny).citytile === null) {
+      if (
+        !map.getCell(nx, ny).hasResource() &&
+        map.getCell(nx, ny).citytile === null
+      ) {
         map.addResource(nx, ny, Resource.Types.WOOD, 850);
       }
-      if (!map.getCell(nx2, ny2).hasResource() && map.getCell(nx2, ny2).citytile === null) {
+      if (
+        !map.getCell(nx2, ny2).hasResource() &&
+        map.getCell(nx2, ny2).citytile === null
+      ) {
         map.addResource(nx2, ny2, Resource.Types.WOOD, 850);
       }
     }
