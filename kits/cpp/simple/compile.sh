@@ -1,3 +1,3 @@
 #!/bin/bash
 
-emcc --std=c++17 -s FORCE_FILESYSTEM=1 --pre-js internals/init_fs.js main.cpp -o main.js
+emcc -s FORCE_FILESYSTEM=1 --pre-js internals/init_fs.js main.cpp lux/define.cpp -o main.js

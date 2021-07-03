@@ -9,13 +9,13 @@ namespace kit
   class INPUT_CONSTANTS
   {
   public:
-    static inline string DONE = "D_DONE";
-    static inline string RESOURCES = "r";
-    static inline string RESEARCH_POINTS = "rp";
-    static inline string UNITS = "u";
-    static inline string CITY = "c";
-    static inline string CITY_TILES = "ct";
-    static inline string ROADS = "ccd";
+    static string DONE;
+    static string RESOURCES;
+    static string RESEARCH_POINTS;
+    static string UNITS;
+    static string CITY;
+    static string CITY_TILES;
+    static string ROADS;
   };
 }
 
