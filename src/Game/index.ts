@@ -171,8 +171,8 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
               break;
             }
-            acc.actionsPlaced.add(unitid);
             if (valid) {
+              acc.actionsPlaced.add(unitid);
               return new PillageAction(action, team, unitid);
             }
           } else {
@@ -214,8 +214,8 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
               break;
             }
-            acc.actionsPlaced.add(unitid);
             if (valid) {
+              acc.actionsPlaced.add(unitid);
               return new SpawnCityAction(action, team, unitid);
             }
           } else {
@@ -247,7 +247,6 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} sent an extra command. CityTile can perform only one action at a time`;
               break;
             }
-            acc.actionsPlaced.add(citytile.getTileID());
             if (!citytile.canBuildUnit()) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but CityTile still with cooldown of ${citytile.cooldown}`;
@@ -267,6 +266,7 @@ export class Game {
               }
             }
             if (valid) {
+              acc.actionsPlaced.add(citytile.getTileID());
               if (action === Game.ACTIONS.BUILD_CART) {
                 acc.cartsBuilt += 1;
                 return new SpawnCartAction(action, team, x, y);
@@ -301,7 +301,6 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
               break;
             }
-            acc.actionsPlaced.add(unitid);
             switch (direction) {
               case Game.DIRECTIONS.NORTH:
               case Game.DIRECTIONS.EAST:
@@ -330,6 +329,7 @@ export class Game {
                 break;
             }
             if (valid) {
+              acc.actionsPlaced.add(unitid);
               return new MoveAction(
                 action,
                 team,
@@ -372,8 +372,8 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} sent an extra command. CityTile can perform only one action at a time`;
               break;
             }
-            acc.actionsPlaced.add(citytile.getTileID());
             if (valid) {
+              acc.actionsPlaced.add(citytile.getTileID());
               return new ResearchAction(action, team, x, y);
             }
           } else {
@@ -411,7 +411,7 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
               break;
             }
-            acc.actionsPlaced.add(srcID);
+            
             const srcUnit = teamState.units.get(srcID);
             const destUnit = teamState.units.get(destID);
             if (srcID === destID) {
@@ -441,6 +441,7 @@ export class Game {
                 break;
             }
             if (valid) {
+              acc.actionsPlaced.add(srcID);
               return new TransferAction(
                 action,
                 team,
