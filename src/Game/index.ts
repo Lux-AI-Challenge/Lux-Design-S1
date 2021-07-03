@@ -226,8 +226,6 @@ export class Game {
         check((acc.actionsPlaced.has(citytile.getTileID())),
           `Agent ${cmd.agentID} sent an extra command. CityTile can perform only one action at a time`);
 
-        acc.actionsPlaced.add(citytile.getTileID());
-
         check((!citytile.canBuildUnit()),
           `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but CityTile still with cooldown of ${citytile.cooldown}`);
 
@@ -239,6 +237,7 @@ export class Game {
             `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but worker unit cap reached. Build more CityTiles!`);
         }
 
+        acc.actionsPlaced.add(citytile.getTileID());
         if (action === Game.ACTIONS.BUILD_CART) {
           acc.cartsBuilt += 1;
           return new SpawnCartAction(action, team, x, y);
@@ -263,8 +262,6 @@ export class Game {
         check((acc.actionsPlaced.has(uid)),
           `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`);
 
-        acc.actionsPlaced.add(uid);
-
         check(!(Object.values(Game.DIRECTIONS).includes(direction)),
           `Agent ${cmd.agentID} tried to move unit ${uid} in invalid direction ${direction}`);
 
@@ -278,6 +275,7 @@ export class Game {
             `Agent ${cmd.agentID} tried to move unit ${uid} onto opponent CityTile`);
         }
 
+        acc.actionsPlaced.add(uid);
         return new MoveAction(
           action,
           team,
@@ -337,8 +335,6 @@ export class Game {
         check((acc.actionsPlaced.has(srcID)),
           `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`);
 
-        acc.actionsPlaced.add(srcID);
-
         const srcUnit = teamState.units.get(srcID);
         const destUnit = teamState.units.get(destID);
         check((srcID === destID),
@@ -353,6 +349,7 @@ export class Game {
         check(!(Object.values(Resource.Types).includes(resourceType)), //needs TS syntax check
           `Agent ${cmd.agentID} tried to transfer invalid resource: ${resourceType}`);
 
+        acc.actionsPlaced.add(srcID);
         return new TransferAction(
           action,
           team,
