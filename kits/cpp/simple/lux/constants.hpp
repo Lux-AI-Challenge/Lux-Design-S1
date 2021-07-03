@@ -7,7 +7,7 @@
 namespace lux
 {
   // nlohmann::json j = nlohmann::json::parse()
-  nlohmann::json GAME_CONSTANTS = nlohmann::json::parse(R"(
+  inline nlohmann::json GAME_CONSTANTS = nlohmann::json::parse(R"(
     {
       "UNIT_TYPES": {
         "WORKER": 0,

@@ -79,7 +79,7 @@ namespace lux
             return "(" + to_string(this->x) + ", " + to_string(this->y) + ")";
         }
     };
-    ostream &operator<<(ostream &out, const Position &p)
+    inline ostream &operator<<(ostream &out, const Position &p)
     {
         out << "(" << p.x << "," << p.y << ")"; // access private data
         return out;

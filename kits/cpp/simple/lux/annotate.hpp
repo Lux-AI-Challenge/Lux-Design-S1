@@ -1,3 +1,5 @@
+#ifndef annotate_h
+#define annotate_h
 #include <string>
 namespace lux {
   using namespace std;
@@ -15,3 +17,6 @@ namespace lux {
   };
 };
 // string lux::Annotate::circle(int x, int y) 
+
+
+#endif
