@@ -1,6 +1,14 @@
 # Change Log
 
 ### v1.2.0
+
+- CLI tool now lets you convert replays into replays with human readable state information and can also directly run matches and generate these stateful replays
+- Through the JS API only, you can reset a match's state to a given state (following the schema stored in stateful replays)
+- All kits have been upgraded to have nicer syntax, a few bug fixes. Please download the new kits
+- Cell `cooldown` is now renamed to `road` in all kits. 
+
+Full ChangeLog:
+
 New:
 - Via the CLI tool, replays can be converted into stateful replays and you can also directly generate stateful replays. Run the help command for instructions on how to do so.
 - Through the JS API, you can now start a match and reset its state to a given state (following the schema stored in the stateful replays) and continue running the match as normal. This is *not* provided via the CLI tool at the moment.
@@ -11,7 +19,7 @@ Changes:
 - All kits default to using manhattan distance now instead of euclidean.
 - Some code refactoring
 - Bin file / CLI tool has its own dedicated folder now.
-- Moved get results function from design.ts to logic.ts and made it statci / functional
+- Moved get results function from design.ts to logic.ts and made it static / functional
 
 Fixes:
 - Fix bug where wood tiles may spawn under cities when the starting 2 city tiles are adjacent
