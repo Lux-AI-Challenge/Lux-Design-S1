@@ -38,9 +38,7 @@ public class Position {
   }
 
   public double distanceTo(Position pos) {
-    int dx = pos.x - this.x;
-    int dy = pos.y - this.y;
-    return Math.sqrt(dx * dx + dy * dy);
+    return Math.abs(pos.x - this.x) + Math.sqrt(pos.y - this.y);
   }
 
 

@@ -3,6 +3,29 @@ import fs from 'fs';
 import JSZip from 'jszip';
 import path from 'path';
 import { GameMap } from '../GameMap';
+import pkg from '../configs.json';
+import { Game } from '../Game';
+import { LuxMatchResults } from '../types';
+
+export interface TurnState extends Game.State {
+  map: Array<
+    Array<{
+      road: number;
+      resource?: { type: string; amount: number };
+    }>
+  >;
+  stats: Game.Stats;
+  cities: Record<
+    string,
+    {
+      cityCells: Array<{ x: number; y: number }>;
+      id: string;
+      fuel: number;
+      lightupkeep: number;
+      team: number;
+    }
+  >;
+}
 
 export class Replay {
   public replayFilePath: string = null;
@@ -11,11 +34,14 @@ export class Replay {
     width: number;
     height: number;
     mapType: GameMap.Types;
+    results?: LuxMatchResults;
     teamDetails: Array<{
       name: string;
       tournamentID: string;
     }>;
     allCommands: Array<Array<MatchEngine.Command>>;
+    stateful?: Array<TurnState>;
+    version: string;
   } = {
     seed: 0,
     allCommands: [],
@@ -23,11 +49,20 @@ export class Replay {
     width: -1,
     height: -1,
     teamDetails: [],
+    version: pkg.version,
   };
-  public storeReplay: boolean = false;
-  constructor(match: Match, public compressReplay: boolean) {
+  public storeReplay = false;
+  constructor(
+    match: Match,
+    public compressReplay: boolean,
+    public statefulReplay = false,
+    public out: string
+  ) {
     const d = new Date().valueOf();
     let replayFileName = `${d}_${match.id}`;
+    if (statefulReplay) {
+      replayFileName += '_stateful';
+    }
     if (compressReplay) {
       replayFileName += '.luxr';
     } else {
@@ -37,6 +72,9 @@ export class Replay {
       match.configs.storeReplayDirectory,
       replayFileName
     );
+    if (out !== undefined) {
+      this.replayFilePath = out;
+    }
     this.storeReplay = match.configs.storeReplay;
     if (fs.existsSync && this.storeReplay) {
       if (!fs.existsSync(match.configs.storeReplayDirectory)) {
@@ -44,6 +82,13 @@ export class Replay {
       }
       fs.writeFileSync(this.replayFilePath, '');
     }
+    if (this.statefulReplay) {
+      this.data.stateful = [];
+    }
+  }
+  public writeState(game: Game): void {
+    const state = game.toStateObject();
+    this.data.stateful.push(state);
   }
   public writeTeams(agents: Agent[]): void {
     agents.forEach((agent) => {
@@ -57,7 +102,8 @@ export class Replay {
       });
     });
   }
-  public writeOut(): void {
+  public writeOut(results: LuxMatchResults): void {
+    this.data.results = results;
     if (!fs.appendFileSync || !this.storeReplay) return;
     if (this.compressReplay) {
       const zipper = new JSZip();

@@ -154,14 +154,14 @@ namespace kit
                     this->map.getCell(x, y)->citytile = citytile;
                     players[team].cityTileCount += 1;
                 }
-                else if (input_identifier == INPUT_CONSTANTS::CELL_COOLDOWN)
+                else if (input_identifier == INPUT_CONSTANTS::ROADS)
                 {
                     int i = 1;
                     int x = stoi(updates[i++]);
                     int y = stoi(updates[i++]);
-                    float cooldown = stof(updates[i++]);
+                    float road = stof(updates[i++]);
                     lux::Cell * cell = this->map.getCell(x, y);
-                    cell->cooldown = cooldown;
+                    cell->road = road;
                 }
             };
         }
