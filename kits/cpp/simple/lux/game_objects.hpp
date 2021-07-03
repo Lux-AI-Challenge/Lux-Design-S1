@@ -4,9 +4,9 @@
 #include "map.hpp"
 #include "position.hpp"
 #include "constants.hpp"
-using namespace std;
 namespace lux
 {
+    using namespace std;
     class Cargo
     {
     public:

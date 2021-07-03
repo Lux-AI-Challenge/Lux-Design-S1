@@ -3,9 +3,9 @@
 #include <vector>
 #include <string>
 #include "constants.hpp"
-using namespace std;
 namespace lux
 {
+    using namespace std;
     class Position
     {
     public:

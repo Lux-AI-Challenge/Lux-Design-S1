@@ -3,9 +3,9 @@
 #include <vector>
 #include "city.hpp"
 #include "position.hpp"
-using namespace std;
 namespace lux
 {
+    using namespace std;
     enum ResourceType
     {
         wood = 'w',
