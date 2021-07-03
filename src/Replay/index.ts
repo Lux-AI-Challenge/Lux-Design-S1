@@ -5,27 +5,7 @@ import path from 'path';
 import { GameMap } from '../GameMap';
 import pkg from '../configs.json';
 import { Game } from '../Game';
-import { LuxMatchResults } from '../types';
-
-export interface TurnState extends Game.State {
-  map: Array<
-    Array<{
-      road: number;
-      resource?: { type: string; amount: number };
-    }>
-  >;
-  stats: Game.Stats;
-  cities: Record<
-    string,
-    {
-      cityCells: Array<{ x: number; y: number }>;
-      id: string;
-      fuel: number;
-      lightupkeep: number;
-      team: number;
-    }
-  >;
-}
+import { LuxMatchResults, SerializedState } from '../types';
 
 export class Replay {
   public replayFilePath: string = null;
@@ -40,7 +20,7 @@ export class Replay {
       tournamentID: string;
     }>;
     allCommands: Array<Array<MatchEngine.Command>>;
-    stateful?: Array<TurnState>;
+    stateful?: Array<SerializedState>;
     version: string;
   } = {
     seed: 0,

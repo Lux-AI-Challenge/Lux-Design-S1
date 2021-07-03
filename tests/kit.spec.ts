@@ -45,7 +45,7 @@ describe('Test kits', () => {
     debug: false,
     debugAnnotations: true,
     loggingLevel: Logger.LEVEL.NONE,
-    mapType: 'debug',
+    mapType: 'random',
     engineOptions: {
       noStdErr: false,
       timeout: {
