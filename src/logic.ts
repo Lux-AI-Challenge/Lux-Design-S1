@@ -367,6 +367,8 @@ export class LuxDesignLogic {
     if (state.configs.debug) {
       await this.debugViewer(game);
     }
+    const matchOver = this.matchOver(match);
+
 
     game.state.turn++;
 
@@ -375,7 +377,7 @@ export class LuxDesignLogic {
       game.replay.writeState(game);
     }
 
-    if (this.matchOver(match)) {
+    if (matchOver) {
       if (game.replay) {
         game.replay.writeOut(this.getResults(match));
       }
