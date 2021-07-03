@@ -12,7 +12,7 @@ Then navigate to that folder via command line e.g. `cd simple` or for windows `c
 
 Your main code will go into `agent.py` and you can create and use files to help you as well. You should leave `main.py` and the entire `lux` subfolder alone. Read the `agent.py` file to get an idea of how a bot is programmed and a feel for the Python API.
 
-To test run your bot, run 
+Make sure your default python is python 3.7 or above. To check, run `python -version`. To then test run your bot, run 
 
 ```
 lux-ai-2021 main.py main.py
