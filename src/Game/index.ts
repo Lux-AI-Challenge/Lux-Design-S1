@@ -21,6 +21,7 @@ import {
 import { Cell } from '../GameMap/cell';
 import { Replay } from '../Replay';
 import { deepCopy } from '../utils';
+import { Position } from '../GameMap/position';
 
 /**
  * Holds basically all game data, including the map.
@@ -213,7 +214,7 @@ export class Game {
         const x: number = +args[0];
         const y: number = +args[1];
 
-        check((isNaN(x) || isNaN(y)),
+        check((isNaN(x) || isNaN(y) || !this.map.inMap(new Position(x, y))),
           `Agent ${cmd.agentID} tried to build unit with invalid coordinates`);
 
         // check if being built on owned city tile
