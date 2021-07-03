@@ -56,6 +56,6 @@
     "nyc": "^15.1.0",
     "prettier": "^2.1.1",
     "ts-node": "^9.0.0",
-    "typescript": "^4.0.2"
+    "typescript": "^4.3.5"
   }
 }

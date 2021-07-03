@@ -2,6 +2,7 @@ node_modules
 lib
 coverage
 .nyc_output
+.idea
 
 # we have mac users
 .DS_Store
