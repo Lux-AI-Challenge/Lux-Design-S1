@@ -1,5 +1,7 @@
 // source ../LuxAI/transpilers/emsdk/emsdk_env.sh
 // emcc -s FORCE_FILESYSTEM=1 --pre-js init_fs.js hello.cpp
+#ifndef kit_h
+#define kit_h
 #include <string>
 #include <iostream>
 #include <vector>
@@ -177,3 +179,5 @@ namespace kit
         };
     };
 }
+
+#endif
