@@ -10,10 +10,9 @@
 #include "game_objects.hpp"
 #include "annotate.hpp"
 #include "city.hpp"
-using namespace std;
 namespace kit
 {
-
+    using namespace std;
     static string getline()
     {
         // exit if stdin is bad now

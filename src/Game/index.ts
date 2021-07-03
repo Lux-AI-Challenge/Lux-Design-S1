@@ -393,7 +393,13 @@ export class Game {
 
   spawnWorker(team: Unit.TEAM, x: number, y: number, unitid?: string): Worker {
     const cell = this.map.getCell(x, y);
-    const unit = new Worker(x, y, team, this.configs, this.globalUnitIDCount + 1);
+    const unit = new Worker(
+      x,
+      y,
+      team,
+      this.configs,
+      this.globalUnitIDCount + 1
+    );
     if (unitid) {
       unit.id = unitid;
     } else this.globalUnitIDCount++;
@@ -634,7 +640,7 @@ export class Game {
       // and all that we have if that's less than requested
       srcunit.cargo[resourceType],
       // and no more than destination-unit's remaining cargo-space
-      destunit.getCargoSpaceLeft(),
+      destunit.getCargoSpaceLeft()
     );
     srcunit.cargo[resourceType] -= transferAmount;
     destunit.cargo[resourceType] += transferAmount;
@@ -784,7 +790,7 @@ export class Game {
           return {
             x: cell.pos.x,
             y: cell.pos.y,
-            cooldown: cell.citytile.cooldown
+            cooldown: cell.citytile.cooldown,
           };
         }),
       };
@@ -829,8 +835,11 @@ export class Game {
           type: unit.type,
         };
       });
-      state.teamStates[team].researchPoints = this.state.teamStates[team].researchPoints;
-      state.teamStates[team].researched = deepCopy(this.state.teamStates[team].researched);
+      state.teamStates[team].researchPoints =
+        this.state.teamStates[team].researchPoints;
+      state.teamStates[team].researched = deepCopy(
+        this.state.teamStates[team].researched
+      );
     });
 
     return state;

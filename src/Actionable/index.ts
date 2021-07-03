@@ -20,7 +20,7 @@ export abstract class Actionable {
    * Checks if the cooldown is low enough to act again
    */
   canAct(): boolean {
-    return (this.cooldown < 1);
+    return this.cooldown < 1;
   }
 
   /**

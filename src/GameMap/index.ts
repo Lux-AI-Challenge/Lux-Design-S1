@@ -101,7 +101,7 @@ export class GameMap {
           cellData.resource = {
             type: cell.resource.type,
             amount: cell.resource.amount,
-          }
+          };
         }
         obj[y].push(cellData);
       }

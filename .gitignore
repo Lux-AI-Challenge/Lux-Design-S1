@@ -1,5 +1,6 @@
 node_modules
-lib
+lib/es5
+lib/es6
 coverage
 .nyc_output
 

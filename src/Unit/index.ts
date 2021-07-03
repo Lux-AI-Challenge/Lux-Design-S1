@@ -126,7 +126,8 @@ export class Cart extends Unit {
       if (action instanceof MoveAction) {
         game.moveUnit(action.team, action.unitid, action.direction);
         this.cooldown +=
-          this.configs.parameters.UNIT_ACTION_COOLDOWN.CART * cooldownMultiplier;
+          this.configs.parameters.UNIT_ACTION_COOLDOWN.CART *
+          cooldownMultiplier;
         this.cooldown -= cell.getRoad();
       } else if (action instanceof TransferAction) {
         game.transferResources(
@@ -137,7 +138,8 @@ export class Cart extends Unit {
           action.amount
         );
         this.cooldown +=
-          this.configs.parameters.UNIT_ACTION_COOLDOWN.CART * cooldownMultiplier;
+          this.configs.parameters.UNIT_ACTION_COOLDOWN.CART *
+          cooldownMultiplier;
         this.cooldown -= cell.getRoad();
       }
     }
@@ -202,7 +204,8 @@ export class Worker extends Unit {
       }
       if (acted) {
         this.cooldown +=
-          this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER * cooldownMultiplier;
+          this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER *
+          cooldownMultiplier;
         this.cooldown -= cell.getRoad();
       }
     }

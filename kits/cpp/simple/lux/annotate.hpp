@@ -1,6 +1,6 @@
 #include <string>
-using namespace std;
 namespace lux {
+  using namespace std;
   class Annotate {
     public:
     static string circle(int x, int y) {

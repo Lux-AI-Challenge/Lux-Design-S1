@@ -5,9 +5,9 @@
 // #include <format>
 #include "map.hpp"
 #include "position.hpp"
-using namespace std;
 namespace lux
 {
+    using namespace std;
     class CityTile
     {
     public:

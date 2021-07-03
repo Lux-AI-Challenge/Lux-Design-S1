@@ -120,17 +120,19 @@ export interface SerializedState {
   teamStates: {
     [x in Unit.TEAM]: {
       researchPoints: number;
-      units: Record<string, {
-        cargo: Unit["cargo"];
-        cooldown: number;
-        x: number;
-        y: number;
-        type: Unit["type"];
-      }>
+      units: Record<
+        string,
+        {
+          cargo: Unit['cargo'];
+          cooldown: number;
+          x: number;
+          y: number;
+          type: Unit['type'];
+        }
+      >;
       researched: {
         [x in Resource.Types]: boolean;
       };
-      
     };
   };
   map: Array<
@@ -143,7 +145,7 @@ export interface SerializedState {
   cities: Record<
     string,
     {
-      cityCells: Array<{ x: number; y: number, cooldown: number }>;
+      cityCells: Array<{ x: number; y: number; cooldown: number }>;
       id: string;
       fuel: number;
       lightupkeep: number;
