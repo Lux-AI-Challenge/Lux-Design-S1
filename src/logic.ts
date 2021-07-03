@@ -345,9 +345,9 @@ export class LuxDesignLogic {
       Resource.Types.COAL,
       Resource.Types.WOOD
     ];
-    for (curType of miningOrder) {
+    for (const curType of miningOrder) {
       game.map.resources
-        .filter(cell => cell.resouce.type === curType)
+        .filter(cell => cell.resource.type === curType)
         .forEach((cell) => { game.handleResourceRelease(cell); });
     }
 
