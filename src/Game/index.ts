@@ -19,6 +19,7 @@ import {
   PillageAction,
 } from '../Actions';
 import { Cell } from '../GameMap/cell';
+import { Position } from '../GameMap/position';
 import { Replay } from '../Replay';
 import { deepCopy } from '../utils';
 
@@ -227,7 +228,7 @@ export class Game {
           if (strs.length === 3) {
             const x = parseInt(strs[1]);
             const y = parseInt(strs[2]);
-            if (isNaN(x) || isNaN(y)) {
+            if (isNaN(x) || isNaN(y) || !this.map.inMap(new Position(x, y))) {
               valid = false;
               errormsg = `Agent ${cmd.agentID} tried to build unit with invalid coordinates`;
               break;
@@ -411,7 +412,7 @@ export class Game {
               errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
               break;
             }
-            
+
             const srcUnit = teamState.units.get(srcID);
             const destUnit = teamState.units.get(destID);
             if (srcID === destID) {
