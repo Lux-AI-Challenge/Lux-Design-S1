@@ -30,7 +30,7 @@
     "lib"
   ],
   "bin": {
-    "lux-ai-2021": "./lib/es5/bin.js"
+    "lux-ai-2021": "./lib/es5/bin/index.js"
   },
   "homepage": "https://github.com/Lux-AI-Challenge/LuxDesign#readme",
   "dependencies": {

@@ -71,6 +71,9 @@ export class LuxDesignLogic {
     game.map.sortResourcesDeterministically();
     if (game.replay) {
       game.replay.writeTeams(match.agents);
+      if (game.replay.statefulReplay) {
+        game.replay.writeState(game);
+      }
     }
 
     // send each agent their id
@@ -205,9 +208,6 @@ export class LuxDesignLogic {
     }
 
     if (game.replay) {
-      if (game.replay.statefulReplay) {
-        game.replay.writeState(game);
-      }
       game.replay.data.allCommands.push(commands);
     }
 
@@ -237,6 +237,10 @@ export class LuxDesignLogic {
       }
       if (state.configs.debug) {
         await this.debugViewer(game);
+      }
+      game.state.turn++;
+      if (game.replay.statefulReplay) {
+        game.replay.writeState(game);
       }
       if (game.configs.storeReplay) {
         game.replay.writeOut(this.getResults(match));
@@ -360,6 +364,13 @@ export class LuxDesignLogic {
       await this.debugViewer(game);
     }
 
+    game.state.turn++;
+
+    // store state
+    if (game.replay.statefulReplay) {
+      game.replay.writeState(game);
+    }
+
     if (this.matchOver(match)) {
       if (game.replay) {
         game.replay.writeOut(this.getResults(match));
@@ -375,7 +386,7 @@ export class LuxDesignLogic {
       const etime = new Date().valueOf();
       state.profile.updateStage.push(etime - stime);
     }
-    game.state.turn++;
+    
     match.log.detail('Beginning turn ' + game.state.turn);
   }
 
@@ -548,7 +559,7 @@ export class LuxDesignLogic {
     const state: LuxMatchState = match.state;
     const game = state.game;
     if (serializedState instanceof Array) {
-      //
+      throw new Error("not supported yet");
     } else {
       // update map first
       const height = serializedState.map.length;
@@ -562,7 +573,7 @@ export class LuxDesignLogic {
       game.map = new GameMap(configs);
 
       for (let y = 0; y < height; y++) {
-        for (let x =0; x < width; x++) {
+        for (let x = 0; x < width; x++) {
           const cellinfo = serializedState.map[y][x];
           if (cellinfo.resource) {
             game.map.addResource(x, y, cellinfo.resource.type as Resource.Types, cellinfo.resource.amount);
@@ -585,6 +596,8 @@ export class LuxDesignLogic {
           );
           tile.cooldown = ct.cooldown;
         });
+        const city = game.cities.get(cityinfo.id);
+        city.fuel = cityinfo.fuel;
       }
 
       const teams = [Unit.TEAM.A, Unit.TEAM.B];
@@ -615,6 +628,9 @@ export class LuxDesignLogic {
       game.globalCityIDCount = serializedState.globalCityIDCount;
       game.globalUnitIDCount = serializedState.globalUnitIDCount;
       game.stats = deepCopy(serializedState.stats);
+
+      // without this, causes some bugs
+      game.map.sortResourcesDeterministically();
     }
   }
 }

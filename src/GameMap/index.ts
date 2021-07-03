@@ -94,15 +94,16 @@ export class GameMap {
       obj.push([]);
       for (let x = 0; x < this.width; x++) {
         const cell = this.getCell(x, y);
-        obj[y].push({
+        const cellData: SerializedState['map'][0][0] = {
           road: cell.road,
-          resource: cell.resource
-            ? {
-                type: cell.resource.type,
-                amount: cell.resource.amount,
-              }
-            : undefined,
-        });
+        };
+        if (cell.resource) {
+          cellData.resource = {
+            type: cell.resource.type,
+            amount: cell.resource.amount,
+          }
+        }
+        obj[y].push(cellData);
       }
     }
     return obj;

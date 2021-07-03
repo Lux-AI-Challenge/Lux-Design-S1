@@ -924,13 +924,15 @@ export class Game {
     teams.forEach((team) => {
       this.state.teamStates[team].units.forEach((unit) => {
         state.teamStates[team].units[unit.id] = {
-          cargo: unit.cargo,
+          cargo: deepCopy(unit.cargo),
           cooldown: unit.cooldown,
           x: unit.pos.x,
           y: unit.pos.y,
           type: unit.type,
         };
       });
+      state.teamStates[team].researchPoints = this.state.teamStates[team].researchPoints;
+      state.teamStates[team].researched = deepCopy(this.state.teamStates[team].researched);
     });
 
     return state;
