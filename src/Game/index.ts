@@ -137,7 +137,7 @@ export class Game {
   ): Action {
 
     // checks for an error condition, and throws a warning if true
-    const check = (condition: boolean, errormsg: string, trace: boolean = true): void => {
+    const check = (condition: boolean, errormsg: string, trace = true): void => {
       if (condition) {
         throw new MatchWarn(
           errormsg +
@@ -145,15 +145,15 @@ export class Game {
         );
       }
     }
-    const invalidMsg = `Agent ${cmd.agentID} sent invalid command`; //needs TS
-    const malformedMsg = `Agent ${cmd.agentID} sent malformed command: ${cmd.command}`; //needs TS
+    const invalidMsg = `Agent ${cmd.agentID} sent invalid command`;
+    const malformedMsg = `Agent ${cmd.agentID} sent malformed command: ${cmd.command}`;
 
-    const [action, ...args] = cmd.command.split(' '); //needs TS?
+    const [action, ...args] = cmd.command.split(' ');
     check((action === undefined), invalidMsg, false);
 
     const team: Unit.TEAM = cmd.agentID;
-    const teamState = this.state.teamStates[team]; //needs TS
-    const acc = accumulatedActionStats[team]; //needs TS?
+    const teamState = this.state.teamStates[team];
+    const acc = accumulatedActionStats[team];
     switch (action) {
 
       case Game.ACTIONS.DEBUG_ANNOTATE_CIRCLE:
@@ -161,8 +161,6 @@ export class Game {
       case Game.ACTIONS.DEBUG_ANNOTATE_X:
         // these actions go directly into the replay file if debugAnnotations is on
         return null;
-
-
       case Game.ACTIONS.PILLAGE: {
         check((args.length !== 1), malformedMsg, false);
         const uid = args[0];
@@ -321,13 +319,13 @@ export class Game {
         const srcID = args[0];
         const destID = args[1];
         const resourceType = args[2] as Resource.Types;
-        const amount = +args[3];
+        const amount = parseInt(args[3]);
 
         check((!teamState.units.has(srcID)),
           `Agent ${cmd.agentID} does not own source unit: ${srcID} for transfer`);
 
         check((!teamState.units.has(destID)),
-          `Agent ${cmd.agentID} does not own destination unit: ${srcID} for transfer`);
+          `Agent ${cmd.agentID} does not own destination unit: ${destID} for transfer`);
 
         check((!(teamState.units.get(srcID).canAct())),
           `Agent ${
