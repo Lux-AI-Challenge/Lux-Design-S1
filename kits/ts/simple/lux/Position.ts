@@ -1,4 +1,4 @@
-import {GAME_CONSTANTS} from "./game_constants";
+import GAME_CONSTANTS from "./game_constants.json";
 const {DIRECTIONS} = GAME_CONSTANTS;
 
 export class Position {

@@ -5,7 +5,7 @@ import {City} from "./City";
 import {Unit} from "./Unit";
 import {Parser} from "./Parser";
 import {Parsed} from "./Parsed";
-import {INPUT_CONSTANTS} from "./game_constants";
+import {INPUT_CONSTANTS} from './io';
 
 // Create parser and use ',' as the delimiter between commands being sent by the `Match` and `MatchEngine`
 const parse = new Parser(' ');

@@ -1,4 +1,4 @@
-import {GAME_CONSTANTS} from "./game_constants";
+import GAME_CONSTANTS from "./game_constants.json";
 import {City} from "./City";
 import {Unit} from "./Unit";
 

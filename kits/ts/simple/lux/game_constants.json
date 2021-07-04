@@ -1,7 +1,4 @@
-/**
- * All game constants
- */
-export const GAME_CONSTANTS = {
+{
   "UNIT_TYPES": {
     "WORKER": 0,
     "CART": 1
@@ -57,15 +54,4 @@ export const GAME_CONSTANTS = {
     "CART_ROAD_DEVELOPMENT_RATE": 0.5,
     "PILLAGE_RATE": 0.25
   }
-};
-
-/** all constants related to any input from match engine */
-export const INPUT_CONSTANTS = {
-  DONE: 'D_DONE',
-  RESEARCH_POINTS: 'rp',
-  RESOURCES: 'r',
-  UNITS: 'u',
-  CITY: 'c',
-  CITY_TILES: 'ct',
-  ROADS: 'ccd',
-};
+}

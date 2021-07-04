@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": true,
+    "resolveJsonModule": true,
     "outDir": "dist"
   },
   "include": [

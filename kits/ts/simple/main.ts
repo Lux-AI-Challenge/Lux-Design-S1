@@ -1,5 +1,5 @@
 import {Agent, GameState} from "./lux/Agent";
-import {GAME_CONSTANTS} from "./lux/game_constants";
+import GAME_CONSTANTS from "./lux/game_constants.json";
 import {Cell} from "./lux/Cell";
 import {City} from "./lux/City";
 import {CityTile} from "./lux/CityTile";
