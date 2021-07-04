@@ -26,41 +26,41 @@ There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing 
   <tr>
    <td>Resource Type
    </td>
-   <td>Fuel Value
+   <td>Research Points<br>Pre-requisite
    </td>
-   <td>Collection Rate
+   <td>Fuel Value<br>per Unit
    </td>
-   <td>Research Points
+   <td>Units Collected<br>per Turn
    </td>
   </tr>
   <tr>
    <td>Wood
    </td>
+   <td>0
+   </td>
    <td>1
    </td>
    <td>20
-   </td>
-   <td>0
    </td>
   </tr>
   <tr>
    <td>Coal
    </td>
+   <td>50
+   </td>
    <td>5
    </td>
    <td>10
-   </td>
-   <td>50
    </td>
   </tr>
   <tr>
    <td>Uranium
    </td>
+   <td>200
+   </td>
    <td>25
    </td>
    <td>1
-   </td>
-   <td>200
    </td>
   </tr>
 </table>
@@ -106,7 +106,7 @@ Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
 - Pillage - Reduce the [Road](#Roads) level of the tile the unit is on by 0.25
-- Transfer - Transfer any number of resources currently in the unit’s cargo to an adjacent unit (You only have to be adjacent at the start of a turn)
+- Transfer - Send any amount of single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
 - Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 Wood in their cargo and the tile is empty.
 
 #### Carts
@@ -114,7 +114,7 @@ Actions
 Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
-- Transfer - Transfer any number of resources currently in the unit’s Cargo to an adjacent unit (You only have to be adjacent at the start of a turn)
+- Transfer - Send any amount of single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
 
 ### Cooldown
 
