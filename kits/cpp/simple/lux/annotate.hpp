@@ -14,6 +14,12 @@ namespace lux {
     static string line(int x1, int y1, int x2, int y2) {
       return "dl " + to_string(x1) + " " + to_string(y1) + " " +  to_string(x2) + " " + to_string(y2);
     };
+    static string text(int x1, int y1, string message, int fontsize) {
+      return "dt " + to_string(x1) + " " + to_string(y1) + " " +  message + " " + to_string(fontsize);
+    };
+    static string sidetext(string message) {
+      return "dst " + message;
+    };
   };
 };
 // string lux::Annotate::circle(int x, int y) 
