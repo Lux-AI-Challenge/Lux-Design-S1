@@ -26,41 +26,41 @@ There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing 
   <tr>
    <td>Resource Type
    </td>
+   <td>Research Pre-requisite
+   </td>
    <td>Fuel Value
    </td>
-   <td>Collection Rate
-   </td>
-   <td>Research Points
+   <td>Collected per Turn
    </td>
   </tr>
   <tr>
    <td>Wood
    </td>
+   <td>0
+   </td>
    <td>1
    </td>
    <td>20
-   </td>
-   <td>0
    </td>
   </tr>
   <tr>
    <td>Coal
    </td>
+   <td>50
+   </td>
    <td>5
    </td>
    <td>10
-   </td>
-   <td>50
    </td>
   </tr>
   <tr>
    <td>Uranium
    </td>
+   <td>200
+   </td>
    <td>25
    </td>
    <td>1
-   </td>
-   <td>200
    </td>
   </tr>
 </table>
