@@ -79,7 +79,6 @@ export abstract class Unit extends Actionable {
     return fuelNeeded <= 0;
   }
   abstract getLightUpkeep(): number;
-  abstract canMove(): boolean;
 }
 
 export namespace Unit {
@@ -109,12 +108,9 @@ export class Cart extends Unit {
   ) {
     super(x, y, Unit.Type.CART, team, configs, idcount);
   }
+
   getLightUpkeep(): number {
     return this.configs.parameters.LIGHT_UPKEEP.CART;
-  }
-
-  canMove(): boolean {
-    return this.canAct();
   }
 
   turn(game: Game): void {
@@ -169,10 +165,6 @@ export class Worker extends Unit {
   }
   getLightUpkeep(): number {
     return this.configs.parameters.LIGHT_UPKEEP.WORKER;
-  }
-
-  canMove(): boolean {
-    return this.canAct();
   }
 
   turn(game: Game): void {
