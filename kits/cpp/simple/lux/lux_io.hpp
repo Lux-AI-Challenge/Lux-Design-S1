@@ -1,3 +1,6 @@
+#ifndef lux_io_h
+#define lux_io_h
+
 #include <map>
 #include <string>
 namespace kit
@@ -14,12 +17,6 @@ namespace kit
     static string CITY_TILES;
     static string ROADS;
   };
-  string INPUT_CONSTANTS::DONE = "D_DONE";
-
-  string INPUT_CONSTANTS::RESEARCH_POINTS = "rp";
-  string INPUT_CONSTANTS::RESOURCES = "r";
-  string INPUT_CONSTANTS::UNITS = "u";
-  string INPUT_CONSTANTS::CITY = "c";
-  string INPUT_CONSTANTS::CITY_TILES = "ct";
-  string INPUT_CONSTANTS::ROADS = "ccd";
 }
+
+#endif
