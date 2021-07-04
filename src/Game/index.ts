@@ -158,8 +158,10 @@ export class Game {
     switch (action) {
 
       case Game.ACTIONS.DEBUG_ANNOTATE_CIRCLE:
-      case Game.ACTIONS.DEBUG_ANNOTATION_LINE:
+      case Game.ACTIONS.DEBUG_ANNOTATE_LINE:
       case Game.ACTIONS.DEBUG_ANNOTATE_X:
+      case Game.ACTIONS.DEBUG_ANNOTATE_TEXT:
+      case Game.ACTIONS.DEBUG_ANNOTATE_SIDETEXT:
         // these actions go directly into the replay file if debugAnnotations is on
         return null;
       case Game.ACTIONS.PILLAGE: {
@@ -913,10 +915,14 @@ export namespace Game {
 
     /** formatted as dc <x> <y> */
     DEBUG_ANNOTATE_CIRCLE = 'dc',
-    /** fomatted as dx <x> <y> */
+    /** formatted as dx <x> <y> */
     DEBUG_ANNOTATE_X = 'dx',
-    /** fomatted as dx <x1> <y1> <x2> <y2> */
-    DEBUG_ANNOTATION_LINE = 'dl',
+    /** formatted as dl <x1> <y1> <x2> <y2> */
+    DEBUG_ANNOTATE_LINE = 'dl',
+    /** formatted as dt <x> <y> <message> <fontsize> */
+    DEBUG_ANNOTATE_TEXT = 'dt',
+    /** formatted as dst <message> */
+    DEBUG_ANNOTATE_SIDETEXT = 'dst',
   }
 
   export enum DIRECTIONS {
