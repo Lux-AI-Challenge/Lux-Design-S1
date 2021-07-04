@@ -26,11 +26,11 @@ There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing 
   <tr>
    <td>Resource Type
    </td>
-   <td>Research Pre-requisite
+   <td>Research Points<br>Pre-requisite
    </td>
-   <td>Fuel Value
+   <td>Fuel Value<br>per Unit
    </td>
-   <td>Collected per Turn
+   <td>Units Collected<br>per Turn
    </td>
   </tr>
   <tr>
