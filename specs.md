@@ -106,7 +106,7 @@ Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
 - Pillage - Reduce the [Road](#Roads) level of the tile the unit is on by 0.25
-- Transfer - Transfer any number of resources currently in the unit’s cargo to an adjacent unit (You only have to be adjacent at the start of a turn)
+- Transfer - Send any amount of single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
 - Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 Wood in their cargo and the tile is empty.
 
 #### Carts
@@ -114,7 +114,7 @@ Actions
 Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
-- Transfer - Transfer any number of resources currently in the unit’s Cargo to an adjacent unit (You only have to be adjacent at the start of a turn)
+- Transfer - Send any amount of single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
 
 ### Cooldown
 
