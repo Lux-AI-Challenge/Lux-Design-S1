@@ -42,39 +42,26 @@ export abstract class Unit extends Actionable {
    * returns true if survived, false if not.
    */
   public spendFuelToSurvive(): boolean {
+    const fuelRates = this.configs.parameters.RESOURCE_TO_FUEL_RATE;
     let fuelNeeded = this.getLightUpkeep();
-    const woodNeeded = Math.ceil(
-      fuelNeeded / this.configs.parameters.RESOURCE_TO_FUEL_RATE.WOOD
-    );
+
+    const woodNeeded = Math.ceil(fuelNeeded / fuelRates.WOOD);
     const woodUsed = Math.min(this.cargo.wood, woodNeeded);
-    fuelNeeded -= woodUsed * this.configs.parameters.RESOURCE_TO_FUEL_RATE.WOOD;
+    fuelNeeded -= woodUsed * fuelRates.WOOD;
     this.cargo.wood -= woodUsed;
-    if (fuelNeeded <= 0) {
-      return true;
-    }
+    if (fuelNeeded <= 0) { return true; }
 
-    const coalNeeded = Math.ceil(
-      fuelNeeded / this.configs.parameters.RESOURCE_TO_FUEL_RATE.COAL
-    );
+    const coalNeeded = Math.ceil(fuelNeeded / fuelRates.COAL);
     const coalUsed = Math.min(this.cargo.coal, coalNeeded);
-    fuelNeeded -= coalUsed * this.configs.parameters.RESOURCE_TO_FUEL_RATE.COAL;
+    fuelNeeded -= coalUsed * fuelRates.COAL;
     this.cargo.coal -= coalUsed;
+    if (fuelNeeded <= 0) { return true; }
 
-    if (fuelNeeded <= 0) {
-      return true;
-    }
-
-    const uraniumNeeded = Math.ceil(
-      fuelNeeded / this.configs.parameters.RESOURCE_TO_FUEL_RATE.URANIUM
-    );
+    const uraniumNeeded = Math.ceil(fuelNeeded / fuelRates.URANIUM);
     const uraniumUsed = Math.min(this.cargo.uranium, uraniumNeeded);
-    fuelNeeded -=
-      uraniumUsed * this.configs.parameters.RESOURCE_TO_FUEL_RATE.URANIUM;
+    fuelNeeded -= uraniumUsed * fuelRates.URANIUM;
     this.cargo.uranium -= uraniumUsed;
-
-    if (fuelNeeded <= 0) {
-      return true;
-    }
+    if (fuelNeeded <= 0) { return true; }
 
     return fuelNeeded <= 0;
   }
