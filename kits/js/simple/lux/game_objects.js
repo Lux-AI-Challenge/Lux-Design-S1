@@ -121,16 +121,9 @@ class Unit {
   }
 
   /** return the command to transfer a resource from a source unit to a destination unit as specified by their ids or the units themselves */
-  transfer(srcUnit, destUnit, resourceType, amount) {
-    let srcID = srcUnit;
-    let destID = destUnit;
-    if (typeof srcID !== "string") {
-      srcID = srcID.id;
-    }
-    if (typeof destID !== "string") {
-      destID = destID.id;
-    }
-    return `t ${srcID} ${destID} ${resourceType} ${amount}`;
+  transfer(destUnit, resourceType, amount) {
+    let destID = typeof destUnit === "string" ? destUnit : destUnit.id;
+    return `t ${this.id} ${destID} ${resourceType} ${amount}`;
   }
 
   /** return the command to build a city right under the worker */
