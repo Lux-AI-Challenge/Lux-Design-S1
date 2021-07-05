@@ -17,6 +17,7 @@ kits/cpp/**/*/main.wasm
 kits/cpp/**/*.out
 kits/java/**/*.class
 __pycache__
+kits/ts/dist
 
 # these contain our test bots
 tests/bots

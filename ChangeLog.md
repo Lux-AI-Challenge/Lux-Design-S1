@@ -6,6 +6,7 @@
 - Through the JS API only, you can reset a match's state to a given state (following the schema stored in stateful replays)
 - All kits have been upgraded to have nicer syntax, along with a few bug fixes. Please download the new kits
 - Cell `cooldown` is now renamed to `road` in all kits. 
+- Typescript kit has been added!
 
 Full ChangeLog:
 
@@ -13,6 +14,7 @@ New:
 - CLI tool now lets you convert replays into replays with human readable state information and can also directly run matches and generate these stateful replays. You can also choose where the replay file is stored at. Moreover the tool has some syntax changes.
 - Through the JS API, you can now start a match and reset its state to a given state (following the schema stored in the stateful replays) and continue running the match as normal. This is *not* provided via the CLI tool at the moment.
 - Python kit made to be more intuitive and has better syntactical sugar
+- Typescript kit has been added!
 
 Changes:
 - Cell cooldown (which is the road level) now renamed to road in all kits and in game engine code. Same with all the constants files too.
@@ -24,7 +26,7 @@ Changes:
 Fixes:
 - Fix bug where wood tiles may spawn under cities when the starting 2 city tiles are adjacent
 - Fix bug with header files in the C++ kit.
-- Fix errorneous comment in JS kit
+- Fix errorneous comment and erroneous transfer function in JS kit
 - Fix various typos in kits and specs
 
 ### v1.1.2
