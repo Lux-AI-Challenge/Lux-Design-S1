@@ -2,53 +2,60 @@
 import yargs from 'yargs';
 import { runner } from './runner';
 import { converter } from './converter';
-yargs
+const argv = yargs(process.argv.slice(2))
   .options({
     seed: {
       describe: 'a seed that randomly generates a initial match state',
+      type: 'number',
     },
-    supress: {
-      describe: 'supress all logs',
-      default: 'false',
+    loglevel: {
+      describe: 'set logger level. In increasing level / verbosity: 0 is for None. 1 for Errors. 2 for Warnings. 3 for Details. 4 for All',
+      default: 2,
+      type: 'number',
     },
     maxtime: {
       describe: 'max time per turn for the bot',
       default: 1200,
+      type: 'number',
     },
     convertToStateful: {
       describe:
         'will convert the passed replay (.json) file into a stateful replay',
-      default: 'false',
+      type: 'boolean',
+      default: false,
     },
     statefulReplay: {
       describe: 'whether to generate stateful replays',
-      default: 'false',
+      type: 'boolean',
+      default: false,
     },
-    storelogs: {
+    storeLogs: {
       describe: 'whether to store error logs as files',
-      default: 'true',
+      type: 'boolean',
+      default: true,
     },
-    storereplay: {
+    storeReplay: {
       describe: 'whether to store the replay or not',
-      default: 'true',
+      default: true,
+      type: 'boolean',
     },
     width: {
       describe: 'set a specific width of the map',
+      type: 'number',
     },
     height: {
       describe: 'set a specific height of the map',
+      type: 'number',
     },
     out: {
       describe: 'where to store the resulting replay file',
+      type: 'string',
     },
   })
-  .help();
-const argv: any = yargs.argv;
-
-let convertToStateful = false;
-if (argv['convertToStateful'] === 'true') {
-  convertToStateful = true;
-}
+  .help().parseSync();
+export type Args = typeof argv;
+// const argv = yargs.argv;
+const convertToStateful = argv.convertToStateful;
 if (convertToStateful) {
   converter(argv);
 } else {

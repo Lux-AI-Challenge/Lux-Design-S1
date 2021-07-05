@@ -4,9 +4,10 @@ import fs from 'fs';
 import { LuxDesign } from '../design';
 import { LuxMatchConfigs, LuxMatchState } from '../types';
 import path from 'path';
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const converter = async (argv: any): Promise<void> => {
-  const replayFile = argv._[0];
+import { Args } from '.';
+
+export const converter = async (argv: Args): Promise<void> => {
+  const replayFile = argv._[0] as string;
   if (!replayFile) {
     throw Error('Need to provide path to replay file');
   }

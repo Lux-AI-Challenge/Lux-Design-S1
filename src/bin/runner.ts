@@ -2,55 +2,54 @@ import { LuxDesign } from '../design';
 import * as Dimension from 'dimensions-ai';
 import { MatchDestroyedError } from 'dimensions-ai/lib/main/DimensionError';
 import { Logger } from 'dimensions-ai';
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const runner = (argv: any): void => {
+import { Args } from '.';
+export const runner = (argv: Args): void => {
   // take in two files
-  const file1 = argv._[0];
-  const file2 = argv._[1];
+  const file1 = argv._[0] as string;
+  const file2 = argv._[1] as string;
   if (!file1 || !file2) {
     throw Error('Need two paths to agents');
   }
-  let maxtime = 1200;
-  if (argv['maxtime']) {
-    maxtime = parseInt(argv['maxtime']);
-    if (isNaN(maxtime)) {
-      throw Error('maxtime argument is not a number');
-    }
-  }
+  const maxtime = argv.maxtime;
   let loglevel = Dimension.Logger.LEVEL.INFO;
-  if (argv['supress'] === 'true') {
-    loglevel = Dimension.Logger.LEVEL.NONE;
+  switch(argv['loglevel']) {
+    case 0:
+      loglevel = Dimension.Logger.LEVEL.NONE;
+      break;
+    case 1:
+      loglevel = Dimension.Logger.LEVEL.ERROR;
+      break;
+    case 2:
+      loglevel = Dimension.Logger.LEVEL.INFO;
+      break;
+    case 3:
+      loglevel = Dimension.Logger.LEVEL.DETAIL;
+      break;
+    case 4:
+      loglevel = Dimension.Logger.LEVEL.ALL;
+      break;
   }
 
-  let storelogs = true;
-  if (argv['storelogs'] === 'false') {
-    storelogs = false;
-  }
-  let storereplay = true;
-  if (argv['storereplay'] === 'false') {
-    storereplay = false;
-  }
-  let statefulReplay = false;
-  if (argv['statefulReplay'] === 'true') {
-    statefulReplay = true;
-  }
+  const storeLogs = argv.storeLogs
+  const storereplay = argv.storeReplay;
+  const statefulReplay = argv.statefulReplay;
 
-  let seed: any = Math.floor(Math.random() * 1e9);
-  if (argv['seed'] !== undefined) {
-    seed = parseInt(argv['seed']);
+  let seed: number = Math.floor(Math.random() * 1e9);
+  if (argv.seed !== undefined) {
+    seed = argv.seed;
   }
-  let out: string;
-  if (argv['out'] !== undefined) {
-    out = argv['out'];
+  let out = argv.out;
+  if (argv.out !== undefined) {
+    out = argv.out;
   }
 
   let width = undefined;
   let height = undefined;
-  if (argv['width']) {
-    width = parseInt(argv['width']);
+  if (argv.width !== undefined) {
+    width = argv.width;
   }
-  if (argv['height']) {
-    height = parseInt(argv['height']);
+  if (argv.height !== undefined) {
+    height = argv.height;
   }
 
   const lux2021 = new LuxDesign('lux_ai_2021', {
@@ -70,11 +69,10 @@ export const runner = (argv: any): void => {
       agentOptions: {
         runCommands: { '.py': ['python'] },
       },
-      storeErrorLogs: storelogs,
+      storeErrorLogs: storeLogs,
     },
   });
-  // dim.log.level = Logger.LEVEL.INFO
-  // dim.log.info("Starting Match")
+
   dim
     .runMatch(
       [
