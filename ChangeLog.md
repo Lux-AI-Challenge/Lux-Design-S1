@@ -4,6 +4,7 @@
 
 - CLI tool now lets you convert replays into replays with human readable state information and can also directly run matches and generate these stateful replays. You can also choose where the replay file is stored at. Moreover the tool has some syntax changes.
 - Through the JS API only, you can reset a match's state to a given state (following the schema stored in stateful replays)
+- You can now debug by adding text onto the game map or onto the side using two new debug functions
 - All kits have been upgraded to have nicer syntax, along with a few bug fixes. Please download the new kits
 - Cell `cooldown` is now renamed to `road` in all kits. 
 - Typescript kit has been added!

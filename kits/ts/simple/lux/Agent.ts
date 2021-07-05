@@ -210,5 +210,11 @@ export const annotate = {
   },
   line: (x1: number, y1: number, x2: number, y2: number): string => {
     return `dl ${x1} ${y1} ${x2} ${y2}`
+  },
+  text: (x1: number, y1: number, message: string, fontsize: number = 16) => {
+    return `dt ${x1} ${y1} '${message}' ${fontsize}`
+  },
+  sidetext: (message: string) => {
+    return `dst '${message}'`
   }
 }
