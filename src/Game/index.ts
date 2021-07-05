@@ -295,7 +295,7 @@ export class Game {
         const x: number = parseInt(args[0]);
         const y: number = parseInt(args[1]);
 
-        check((isNaN(x) || isNaN(y)),
+        check((isNaN(x) || isNaN(y) || !this.map.inMap(new Position(x, y))),
           `Agent ${cmd.agentID} tried to run research at invalid coordinates`);
 
         // check if being researched on owned city tile
