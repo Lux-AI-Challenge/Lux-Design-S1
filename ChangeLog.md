@@ -29,6 +29,7 @@ Fixes:
 - Fix bug with header files in the C++ kit.
 - Fix errorneous comment and erroneous transfer function in JS kit
 - Fix various typos in kits and specs
+- Some undefined errors with map gen
 
 ### v1.1.2
 Fixes:

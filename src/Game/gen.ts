@@ -4,6 +4,7 @@ import { Unit } from '../Unit';
 import { LuxMatchConfigs } from '../types';
 import { GameMap } from '../GameMap';
 import seedrandom from 'seedrandom';
+import { Position } from '../GameMap/position';
 
 const mapSizes = [12, 16, 24, 32];
 export const generateGame = (
@@ -150,6 +151,9 @@ export const generateGame = (
         ny2 = height - ny - 1;
       } else {
         nx2 = width - nx - 1;
+      }
+      if (!map.inMap(new Position(nx, ny)) || !map.inMap(new Position(nx2, ny2))) {
+        continue;
       }
       if (
         !map.getCell(nx, ny).hasResource() &&
