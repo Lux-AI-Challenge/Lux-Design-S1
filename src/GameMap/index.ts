@@ -1,7 +1,7 @@
 import { Cell } from '../GameMap/cell';
 import { Unit } from '../Unit';
 import { Resource } from '../Resource';
-import { LuxMatchConfigs } from '../types';
+import { LuxMatchConfigs, SerializedState } from '../types';
 import { Position } from './position';
 
 export class GameMap {
@@ -88,6 +88,27 @@ export class GameMap {
     );
   }
 
+  toStateObject(): SerializedState['map'] {
+    const obj: SerializedState['map'] = [];
+    for (let y = 0; y < this.height; y++) {
+      obj.push([]);
+      for (let x = 0; x < this.width; x++) {
+        const cell = this.getCell(x, y);
+        const cellData: SerializedState['map'][0][0] = {
+          road: cell.road,
+        };
+        if (cell.resource) {
+          cellData.resource = {
+            type: cell.resource.type,
+            amount: cell.resource.amount,
+          };
+        }
+        obj[y].push(cellData);
+      }
+    }
+    return obj;
+  }
+
   /**
    * Return printable map string
    */
@@ -137,7 +158,7 @@ export class GameMap {
                 return `▩`.red;
               }
             }
-            const cd = cell.getTileCooldown();
+            const cd = cell.getRoad();
             if (cd < 1.1) {
               return '0';
             } else if (cd < 2.1) {

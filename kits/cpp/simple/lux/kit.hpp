@@ -1,5 +1,7 @@
 // source ../LuxAI/transpilers/emsdk/emsdk_env.sh
 // emcc -s FORCE_FILESYSTEM=1 --pre-js init_fs.js hello.cpp
+#ifndef kit_h
+#define kit_h
 #include <string>
 #include <iostream>
 #include <vector>
@@ -8,10 +10,9 @@
 #include "game_objects.hpp"
 #include "annotate.hpp"
 #include "city.hpp"
-using namespace std;
 namespace kit
 {
-
+    using namespace std;
     static string getline()
     {
         // exit if stdin is bad now
@@ -154,14 +155,14 @@ namespace kit
                     this->map.getCell(x, y)->citytile = citytile;
                     players[team].cityTileCount += 1;
                 }
-                else if (input_identifier == INPUT_CONSTANTS::CELL_COOLDOWN)
+                else if (input_identifier == INPUT_CONSTANTS::ROADS)
                 {
                     int i = 1;
                     int x = stoi(updates[i++]);
                     int y = stoi(updates[i++]);
-                    float cooldown = stof(updates[i++]);
+                    float road = stof(updates[i++]);
                     lux::Cell * cell = this->map.getCell(x, y);
-                    cell->cooldown = cooldown;
+                    cell->road = road;
                 }
             };
         }
@@ -177,3 +178,5 @@ namespace kit
         };
     };
 }
+
+#endif

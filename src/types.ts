@@ -1,5 +1,7 @@
 import { Game } from './Game';
 import { GameMap } from './GameMap';
+import { Resource } from './Resource';
+import { Unit } from './Unit';
 
 export interface LuxMatchResults {
   ranks: Array<{ rank: number; agentID: number }>;
@@ -24,6 +26,15 @@ export interface LuxMatchConfigs {
    * @default true
    */
   storeReplay: boolean;
+  /**
+   * Whether to generate a stateful replay in addition to the current format
+   * @default false
+   */
+  statefulReplay: boolean;
+  /**
+   * where to write the replay file. Default will write to a replays folder and name it as so <date>_<match_id>.json
+   */
+  out?: string;
   /**
    * Whether to compress replay into a unreadable binary format or leave it as json
    * @default false
@@ -91,13 +102,54 @@ export interface LuxMatchConfigs {
       CART: number;
       WORKER: number;
     };
-    /** Maximum tile cooldown, before road can no longer be developed further */
-    MAX_CELL_COOLDOWN: number;
+    /** Maximum road level, before road can no longer be developed further */
+    MAX_ROAD: number;
     /** how fast carts develop roads, specifically value is equal to how much to increase cooldown reduction of a tile */
     CART_ROAD_DEVELOPMENT_RATE: number;
     /** how fast workers pillage roads, specifically value is equal to how much to decrease cooldown reduction of a tile  */
     PILLAGE_RATE: number;
-    /** Minimum tile cooldown */
-    MIN_CELL_COOLDOWN: number;
+    /** Minimum road level */
+    MIN_ROAD: number;
   };
+}
+
+export interface SerializedState {
+  turn: number;
+  globalCityIDCount: number;
+  globalUnitIDCount: number;
+  teamStates: {
+    [x in Unit.TEAM]: {
+      researchPoints: number;
+      units: Record<
+        string,
+        {
+          cargo: Unit['cargo'];
+          cooldown: number;
+          x: number;
+          y: number;
+          type: Unit['type'];
+        }
+      >;
+      researched: {
+        [x in Resource.Types]: boolean;
+      };
+    };
+  };
+  map: Array<
+    Array<{
+      road: number;
+      resource?: { type: string; amount: number };
+    }>
+  >;
+  stats: Game.Stats;
+  cities: Record<
+    string,
+    {
+      cityCells: Array<{ x: number; y: number; cooldown: number }>;
+      id: string;
+      fuel: number;
+      lightupkeep: number;
+      team: number;
+    }
+  >;
 }

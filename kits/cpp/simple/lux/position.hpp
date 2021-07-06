@@ -3,9 +3,9 @@
 #include <vector>
 #include <string>
 #include "constants.hpp"
-using namespace std;
 namespace lux
 {
+    using namespace std;
     class Position
     {
     public:
@@ -49,12 +49,10 @@ namespace lux
             }
         }
 
-        /** Returns distance to pos from this position */
+        /** Returns Manhattan distance to pos from this position */
         float distanceTo(const Position &pos) const
         {
-            int dx = pos.x - this->x;
-            int dy = pos.y - this->y;
-            return sqrt(dx * dx + dy * dy);
+            return abs(pos.x - this->x) + abs(pos.y - this->y);
         }
 
         /** Returns closest direction to targetPos, or center if staying put is best */
@@ -81,11 +79,7 @@ namespace lux
             return "(" + to_string(this->x) + ", " + to_string(this->y) + ")";
         }
     };
-    ostream &operator<<(ostream &out, const Position &p)
-    {
-        out << "(" << p.x << "," << p.y << ")"; // access private data
-        return out;
-    };
+    ostream &operator<<(ostream &out, const Position &p);
 }
 
 #endif

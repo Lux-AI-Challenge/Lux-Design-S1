@@ -34,7 +34,7 @@ class Cell {
     this.pos = new Position(x, y);
     this.resource = null;
     this.citytile = null;
-    this.cooldown = 0;
+    this.road = 0;
   }
   hasResource() {
     return this.resource !== null && this.resource.amount > 0;
@@ -73,11 +73,9 @@ class Position {
     }
   }
 
-  /** Returns distance to pos from this position */
+  /** Returns Manhattan distance to pos from this position */
   distanceTo(pos) {
-    const dx = pos.x - this.x;
-    const dy = pos.y - this.y;
-    return Math.sqrt(dx * dx + dy * dy);
+    return Math.abs(pos.x - this.x) + Math.abs(pos.y - this.y);
   }
 
   /** Returns closest direction to targetPos, or null if staying put is best */

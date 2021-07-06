@@ -2,11 +2,11 @@ package lux;
 
 // TODO: automate converting json to this format
 public final class GameConstants {
-    public static class UNIT_TYPES { 
+    public static class UNIT_TYPES {
       public static final int WORKER = 0;
       public static final int CART = 1;
     }
-    public static class RESOURCE_TYPES { 
+    public static class RESOURCE_TYPES {
       public static final String WOOD = "wood";
       public static final String COAL = "coal";
       public static final String URANIUM = "uranium";
@@ -35,7 +35,7 @@ public final class GameConstants {
         public static final int WOOD = 1;
         public static final int COAL = 5;
         public static final int URANIUM = 25;
-      } 
+      }
       public static class RESEARCH_REQUIREMENTS {
         public static final int COAL = 50;
         public static final int URANIUM = 200;
@@ -45,8 +45,8 @@ public final class GameConstants {
         public static final int CART = 3;
         public static final int WORKER = 2;
       }
-      public static final double MAX_CELL_COOLDOWN = 6;
-      public static final double MIN_CELL_COOLDOWN = 0;
+      public static final double MAX_ROAD = 6;
+      public static final double MIN_ROAD = 0;
       public static final double CART_ROAD_DEVELOPMENT_RATE = 0.5;
       public static final double PILLAGE_RATE = 0.25;
     }

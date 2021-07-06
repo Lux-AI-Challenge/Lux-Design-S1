@@ -3,7 +3,7 @@ package lux;
 public class Unit {
   public Position pos;
   public int team;
-  public String id; 
+  public String id;
   public int type;
   public double cooldown;
   public Cargo cargo;
@@ -31,7 +31,7 @@ public class Unit {
   }
   public boolean canBuild(GameMap gameMap) {
     Cell cell = gameMap.getCellByPos(this.pos);
-    if (!cell.hasResource() && this.cooldown < 1 && this.cargo.wood >= GameConstants.PARAMETERS.CITY_WOOD_COST) return true;
+    if (!cell.hasResource() && this.canAct() && this.cargo.wood >= GameConstants.PARAMETERS.CITY_WOOD_COST) return true;
     return false;
   }
   public boolean canAct() {

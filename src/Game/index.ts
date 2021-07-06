@@ -4,7 +4,7 @@ import { Unit } from '../Unit';
 import { City, CityTile } from './city';
 import { GameMap } from '../GameMap';
 import { Cart, Worker } from '../Unit';
-import { LuxMatchConfigs } from '../types';
+import { LuxMatchConfigs, SerializedState } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
 import { MatchWarn } from 'dimensions-ai/lib/main/DimensionError';
 import { MatchEngine, Match } from 'dimensions-ai';
@@ -20,6 +20,8 @@ import {
 } from '../Actions';
 import { Cell } from '../GameMap/cell';
 import { Replay } from '../Replay';
+import { deepCopy } from '../utils';
+import { Position } from '../GameMap/position';
 
 /**
  * Holds basically all game data, including the map.
@@ -81,7 +83,6 @@ export class Game {
       [Unit.TEAM.A]: {
         researchPoints: 0,
         units: new Map(),
-        fuel: 0,
         researched: {
           wood: true,
           coal: false,
@@ -91,7 +92,6 @@ export class Game {
       [Unit.TEAM.B]: {
         researchPoints: 0,
         units: new Map(),
-        fuel: 0,
         researched: {
           wood: true,
           coal: false,
@@ -136,330 +136,302 @@ export class Game {
     cmd: MatchEngine.Command,
     accumulatedActionStats: _AccumulatedActionStats = this._genInitialAccumulatedActionStats()
   ): Action {
-    const strs = cmd.command.split(' ');
-    if (strs.length === 0) {
-      throw new MatchWarn(
-        `Agent ${cmd.agentID} sent malformed command: ${cmd.command}`
-      );
-    } else {
-      const action = strs[0];
-      let valid = true;
-      const team: Unit.TEAM = cmd.agentID;
-      const acc = accumulatedActionStats[team];
-      let errormsg = `Agent ${cmd.agentID} sent invalid command`;
-      switch (action) {
-        case Game.ACTIONS.DEBUG_ANNOTATE_CIRCLE:
-        case Game.ACTIONS.DEBUG_ANNOTATION_LINE:
-        case Game.ACTIONS.DEBUG_ANNOTATE_X:
-          // these actions go directly into the replay file if debugAnnotations is on
-          return null;
-        case Game.ACTIONS.PILLAGE:
-          if (strs.length === 2) {
-            const unitid = strs[1];
-            const unit = this.getUnit(team, unitid);
-            if (!unit) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to pillage tile with invalid/unowned unit id: ${unitid}`;
-              break;
-            }
-            if (!(unit.cooldown < 1)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to pillage tile with cooldown: ${unit.cooldown}`;
-              break;
-            }
-            if (acc.actionsPlaced.has(unitid)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
-              break;
-            }
-            acc.actionsPlaced.add(unitid);
-            if (valid) {
-              return new PillageAction(action, team, unitid);
-            }
-          } else {
-            valid = false;
-          }
-          break;
-        case Game.ACTIONS.BUILD_CITY:
-          if (strs.length === 2) {
-            const unitid = strs[1];
-            const unit = this.getUnit(team, unitid);
-            if (!unit) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build CityTile with invalid/unowned unit id: ${unitid}`;
-              break;
-            }
-            const cell = this.map.getCellByPos(unit.pos);
-            if (cell.isCityTile()) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build CityTile on existing CityTile`;
-              break;
-            }
-            if (cell.hasResource()) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build CityTile on non-empty resource tile`;
-              break;
-            }
-            if (!(unit.cooldown < 1)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build CityTile with cooldown: ${unit.cooldown}`;
-              break;
-            }
-            if (unit.cargo.wood < this.configs.parameters.CITY_WOOD_COST) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build CityTile with insufficient wood ${unit.cargo.wood}`;
-              break;
-            }
-            if (acc.actionsPlaced.has(unitid)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
-              break;
-            }
-            acc.actionsPlaced.add(unitid);
-            if (valid) {
-              return new SpawnCityAction(action, team, unitid);
-            }
-          } else {
-            valid = false;
-          }
-          break;
-        case Game.ACTIONS.BUILD_CART:
-        case Game.ACTIONS.BUILD_WORKER:
-          if (strs.length === 3) {
-            const x = parseInt(strs[1]);
-            const y = parseInt(strs[2]);
-            if (isNaN(x) || isNaN(y)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build unit with invalid coordinates`;
-              break;
-            }
-            // check if being built on owned city tile
-            const cell = this.map.getCell(x, y);
-            if (!cell.isCityTile() || cell.citytile.team !== team) {
-              // invalid if not a city or not owned
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) that it does not own`;
-              break;
-            }
-
-            const citytile = cell.citytile;
-            if (acc.actionsPlaced.has(citytile.getTileID())) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} sent an extra command. CityTile can perform only one action at a time`;
-              break;
-            }
-            acc.actionsPlaced.add(citytile.getTileID());
-            if (!citytile.canBuildUnit()) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but CityTile still with cooldown of ${citytile.cooldown}`;
-              break;
-            }
-            if (action === Game.ACTIONS.BUILD_CART) {
-              if (this.cartUnitCapReached(team, acc.cartsBuilt)) {
-                valid = false;
-                errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but cart unit cap reached. Build more cities!`;
-                break;
-              }
-            } else {
-              if (this.workerUnitCapReached(team, acc.workersBuilt)) {
-                valid = false;
-                errormsg = `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but worker unit cap reached. Build more cities!`;
-                break;
-              }
-            }
-            if (valid) {
-              if (action === Game.ACTIONS.BUILD_CART) {
-                acc.cartsBuilt += 1;
-                return new SpawnCartAction(action, team, x, y);
-              } else if (action === Game.ACTIONS.BUILD_WORKER) {
-                acc.workersBuilt += 1;
-                return new SpawnWorkerAction(action, team, x, y);
-              }
-            }
-          } else {
-            valid = false;
-            break;
-          }
-          break;
-        case Game.ACTIONS.MOVE:
-          if (strs.length === 3) {
-            const unitid = strs[1];
-            const direction = strs[2];
-            const teamState = this.state.teamStates[team];
-            if (!teamState.units.has(unitid)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} that it does not own`;
-              break;
-            }
-            const unit = teamState.units.get(unitid);
-            if (!unit.canMove()) {
-              errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} with cooldown: ${unit.cooldown}`;
-              valid = false;
-              break;
-            }
-            if (acc.actionsPlaced.has(unitid)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
-              break;
-            }
-            acc.actionsPlaced.add(unitid);
-            switch (direction) {
-              case Game.DIRECTIONS.NORTH:
-              case Game.DIRECTIONS.EAST:
-              case Game.DIRECTIONS.SOUTH:
-              case Game.DIRECTIONS.WEST: {
-                const newpos = unit.pos.translate(direction, 1);
-                if (!this.map.inMap(newpos)) {
-                  errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} off map`;
-                  valid = false;
-                } else if (
-                  this.map.getCellByPos(newpos).isCityTile() &&
-                  this.map.getCellByPos(newpos).citytile.team !== team
-                ) {
-                  errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} onto opponent CityTile`;
-                  valid = false;
-                }
-                break;
-              }
-              case Game.DIRECTIONS.CENTER: {
-                // do nothing
-                break;
-              }
-              default:
-                errormsg = `Agent ${cmd.agentID} tried to move unit ${unitid} in invalid direction ${direction}`;
-                valid = false;
-                break;
-            }
-            if (valid) {
-              return new MoveAction(
-                action,
-                team,
-                unitid,
-                direction as Game.DIRECTIONS,
-                this.map.getCellByPos(
-                  unit.pos.translate(direction as Game.DIRECTIONS, 1)
-                )
-              );
-            }
-          } else {
-            valid = false;
-          }
-          break;
-        case Game.ACTIONS.RESEARCH:
-          if (strs.length === 3) {
-            const x = parseInt(strs[1]);
-            const y = parseInt(strs[2]);
-            if (isNaN(x) || isNaN(y)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to run research at invalid coordinates`;
-              break;
-            }
-            // check if being researched on owned city tile
-            const cell = this.map.getCell(x, y);
-            if (!cell.isCityTile() || cell.citytile.team !== team) {
-              // invalid if not a city or not owned
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to run research at CityTile (${x}, ${y}) that it does not own`;
-              break;
-            }
-            const citytile = cell.citytile;
-            if (!citytile.canResearch()) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to run research at CityTile (${x}, ${y}) but CityTile still on cooldown ${citytile.cooldown}`;
-              break;
-            }
-            if (acc.actionsPlaced.has(citytile.getTileID())) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} sent an extra command. CityTile can perform only one action at a time`;
-              break;
-            }
-            acc.actionsPlaced.add(citytile.getTileID());
-            if (valid) {
-              return new ResearchAction(action, team, x, y);
-            }
-          } else {
-            valid = false;
-          }
-          break;
-        case Game.ACTIONS.TRANSFER:
-          if (strs.length === 5) {
-            const srcID = strs[1];
-            const destID = strs[2];
-            const resourceType = strs[3];
-            const amount = parseInt(strs[4]);
-            const teamState = this.state.teamStates[team];
-            if (!teamState.units.has(srcID)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} does not own source unit: ${srcID} for transfer`;
-              break;
-            }
-            if (!teamState.units.has(destID)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} does not own destination unit: ${srcID} for transfer`;
-              break;
-            }
-            if (!(teamState.units.get(srcID).cooldown < 1)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to transfer resources with cooldown: ${teamState.units.get(srcID).cooldown}`;
-              break;
-            }
-            if (acc.actionsPlaced.has(srcID)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`;
-              break;
-            }
-            acc.actionsPlaced.add(srcID);
-            const srcUnit = teamState.units.get(srcID);
-            const destUnit = teamState.units.get(destID);
-            if (srcID === destID) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to transfer between the same unit ${srcID}`;
-              break;
-            }
-            if (!srcUnit.pos.isAdjacent(destUnit.pos)) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to transfer between non-adjacent units: ${srcID}, ${destID}`;
-              break;
-            }
-
-            if (isNaN(amount) || amount < 0) {
-              valid = false;
-              errormsg = `Agent ${cmd.agentID} tried to transfer invalid amount: ${strs[3]}`;
-              break;
-            }
-            switch (resourceType) {
-              case Resource.Types.WOOD:
-              case Resource.Types.COAL:
-              case Resource.Types.URANIUM:
-                break;
-              default:
-                valid = false;
-                errormsg = `Agent ${cmd.agentID} tried to transfer invalid resource: ${resourceType}`;
-                break;
-            }
-            if (valid) {
-              return new TransferAction(
-                action,
-                team,
-                srcID,
-                destID,
-                resourceType as Resource.Types,
-                amount
-              );
-            }
-          } else {
-            valid = false;
-          }
-          break;
-        default:
-          valid = false;
-      }
-      if (valid === false) {
+    // checks for an error condition, and throws a warning if true
+    const check = (
+      condition: boolean,
+      errormsg: string,
+      trace = true
+    ): void => {
+      if (condition) {
         throw new MatchWarn(
-          errormsg + `; turn ${this.state.turn}; cmd: ${cmd.command}`
+          errormsg +
+            (trace ? `; turn ${this.state.turn}; cmd: ${cmd.command}` : '')
+        );
+      }
+    };
+    const invalidMsg = `Agent ${cmd.agentID} sent invalid command`;
+    const malformedMsg = `Agent ${cmd.agentID} sent malformed command: ${cmd.command}`;
+
+    const [action, ...args] = cmd.command.split(' ');
+    check(action === undefined, invalidMsg, false);
+
+    const team: Unit.TEAM = cmd.agentID;
+    const teamState = this.state.teamStates[team];
+    const acc = accumulatedActionStats[team];
+    switch (action) {
+      case Game.ACTIONS.DEBUG_ANNOTATE_CIRCLE:
+      case Game.ACTIONS.DEBUG_ANNOTATE_LINE:
+      case Game.ACTIONS.DEBUG_ANNOTATE_X:
+      case Game.ACTIONS.DEBUG_ANNOTATE_TEXT:
+      case Game.ACTIONS.DEBUG_ANNOTATE_SIDETEXT:
+        // these actions go directly into the replay file if debugAnnotations is on
+        return null;
+      case Game.ACTIONS.PILLAGE: {
+        check(args.length !== 1, malformedMsg, false);
+        const uid = args[0];
+
+        const unit = this.getUnit(team, uid);
+        check(
+          !unit,
+          `Agent ${cmd.agentID} tried to pillage tile with invalid/unowned unit id: ${uid}`
+        );
+
+        check(
+          !unit.canAct(),
+          `Agent ${cmd.agentID} tried to pillage tile with cooldown: ${unit.cooldown}`
+        );
+
+        check(
+          acc.actionsPlaced.has(uid),
+          `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`
+        );
+
+        acc.actionsPlaced.add(uid);
+        return new PillageAction(action, team, uid);
+      }
+
+      case Game.ACTIONS.BUILD_CITY: {
+        check(args.length !== 1, malformedMsg, false);
+        const uid = args[0];
+
+        const unit = this.getUnit(team, uid);
+        check(
+          !unit,
+          `Agent ${cmd.agentID} tried to build CityTile with invalid/unowned unit id: ${uid}`
+        );
+
+        const cell = this.map.getCellByPos(unit.pos);
+        check(
+          cell.isCityTile(),
+          `Agent ${cmd.agentID} tried to build CityTile on existing CityTile`
+        );
+
+        check(
+          cell.hasResource(),
+          `Agent ${cmd.agentID} tried to build CityTile on non-empty resource tile`
+        );
+
+        check(
+          !unit.canAct(),
+          `Agent ${cmd.agentID} tried to build CityTile with cooldown: ${unit.cooldown}`
+        );
+
+        check(
+          unit.cargo.wood < this.configs.parameters.CITY_WOOD_COST,
+          `Agent ${cmd.agentID} tried to build CityTile with insufficient wood ${unit.cargo.wood}`
+        );
+
+        check(
+          acc.actionsPlaced.has(uid),
+          `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`
+        );
+
+        acc.actionsPlaced.add(uid);
+        return new SpawnCityAction(action, team, uid);
+      }
+
+      case Game.ACTIONS.BUILD_CART:
+      case Game.ACTIONS.BUILD_WORKER: {
+        check(args.length !== 2, malformedMsg, false);
+        const x: number = parseInt(args[0]);
+        const y: number = parseInt(args[1]);
+
+        check(
+          isNaN(x) || isNaN(y) || !this.map.inMap(new Position(x, y)),
+          `Agent ${cmd.agentID} tried to build unit with invalid coordinates`
+        );
+
+        // check if being built on owned city tile
+        const cell = this.map.getCell(x, y);
+        // invalid if not a city or not owned
+        check(
+          !cell.isCityTile() || cell.citytile.team !== team,
+          `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) that it does not own`
+        );
+
+        const citytile = cell.citytile;
+        check(
+          acc.actionsPlaced.has(citytile.getTileID()),
+          `Agent ${cmd.agentID} sent an extra command. CityTile can perform only one action at a time`
+        );
+
+        check(
+          !citytile.canBuildUnit(),
+          `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but CityTile still with cooldown of ${citytile.cooldown}`
+        );
+
+        if (action === Game.ACTIONS.BUILD_CART) {
+          check(
+            this.cartUnitCapReached(team, acc.cartsBuilt),
+            `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but cart unit cap reached. Build more CityTiles!`
+          );
+        } else {
+          check(
+            this.workerUnitCapReached(team, acc.workersBuilt),
+            `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but worker unit cap reached. Build more CityTiles!`
+          );
+        }
+
+        acc.actionsPlaced.add(citytile.getTileID());
+        if (action === Game.ACTIONS.BUILD_CART) {
+          acc.cartsBuilt += 1;
+          return new SpawnCartAction(action, team, x, y);
+        }
+
+        acc.workersBuilt += 1;
+        return new SpawnWorkerAction(action, team, x, y);
+      }
+
+      case Game.ACTIONS.MOVE: {
+        check(args.length !== 2, malformedMsg, false);
+        const uid = args[0];
+        const direction = args[1] as Game.DIRECTIONS;
+
+        check(
+          !teamState.units.has(uid),
+          `Agent ${cmd.agentID} tried to move unit ${uid} that it does not own`
+        );
+
+        const unit = teamState.units.get(uid);
+        check(
+          !unit.canMove(),
+          `Agent ${cmd.agentID} tried to move unit ${uid} with cooldown: ${unit.cooldown}`
+        );
+
+        check(
+          acc.actionsPlaced.has(uid),
+          `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`
+        );
+
+        check(
+          !Object.values(Game.DIRECTIONS).includes(direction),
+          `Agent ${cmd.agentID} tried to move unit ${uid} in invalid direction ${direction}`
+        );
+
+        if (direction !== Game.DIRECTIONS.CENTER) {
+          const newpos = unit.pos.translate(direction, 1);
+          check(
+            !this.map.inMap(newpos),
+            `Agent ${cmd.agentID} tried to move unit ${uid} off map`
+          );
+
+          check(
+            this.map.getCellByPos(newpos).isCityTile() &&
+              this.map.getCellByPos(newpos).citytile.team !== team,
+            `Agent ${cmd.agentID} tried to move unit ${uid} onto opponent CityTile`
+          );
+        }
+
+        acc.actionsPlaced.add(uid);
+        return new MoveAction(
+          action,
+          team,
+          uid,
+          direction as Game.DIRECTIONS,
+          this.map.getCellByPos(
+            unit.pos.translate(direction as Game.DIRECTIONS, 1)
+          )
+        );
+      }
+
+      case Game.ACTIONS.RESEARCH: {
+        check(args.length !== 2, malformedMsg, false);
+        const x: number = parseInt(args[0]);
+        const y: number = parseInt(args[1]);
+
+        check(
+          isNaN(x) || isNaN(y) || !this.map.inMap(new Position(x, y)),
+          `Agent ${cmd.agentID} tried to run research at invalid coordinates`
+        );
+
+        // check if being researched on owned city tile
+        const cell = this.map.getCell(x, y);
+        // invalid if not a city or not owned
+        check(
+          !cell.isCityTile() || cell.citytile.team !== team,
+          `Agent ${cmd.agentID} tried to run research at CityTile (${x}, ${y}) that it does not own`
+        );
+
+        const citytile = cell.citytile;
+        check(
+          !citytile.canResearch(),
+          `Agent ${cmd.agentID} tried to run research at CityTile (${x}, ${y}) but CityTile still on cooldown ${citytile.cooldown}`,
+          true
+        );
+
+        check(
+          acc.actionsPlaced.has(citytile.getTileID()),
+          `Agent ${cmd.agentID} sent an extra command. CityTile can perform only one action at a time`
+        );
+
+        acc.actionsPlaced.add(citytile.getTileID());
+        return new ResearchAction(action, team, x, y);
+      }
+
+      case Game.ACTIONS.TRANSFER: {
+        check(args.length !== 4, malformedMsg, false);
+        const srcID = args[0];
+        const destID = args[1];
+        const resourceType = args[2] as Resource.Types;
+        const amount = parseInt(args[3]);
+
+        check(
+          !teamState.units.has(srcID),
+          `Agent ${cmd.agentID} does not own source unit: ${srcID} for transfer`
+        );
+
+        check(
+          !teamState.units.has(destID),
+          `Agent ${cmd.agentID} does not own destination unit: ${destID} for transfer`
+        );
+
+        check(
+          !teamState.units.get(srcID).canAct(),
+          `Agent ${cmd.agentID} tried to transfer resources with cooldown: ${
+            teamState.units.get(srcID).cooldown
+          }`
+        );
+
+        check(
+          acc.actionsPlaced.has(srcID),
+          `Agent ${cmd.agentID} sent an extra command. Unit can perform only one action at a time`
+        );
+
+        const srcUnit = teamState.units.get(srcID);
+        const destUnit = teamState.units.get(destID);
+        check(
+          srcID === destID,
+          `Agent ${cmd.agentID} tried to transfer between the same unit ${srcID}`
+        );
+
+        check(
+          !srcUnit.pos.isAdjacent(destUnit.pos),
+          `Agent ${cmd.agentID} tried to transfer between non-adjacent units: ${srcID}, ${destID}`
+        );
+
+        check(
+          isNaN(amount) || amount < 0,
+          `Agent ${cmd.agentID} tried to transfer invalid amount: ${amount}`
+        );
+
+        check(
+          !Object.values(Resource.Types).includes(resourceType), //needs TS syntax check
+          `Agent ${cmd.agentID} tried to transfer invalid resource: ${resourceType}`
+        );
+
+        acc.actionsPlaced.add(srcID);
+        return new TransferAction(
+          action,
+          team,
+          srcID,
+          destID,
+          resourceType as Resource.Types,
+          amount
         );
       }
     }
+
+    check(true, malformedMsg, false);
   }
 
   workerUnitCapReached(team: Unit.TEAM, offset = 0): boolean {
@@ -488,10 +460,16 @@ export class Game {
 
   spawnWorker(team: Unit.TEAM, x: number, y: number, unitid?: string): Worker {
     const cell = this.map.getCell(x, y);
-    const unit = new Worker(x, y, team, this.configs, this.globalUnitIDCount++);
+    const unit = new Worker(
+      x,
+      y,
+      team,
+      this.configs,
+      this.globalUnitIDCount + 1
+    );
     if (unitid) {
       unit.id = unitid;
-    }
+    } else this.globalUnitIDCount++;
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
     this.stats.teamStats[team].workersBuilt += 1;
@@ -500,10 +478,10 @@ export class Game {
 
   spawnCart(team: Unit.TEAM, x: number, y: number, unitid?: string): Cart {
     const cell = this.map.getCell(x, y);
-    const unit = new Cart(x, y, team, this.configs, this.globalUnitIDCount++);
+    const unit = new Cart(x, y, team, this.configs, this.globalUnitIDCount + 1);
     if (unitid) {
       unit.id = unitid;
-    }
+    } else this.globalUnitIDCount++;
     cell.units.set(unit.id, unit);
     this.state.teamStates[team].units.set(unit.id, unit);
     this.stats.teamStats[team].cartsBuilt += 1;
@@ -511,7 +489,7 @@ export class Game {
   }
 
   /**
-   * Spawn city tile for a team at (x, y)
+   * Spawn city tile for a team at (x, y). Can pass cityid to use an existing city id
    */
   spawnCityTile(
     team: Unit.TEAM,
@@ -533,14 +511,13 @@ export class Game {
       return false;
     });
 
-    // set cooldown to minimum as city auto gives max cooldown to units and once city is gone it should default to min cell cooldown
-    cell.cooldown = this.configs.parameters.MAX_CELL_COOLDOWN;
-
     // if no adjacent city cells of same team, generate new city
     if (adjSameTeamCityTiles.length === 0) {
-      const city = new City(team, this.configs, this.globalCityIDCount++);
+      const city = new City(team, this.configs, this.globalCityIDCount + 1);
       if (cityid) {
         city.id = cityid;
+      } else {
+        this.globalCityIDCount++;
       }
       cell.setCityTile(team, city.id);
       city.addCityTile(cell);
@@ -658,9 +635,8 @@ export class Game {
         amountDistributed += distributeAmount;
 
         // update stats
-        this.stats.teamStats[worker.team].resourcesCollected[
-          type
-        ] += Math.floor(distributeAmount);
+        this.stats.teamStats[worker.team].resourcesCollected[type] +=
+          Math.floor(distributeAmount);
 
         // subtract how much was given.
         amountToDistribute -= distributeAmount;
@@ -724,19 +700,15 @@ export class Game {
   ): void {
     const srcunit = this.getUnit(team, srcID);
     const destunit = this.getUnit(team, destID);
-    // the amount to actually transfer
-    let transferAmount = amount;
-    if (srcunit.cargo[resourceType] >= amount) {
-      transferAmount = amount;
-    } else {
-      // when resources is below specified amount, we can only transfer as much as we can hold
-      transferAmount = srcunit.cargo[resourceType];
-    }
-    const spaceLeft = destunit.getCargoSpaceLeft();
-    // if we want to transferr more than there is space, we can only transfer what space is left
-    if (transferAmount > spaceLeft) {
-      transferAmount = spaceLeft;
-    }
+    // the amount to actually transfer is the minimum of:
+    const transferAmount = Math.min(
+      // the amount requested
+      amount,
+      // and all that we have if that's less than requested
+      srcunit.cargo[resourceType],
+      // and no more than destination-unit's remaining cargo-space
+      destunit.getCargoSpaceLeft()
+    );
     srcunit.cargo[resourceType] -= transferAmount;
     destunit.cargo[resourceType] += transferAmount;
   }
@@ -747,7 +719,7 @@ export class Game {
     this.cities.delete(cityID);
     city.citycells.forEach((cell) => {
       cell.citytile = null;
-      cell.cooldown = this.configs.parameters.MIN_CELL_COOLDOWN;
+      cell.road = this.configs.parameters.MIN_ROAD;
     });
   }
 
@@ -872,6 +844,73 @@ export class Game {
     const cycleLength = dayLength + this.configs.parameters.NIGHT_LENGTH;
     return this.state.turn % cycleLength >= dayLength;
   }
+
+  toStateObject(): SerializedState {
+    const cities: SerializedState['cities'] = {};
+    this.cities.forEach((city) => {
+      cities[city.id] = {
+        id: city.id,
+        fuel: city.fuel,
+        lightupkeep: city.getLightUpkeep(),
+        team: city.team,
+        cityCells: city.citycells.map((cell) => {
+          return {
+            x: cell.pos.x,
+            y: cell.pos.y,
+            cooldown: cell.citytile.cooldown,
+          };
+        }),
+      };
+    });
+    const state: SerializedState = {
+      turn: this.state.turn,
+      globalCityIDCount: this.globalCityIDCount,
+      globalUnitIDCount: this.globalUnitIDCount,
+      teamStates: {
+        [Unit.TEAM.A]: {
+          researchPoints: 0,
+          units: {},
+          researched: {
+            wood: true,
+            coal: false,
+            uranium: false,
+          },
+        },
+        [Unit.TEAM.B]: {
+          researchPoints: 0,
+          units: {},
+          researched: {
+            wood: true,
+            coal: false,
+            uranium: false,
+          },
+        },
+      },
+      stats: deepCopy(this.stats),
+      map: this.map.toStateObject(),
+      cities,
+    };
+
+    const teams = [Unit.TEAM.A, Unit.TEAM.B];
+    teams.forEach((team) => {
+      this.state.teamStates[team].units.forEach((unit) => {
+        state.teamStates[team].units[unit.id] = {
+          cargo: deepCopy(unit.cargo),
+          cooldown: unit.cooldown,
+          x: unit.pos.x,
+          y: unit.pos.y,
+          type: unit.type,
+        };
+      });
+      state.teamStates[team].researchPoints =
+        this.state.teamStates[team].researchPoints;
+      state.teamStates[team].researched = deepCopy(
+        this.state.teamStates[team].researched
+      );
+    });
+
+    return state;
+  }
 }
 export namespace Game {
   export interface Configs {
@@ -902,7 +941,6 @@ export namespace Game {
     };
   }
   export interface TeamState {
-    fuel: number;
     researchPoints: number;
     units: Map<string, Unit>;
     researched: {
@@ -944,10 +982,14 @@ export namespace Game {
 
     /** formatted as dc <x> <y> */
     DEBUG_ANNOTATE_CIRCLE = 'dc',
-    /** fomatted as dx <x> <y> */
+    /** formatted as dx <x> <y> */
     DEBUG_ANNOTATE_X = 'dx',
-    /** fomatted as dx <x1> <y1> <x2> <y2> */
-    DEBUG_ANNOTATION_LINE = 'dl',
+    /** formatted as dl <x1> <y1> <x2> <y2> */
+    DEBUG_ANNOTATE_LINE = 'dl',
+    /** formatted as dt <x> <y> <message> <fontsize> */
+    DEBUG_ANNOTATE_TEXT = 'dt',
+    /** formatted as dst <message> */
+    DEBUG_ANNOTATE_SIDETEXT = 'dst',
   }
 
   export enum DIRECTIONS {

@@ -166,11 +166,11 @@ class Agent {
           this.gameState.players[team].cityTileCount += 1;
           break;
         }
-        case INPUT_CONSTANTS.CELL_COOLDOWN: {
+        case INPUT_CONSTANTS.ROADS: {
           const x = update.nextInt();
           const y = update.nextInt();
-          const cooldown = update.nextFloat();
-          this.gameState.map.getCell(x, y).cooldown = cooldown;
+          const road = update.nextFloat();
+          this.gameState.map.getCell(x, y).road = road;
           break;
         }
       }
@@ -194,6 +194,12 @@ const annotate = {
   },
   line: (x1, y1, x2, y2) => {
     return `dl ${x1} ${y1} ${x2} ${y2}`
+  },
+  text: (x1, y1, message, fontsize = 16) => {
+    return `dt ${x1} ${y1} '${message}' ${fontsize}`
+  },
+  sidetext: (message) => {
+    return `dst '${message}'`
   }
 }
 

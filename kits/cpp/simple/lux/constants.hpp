@@ -7,7 +7,7 @@
 namespace lux
 {
   // nlohmann::json j = nlohmann::json::parse()
-  nlohmann::json GAME_CONSTANTS = nlohmann::json::parse(R"(
+  static nlohmann::json GAME_CONSTANTS = nlohmann::json::parse(R"(
     {
       "UNIT_TYPES": {
         "WORKER": 0,
@@ -59,8 +59,8 @@ namespace lux
           "CART": 3,
           "WORKER": 2
         },
-        "MAX_CELL_COOLDOWN": 6,
-        "MIN_CELL_COOLDOWN": 0,
+        "MAX_ROAD": 6,
+        "MIN_ROAD": 0,
         "CART_ROAD_DEVELOPMENT_RATE": 0.5,
         "PILLAGE_RATE": 0.25
       }

@@ -63,12 +63,20 @@ lux-ai-2021 --seed=100 path/to/botfile path/to/otherbotfile
 
 which will run a match using seed 100.
 
-For boolean options such as `supress, storelogs, storereplay` etc., set them like so
+You can tell the CLI tool whether to store the agent logs or match replays via `--storeLogs, --storeReplay`. Set these boolean options like so
 
 ```
-lux-ai-2021 --supress=true
-lux-ai-2021 --storelogs=false
+# to set to true
+lux-ai-2021 --statefulReplay
+# to set to false
+lux-ai-2021 --storeLogs=false
 ```
+
+By default the tool will generate minimum, **action-based**, replays that are small in size and work in the visualizer but it does not have state information e.g. resources on the map in each turn. To generate **stateful** replays, set the `--statefulReplay` option to true. To convert a action-based replay to a stateful one, set the `--convertToStateful` option to true and pass the file to convert.
+
+Choose where the replay file is stored at by setting `--out=path/to/file.json`
+
+You can also change the logging levels by setting `--loglevel=x` for number x from 0 to 4. The default is 2 which will print to terminal all game warnings and errors.
 
 ## Contributing
 

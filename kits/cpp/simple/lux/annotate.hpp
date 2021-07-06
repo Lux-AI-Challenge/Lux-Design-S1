@@ -1,6 +1,8 @@
+#ifndef annotate_h
+#define annotate_h
 #include <string>
-using namespace std;
 namespace lux {
+  using namespace std;
   class Annotate {
     public:
     static string circle(int x, int y) {
@@ -12,6 +14,18 @@ namespace lux {
     static string line(int x1, int y1, int x2, int y2) {
       return "dl " + to_string(x1) + " " + to_string(y1) + " " +  to_string(x2) + " " + to_string(y2);
     };
+    static string text(int x1, int y1, string message) {
+      return "dt " + to_string(x1) + " " + to_string(y1) + " " +  message + " " + to_string(16);
+    };
+    static string text(int x1, int y1, string message, int fontsize) {
+      return "dt " + to_string(x1) + " " + to_string(y1) + " " +  message + " " + to_string(fontsize);
+    };
+    static string sidetext(string message) {
+      return "dst " + message;
+    };
   };
 };
 // string lux::Annotate::circle(int x, int y) 
+
+
+#endif
