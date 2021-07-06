@@ -95,7 +95,7 @@ export class GameMap {
       for (let x = 0; x < this.width; x++) {
         const cell = this.getCell(x, y);
         const cellData: SerializedState['map'][0][0] = {
-          road: cell.road,
+          road: cell.getRoad(),
         };
         if (cell.resource) {
           cellData.resource = {
