@@ -9,7 +9,8 @@ const argv = yargs(process.argv.slice(2))
       type: 'number',
     },
     loglevel: {
-      describe: 'set logger level. In increasing level / verbosity: 0 is for None. 1 for Errors. 2 for Warnings. 3 for Details. 4 for All',
+      describe:
+        'set logger level. In increasing level / verbosity: 0 is for None. 1 for Errors. 2 for Warnings. 3 for Details. 4 for All',
       default: 2,
       type: 'number',
     },
@@ -52,7 +53,8 @@ const argv = yargs(process.argv.slice(2))
       type: 'string',
     },
   })
-  .help().parseSync();
+  .help()
+  .parseSync();
 export type Args = typeof argv;
 // const argv = yargs.argv;
 const convertToStateful = argv.convertToStateful;

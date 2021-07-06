@@ -12,7 +12,7 @@ export const runner = (argv: Args): void => {
   }
   const maxtime = argv.maxtime;
   let loglevel = Dimension.Logger.LEVEL.INFO;
-  switch(argv['loglevel']) {
+  switch (argv['loglevel']) {
     case 0:
       loglevel = Dimension.Logger.LEVEL.NONE;
       break;
@@ -30,7 +30,7 @@ export const runner = (argv: Args): void => {
       break;
   }
 
-  const storeLogs = argv.storeLogs
+  const storeLogs = argv.storeLogs;
   const storereplay = argv.storeReplay;
   const statefulReplay = argv.statefulReplay;
 

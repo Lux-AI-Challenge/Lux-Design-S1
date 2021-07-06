@@ -152,7 +152,10 @@ export const generateGame = (
       } else {
         nx2 = width - nx - 1;
       }
-      if (!map.inMap(new Position(nx, ny)) || !map.inMap(new Position(nx2, ny2))) {
+      if (
+        !map.inMap(new Position(nx, ny)) ||
+        !map.inMap(new Position(nx2, ny2))
+      ) {
         continue;
       }
       if (

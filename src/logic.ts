@@ -372,7 +372,6 @@ export class LuxDesignLogic {
     }
     const matchOver = this.matchOver(match);
 
-
     game.state.turn++;
 
     // store state
