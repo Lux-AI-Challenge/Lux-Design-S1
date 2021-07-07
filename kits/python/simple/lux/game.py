@@ -45,7 +45,7 @@ class Game:
             input_identifier = strs[0]
             if input_identifier == INPUT_CONSTANTS.RESEARCH_POINTS:
                 team = int(strs[1])
-                self.players[team].research_points = int(strs[1])
+                self.players[team].research_points = int(strs[2])
             elif input_identifier == INPUT_CONSTANTS.RESOURCES:
                 r_type = strs[1]
                 x = int(strs[2])
