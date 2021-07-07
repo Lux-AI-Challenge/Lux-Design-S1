@@ -33,5 +33,6 @@ if __name__ == "__main__":
             observation["updates"] = []
             step += 1
             observation["step"] = step
-            print(",".join(actions))
+            if actions:
+                print(",".join(actions))
             print("D_FINISH")
