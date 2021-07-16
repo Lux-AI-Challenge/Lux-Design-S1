@@ -12,6 +12,8 @@ In the Lux AI Challenge Season 1, both teams control a team of [Units](#Units) a
 
 The world of Lux is represented as a 2d grid. Coordinates increase east (right) and south (down). The map width and height range can be 12, 16, 24, or 32 tiles long. The (0, 0) coordinate is at the top left.
 
+![](https://raw.githubusercontent.com/Lux-AI-Challenge/Lux-Design-2021/master/assets/game_board.png)
+
 The map has various features including [Resources](#Resources) (Wood, Coal, Uranium), [Units](#Units) ([Workers](#Workers), [Carts](#Carts)), [CityTiles](#CityTiles), and [Road](#Roads).
 
 In order to prevent maps from favoring one player over another, it is guaranteed that maps are always symmetric by vertical or horizontal reflection.
