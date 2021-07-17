@@ -1,5 +1,11 @@
 # Change Log
 
+### v1.2.2
+
+Changes:
+- Output messages to agents after match is declared over
+
+
 ### v1.2.0
 
 - CLI tool now lets you convert replays into replays with human readable state information and can also directly run matches and generate these stateful replays. You can also choose where the replay file is stored at. Moreover the tool has some syntax changes.

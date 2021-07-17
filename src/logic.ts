@@ -379,6 +379,11 @@ export class LuxDesignLogic {
       game.replay.writeState(game);
     }
 
+    /** Agent Update Section */
+    await this.sendAllAgentsGameInformation(match);
+    // tell all agents updates are done
+    await match.sendAll('D_DONE');
+
     if (matchOver) {
       if (game.replay) {
         game.replay.writeOut(this.getResults(match));
@@ -386,10 +391,6 @@ export class LuxDesignLogic {
       return 'finished' as Match.Status.FINISHED;
     }
 
-    /** Agent Update Section */
-    await this.sendAllAgentsGameInformation(match);
-    // tell all agents updates are done
-    await match.sendAll('D_DONE');
     if (game.configs.runProfiler) {
       const etime = new Date().valueOf();
       state.profile.updateStage.push(etime - stime);
