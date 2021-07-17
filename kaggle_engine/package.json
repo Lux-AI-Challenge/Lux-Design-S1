@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lux-ai/2021-challenge": "^1.2.1",
+    "@lux-ai/2021-challenge": "^1.2.2",
     "dimensions-ai": "^5.0.1"
   },
   "devDependencies": {
