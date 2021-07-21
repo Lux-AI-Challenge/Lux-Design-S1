@@ -194,6 +194,7 @@ export class Worker extends Unit {
         );
       } else if (action instanceof SpawnCityAction) {
         game.spawnCityTile(action.team, this.pos.x, this.pos.y);
+        this.cargo.wood -= this.configs.parameters.CITY_WOOD_COST;
       } else if (action instanceof PillageAction) {
         cell.road = Math.max(
           cell.road - this.configs.parameters.PILLAGE_RATE,
