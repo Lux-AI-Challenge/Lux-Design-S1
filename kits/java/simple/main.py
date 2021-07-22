@@ -44,13 +44,14 @@ def java_agent(observation, configuration):
     agent1res = (agent_process.stdout.readline()).decode()
     _end_res = (agent_process.stdout.readline()).decode()
 
-    try:  line = q.get_nowait()
-    except Empty:
-        # no standard error received
-        pass
-    else:
-        # standard error output received, print it out
-        print(line.decode(), file=sys.stderr)
+    while True:
+        try:  line = q.get_nowait()
+        except Empty:
+            # no standard error received, break
+            break
+        else:
+            # standard error output received, print it out
+            print(line.decode(), file=sys.stderr, end='')
 
     outputs = agent1res.split("\n")[0].split(",")
     actions = []
