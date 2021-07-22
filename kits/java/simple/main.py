@@ -1,30 +1,57 @@
 from subprocess import Popen, PIPE
+from threading  import Thread
+from queue import Queue, Empty
+
 import atexit
 import os
-
+import sys
 agent_processes = [None, None]
+t = None
+q = None
 def cleanup_process():
     global agent_processes
     for proc in agent_processes:
         if proc is not None:
             proc.kill()
+def enqueue_output(out, queue):
+    for line in iter(out.readline, b''):
+        queue.put(line)
+    out.close()
 def java_agent(observation, configuration):
     """
-    a wrapper around a java agent
+    a wrapper around a js agent
     """
-    global agent_processes
+    global agent_processes, t, q
+
     agent_process = agent_processes[observation.player]
     ### Do not edit ###
     if agent_process is None:
         cwd = os.path.dirname(configuration["__raw_path__"])
-        agent_process = Popen(["java", "Bot"], stdin=PIPE, stdout=PIPE, cwd=cwd)
+        agent_process = Popen(["java", "Bot"], stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=cwd)
         agent_processes[observation.player] = agent_process
         atexit.register(cleanup_process)
+
+        # following 4 lines from https://stackoverflow.com/questions/375427/a-non-blocking-read-on-a-subprocess-pipe-in-python
+        q = Queue()
+        t = Thread(target=enqueue_output, args=(agent_process.stderr, q))
+        t.daemon = True # thread dies with the program
+        t.start()
+
     agent_process.stdin.write(("\n".join(observation["updates"]) + "\n").encode())
     agent_process.stdin.flush()
-    
+
+    # wait for data written to stdout
     agent1res = (agent_process.stdout.readline()).decode()
     _end_res = (agent_process.stdout.readline()).decode()
+
+    try:  line = q.get_nowait()
+    except Empty:
+        # no standard error received
+        pass
+    else:
+        # standard error output received, print it out
+        print(line.decode(), file=sys.stderr)
+
     outputs = agent1res.split("\n")[0].split(",")
     actions = []
     for cmd in outputs:
