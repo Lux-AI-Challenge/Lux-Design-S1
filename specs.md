@@ -2,7 +2,7 @@
 
 ### Background
 
-The night is dark and full of terrors. Two teams must fight off the darkness, collect resources, and advance through the ages. Daytime finds a desperate rush to gather and build the resources that can carry you through the impending night. Plan and expand carefully -- any city that fails to produce enough light cannot stave off the darkness, and will be consumed by darkness.
+The night is dark and full of terrors. Two teams must fight off the darkness, collect resources, and advance through the ages. Daytime finds a desperate rush to gather and build the resources that can carry you through the impending night. Plan and expand carefully -- any city that fails to produce enough light will be consumed by darkness.
 
 ### Environment
 
@@ -69,7 +69,7 @@ There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing 
 
 #### Collection Mechanics
 
-At the end of each turn, [Units](#Units) automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current formula:
+At the end of each turn, [Workers](#Worker) automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current formula:
 
 - Uranium, coal, then wood tiles do the following in order:
   - Determine the number of eligible workers (adjacent and have required research level)
