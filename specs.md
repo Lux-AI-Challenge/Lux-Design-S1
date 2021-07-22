@@ -69,7 +69,7 @@ There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing 
 
 #### Collection Mechanics
 
-At the end of each turn, [Workers](#Worker) automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current formula:
+At the end of each turn, [Workers](#Workers) automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current formula:
 
 - Uranium, coal, then wood tiles do the following in order:
   - Determine the number of eligible workers (adjacent and have required research level)
