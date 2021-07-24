@@ -731,6 +731,29 @@ export class Game {
   }
 
   /**
+   * regenerates trees on map according to the following formula
+   * let max_wood_amount be base and the current amount be curr
+   *
+   * then at the end of each turn after all moves and all resource collection is finished,
+   * the wood at a wood tile grows to ceil(min(curr * 1.03, base))
+   */
+  regenerateTrees(): void {
+    this.map.resources
+      .filter((cell) => cell.resource.type === 'wood')
+      .forEach((cell) => {
+        // add this condition so we let forests near a city start large (but not regrow until below a max)
+        if (cell.resource.amount < this.configs.parameters.MAX_WOOD_AMOUNT) {
+          cell.resource.amount = Math.ceil(
+            Math.min(
+              cell.resource.amount * this.configs.parameters.WOOD_GROWTH_RATE,
+              this.configs.parameters.MAX_WOOD_AMOUNT
+            )
+          );
+        }
+      });
+  }
+
+  /**
    * Process given move actions and returns a pruned array of actions that can all be executed with no collisions
    */
   handleMovementActions(

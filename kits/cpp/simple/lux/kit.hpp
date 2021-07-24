@@ -169,12 +169,20 @@ namespace kit
 
     private:
         void resetPlayerStates(){
-            players[0].units.clear();
-            players[0].cities.clear();
-            players[1].units.clear();
-            players[1].cities.clear();
-            players[0].cityTileCount = 0;
-            players[1].cityTileCount = 0;
+            for (int team = 0; team < 2; team++) {
+                for (auto it : players[team].cities){
+                    lux::City *city = it.second;
+                    for (auto citytile : city->citytiles) {
+                        delete citytile;
+                    }
+                    city->citytiles.clear();
+                    delete city;
+                }
+                players[team].units.clear();
+                players[team].cities.clear();
+                players[team].cityTileCount = 0;
+            }
+            
         };
     };
 }

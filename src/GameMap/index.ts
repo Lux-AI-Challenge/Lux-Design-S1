@@ -30,10 +30,10 @@ export class GameMap {
     }
   }
   // make resources array order determinstic
-  // TODO: should sort by distance to center so resource distribution is even on both sides of halves
   sortResourcesDeterministically(): void {
+    const val = Math.max(this.width, this.height) ;
     this.resources.sort((a, b) => {
-      return a.pos.x * this.width + a.pos.y - (b.pos.x * this.width + b.pos.y);
+      return a.pos.x * val + a.pos.y - (b.pos.x * val + b.pos.y);
     });
   }
 
