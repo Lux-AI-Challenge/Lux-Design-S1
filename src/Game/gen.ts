@@ -119,7 +119,6 @@ export const generateGame = (
       });
     });
 
-    // pick random spawn location of first worker and city near a cluster of wood.
     let spawnX = Math.floor(rng() * (halfWidth - 1)) + 1;
     let spawnY = Math.floor(rng() * (halfHeight - 1)) + 1;
     while (map.getCell(spawnX, spawnY).hasResource()) {
@@ -141,7 +140,12 @@ export const generateGame = (
       MOVE_DELTAS[deltaIndex],
       MOVE_DELTAS[(deltaIndex + 1) % MOVE_DELTAS.length],
       MOVE_DELTAS[(deltaIndex + 2) % MOVE_DELTAS.length],
+      MOVE_DELTAS[(deltaIndex + 3) % MOVE_DELTAS.length],
+      MOVE_DELTAS[(deltaIndex + 4) % MOVE_DELTAS.length],
+      MOVE_DELTAS[(deltaIndex + 5) % MOVE_DELTAS.length],
+      MOVE_DELTAS[(deltaIndex + 6) % MOVE_DELTAS.length]
     ];
+    let count = 0
     for (const delta of woodSpawnsDeltas) {
       const nx = spawnX + delta[0];
       const ny = spawnY + delta[1];
@@ -162,14 +166,17 @@ export const generateGame = (
         !map.getCell(nx, ny).hasResource() &&
         map.getCell(nx, ny).citytile === null
       ) {
-        map.addResource(nx, ny, Resource.Types.WOOD, 850);
+        count += 1;
+        map.addResource(nx, ny, Resource.Types.WOOD, 800);
       }
       if (
         !map.getCell(nx2, ny2).hasResource() &&
         map.getCell(nx2, ny2).citytile === null
       ) {
-        map.addResource(nx2, ny2, Resource.Types.WOOD, 850);
+        count += 1;
+        map.addResource(nx2, ny2, Resource.Types.WOOD, 800);
       }
+      if (count == 6) break;
     }
 
     return game;
@@ -193,8 +200,8 @@ const validateResourcesMap = (
       }
     });
   });
-  if (data.wood < 15000) return false;
-  if (data.coal < 4000) return false;
+  if (data.wood < 2000) return false;
+  if (data.coal < 3000) return false;
   if (data.uranium < 600) return false;
   return true;
 };
@@ -215,8 +222,8 @@ const generateAllResources = (
   }
   const woodResourcesMap = generateResourceMap(
     rng,
-    0.2,
-    0.02,
+    0.192,
+    0.01,
     halfWidth,
     halfHeight,
     { deathLimit: 2, birthLimit: 4 }
@@ -224,7 +231,7 @@ const generateAllResources = (
   woodResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 800 + Math.floor(rng() * 500);
+        const amt = Math.min(100 + Math.floor(rng() * 100), 400);
         resourcesMap[y][x] = { type: Resource.Types.WOOD, amt };
         if (symmetry === SYMMETRY.VERTICAL) {
           resourcesMap[y][width - x - 1] = { amt, type: Resource.Types.WOOD };
@@ -245,7 +252,7 @@ const generateAllResources = (
   coalResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 300 + Math.floor(rng() * 150);
+        const amt = 500 + Math.floor(rng() * 150);
         resourcesMap[y][x] = { type: Resource.Types.COAL, amt };
         if (symmetry === SYMMETRY.VERTICAL) {
           resourcesMap[y][width - x - 1] = { amt, type: Resource.Types.COAL };
@@ -266,7 +273,7 @@ const generateAllResources = (
   uraniumResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 250 + Math.floor(rng() * 100);
+        const amt = 500 + Math.floor(rng() * 100);
         resourcesMap[y][x] = { type: Resource.Types.URANIUM, amt };
         if (symmetry === SYMMETRY.VERTICAL) {
           resourcesMap[y][width - x - 1] = {

@@ -367,6 +367,9 @@ export class LuxDesignLogic {
       this.handleNight(state);
     }
 
+    // regenerate forests
+    game.regenerateTrees();
+
     if (state.configs.debug) {
       await this.debugViewer(game);
     }
