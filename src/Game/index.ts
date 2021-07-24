@@ -741,12 +741,15 @@ export class Game {
     this.map.resources
       .filter((cell) => cell.resource.type === 'wood')
       .forEach((cell) => {
-        cell.resource.amount = Math.ceil(
-          Math.min(
-            cell.resource.amount * this.configs.parameters.WOOD_GROWTH_RATE,
-            this.configs.parameters.MAX_WOOD_AMOUNT
-          )
-        );
+        // add this condition so we let forests near a city start large (but not regrow until below a max)
+        if (cell.resource.amount < this.configs.parameters.MAX_WOOD_AMOUNT) {
+          cell.resource.amount = Math.ceil(
+            Math.min(
+              cell.resource.amount * this.configs.parameters.WOOD_GROWTH_RATE,
+              this.configs.parameters.MAX_WOOD_AMOUNT
+            )
+          );
+        }
       });
   }
 
