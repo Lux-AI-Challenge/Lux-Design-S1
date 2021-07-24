@@ -162,13 +162,13 @@ export const generateGame = (
         !map.getCell(nx, ny).hasResource() &&
         map.getCell(nx, ny).citytile === null
       ) {
-        map.addResource(nx, ny, Resource.Types.WOOD, 850);
+        map.addResource(nx, ny, Resource.Types.WOOD, 800);
       }
       if (
         !map.getCell(nx2, ny2).hasResource() &&
         map.getCell(nx2, ny2).citytile === null
       ) {
-        map.addResource(nx2, ny2, Resource.Types.WOOD, 850);
+        map.addResource(nx2, ny2, Resource.Types.WOOD, 800);
       }
     }
 
@@ -224,7 +224,7 @@ const generateAllResources = (
   woodResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 800 + Math.floor(rng() * 500);
+        const amt = Math.min(400 + Math.floor(rng() * 500), 800);
         resourcesMap[y][x] = { type: Resource.Types.WOOD, amt };
         if (symmetry === SYMMETRY.VERTICAL) {
           resourcesMap[y][width - x - 1] = { amt, type: Resource.Types.WOOD };
@@ -266,7 +266,7 @@ const generateAllResources = (
   uraniumResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 250 + Math.floor(rng() * 100);
+        const amt = 350 + Math.floor(rng() * 100);
         resourcesMap[y][x] = { type: Resource.Types.URANIUM, amt };
         if (symmetry === SYMMETRY.VERTICAL) {
           resourcesMap[y][width - x - 1] = {

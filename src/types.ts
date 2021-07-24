@@ -90,6 +90,10 @@ export interface LuxMatchConfigs {
     CITY_ADJACENCY_BONUS: number;
     /** wood resource cost for a worker to build a city */
     CITY_WOOD_COST: number;
+    /** grow rate of wood tiles */
+    WOOD_GROWTH_RATE: number;
+    /** max wood allowed in a wood tile */
+    MAX_WOOD_AMOUNT: number;
     /** Number of research points required to unlock the mining of the following resources */
     RESEARCH_REQUIREMENTS: {
       COAL: number;
