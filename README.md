@@ -28,7 +28,7 @@ Open up the command line, and install the competition design with
 npm install -g @lux-ai/2021-challenge@1.2.2
 ```
 
-To run a match from the command line (CLI), simply run
+You may ignore any warnings that show up, those are harmless. To run a match from the command line (CLI), simply run
 
 ```
 lux-ai-2021 path/to/botfile path/to/otherbotfile
