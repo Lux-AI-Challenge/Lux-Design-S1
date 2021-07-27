@@ -15,12 +15,13 @@ export const generateGame = (
   };
   const seed = configs.seed;
   const rng = seedrandom(`gen_${seed}`);
+  const size = mapSizes[Math.floor(rng() * mapSizes.length)];
   if (configs.width === undefined) {
     // TODO: use rng to get width and heights
-    configs.width = mapSizes[Math.floor(rng() * mapSizes.length)];
+    configs.width = size;
   }
   if (configs.height === undefined) {
-    configs.height = mapSizes[Math.floor(rng() * mapSizes.length)];
+    configs.height = size;
   }
   const game = new Game(configs);
   const map = game.map;
