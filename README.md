@@ -25,7 +25,7 @@ You will need Node.js version 12 or above. See installation instructions [here](
 Open up the command line, and install the competition design with
 
 ```
-npm install -g @lux-ai/2021-challenge
+npm install -g @lux-ai/2021-challenge@1.2.2
 ```
 
 To run a match from the command line (CLI), simply run
