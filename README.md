@@ -6,13 +6,17 @@ Welcome to the Lux AI Challenge Season 1!
 
 The Lux AI Challenge is a competition where competitors design agents to tackle a multi-variable optimization, resource gathering, and allocation problem in a 1v1 scenario against other competitors. In addition to optimization, successful agents must be capable of analyzing their opponents and developing appropriate policies to get the upper hand.
 
+Thanks to our sponsors [QuantCo](https://quantco.com/), [J Ventures](http://www.thejiangmen.com/), and qAImera, we have a $10,000 prize pool along with many other non-monetary prizes this year! For more information see https://www.lux-ai.org/sponsors-2021
+
 Make sure to join our community discord at https://discord.gg/aWJt3UAcgn to chat, strategize, and learn with other competitors! We will be posting announcements on the Kaggle Forums and on the discord.
 
 This was built by the Lux AI Challenge team, using the [Dimensions](https://github.com/StoneT2000/Dimensions) package.
 
-Season 1 specifications can be found here: https://lux-ai.org/specs-2021
+To get started, go to our [Getting Started](#getting-started) section.
 
-Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits
+Season 1 specifications can be found here: https://lux-ai.org/specs-2021. These detail how the game works and what rules your agent must abide by.
+
+Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits.
 
 Competition Leaderboard: Not yet released
 
