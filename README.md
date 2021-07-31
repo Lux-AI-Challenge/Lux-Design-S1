@@ -1,20 +1,22 @@
 # Lux AI Challenge: Season 1
 
-Welcome to the season 1 of the Lux AI Challenge! This repository is the entire codebase that runs the game engine for your bots to compete on. 
+The night is dark and full of terrors. Two teams must fight off the darkness, collect resources, and advance through the ages. Daytime finds a desperate rush to gather and build the resources that can carry you through the impending night. Plan and expand carefully -- any city that fails to produce enough light will be consumed by darkness.
+
+Welcome to the Lux AI Challenge Season 1!
+
+The Lux AI Challenge is a competition where competitors design agents to tackle a multi-variable optimization, resource gathering, and allocation problem in a 1v1 scenario against other competitors. In addition to optimization, successful agents must be capable of analyzing their opponents and developing appropriate policies to get the upper hand.
+
+Make sure to join our community discord at https://discord.gg/aWJt3UAcgn to chat, strategize, and learn with other competitors! We will be posting announcements on the Kaggle Forums and on the discord.
 
 This was built by the Lux AI Challenge team, using the [Dimensions](https://github.com/StoneT2000/Dimensions) package.
 
-Here are some important links:
-
-Season 1 Specifications: https://lux-ai.org/specs-2021
+Season 1 specifications can be found here: https://lux-ai.org/specs-2021
 
 Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits
 
-Competition Discord (for announcements, strategy talk etc.): https://discord.com/invite/DZSm47VHMz
-
 Competition Leaderboard: Not yet released
 
-The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a local copy of the visualizer, see https://github.com/Lux-AI-Challenge/LuxViewer2021
+The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a local copy of the visualizer, see https://github.com/Lux-AI-Challenge/LuxViewer2021. You may also use the embedded visualizer on the Kaggle competition page.
 
 ![](./assets/game_replay.gif)
 
@@ -51,7 +53,7 @@ The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits)
 - C++: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/cpp
 - Java: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/java
 
-To stay up to date on changes and updates to the competition and the engine, see https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/ChangeLog.md or watch for announcements on the forums or the [Discord](https://discord.com/invite/DZSm47VHMz)
+To stay up to date on changes and updates to the competition and the engine, see https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/ChangeLog.md or watch for announcements on the [forums](https://www.kaggle.com/c/hungry-geese/discussion) or the [Discord](https://discord.com/invite/DZSm47VHMz)
 
 ## CLI Usage
 
@@ -89,3 +91,6 @@ Original design for season 1 concevied by [Bovard](https://github.com/bovard) an
 UI/UX Design by [Isa](https://github.com/p-isa)
 
 With balance testing help from [David](https://github.com/holypegasus)
+
+## Sponsors
+We would like to thank our 3 sponsors, [QuantCo](https://quantco.com/), [J Ventures](http://www.thejiangmen.com/), and qAImera this year for allowing us to provide a prize pool and exciting opportunities to our competitors! For more information on them, check them out here: https://www.lux-ai.org/sponsors-2021
