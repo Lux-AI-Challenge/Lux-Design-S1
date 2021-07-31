@@ -24,6 +24,8 @@ Each player will start with a single [CityTile](#CityTiles) and a single worker 
 
 There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing fuel efficiency). These resources are collected by workers, then dropped off once a worker moves on top of a [CityTile](#CityTiles) to then be converted into fuel for the city. Some resources require research points before they are possible to collect.
 
+Wood in particular can regrow. Each turn, every wood tile's wood amount increases by 1% of its current wood amount rounded up. Wood tiles that have been depleted will not regrow. Only wood tiles with less than 400 wood will regrow.
+
 <table>
   <tr>
    <td>Resource Type
@@ -67,8 +69,6 @@ There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing 
   </tr>
 </table>
 
-Wood in particular can regrow. Each turn, every wood tile's wood amount increases by 1% of its current wood amount rounded up. Wood tiles that have been depleted will not regrow. Only wood tiles with less than 400 wood will regrow.
-
 #### Collection Mechanics
 
 At the end of each turn, [Workers](#Workers) automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current formula:
@@ -110,7 +110,7 @@ Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
 - Pillage - Reduce the [Road](#Roads) level of the tile the unit is on by 0.5
-- Transfer - Send any amount of single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
+- Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
 - Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 Wood in their cargo and the tile is empty. If building is succesful, 100 wood is consumed and a new [CityTile](#CityTiles) is built with 0 starting resources.
 
 #### Carts
@@ -118,7 +118,7 @@ Actions
 Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
-- Transfer - Send any amount of single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
+- Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
 
 ### Cooldown
 
