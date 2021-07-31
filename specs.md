@@ -10,7 +10,7 @@ In the Lux AI Challenge Season 1, both teams control a team of [Units](#Units) a
 
 ### The Map
 
-The world of Lux is represented as a 2d grid. Coordinates increase east (right) and south (down). The map width and height range can be 12, 16, 24, or 32 tiles long. The (0, 0) coordinate is at the top left.
+The world of Lux is represented as a 2d grid. Coordinates increase east (right) and south (down). The map is always a square and can be 12, 16, 24, or 32 tiles long. The (0, 0) coordinate is at the top left.
 
 ![](https://raw.githubusercontent.com/Lux-AI-Challenge/Lux-Design-2021/master/assets/game_board.png)
 
@@ -60,12 +60,14 @@ There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing 
    </td>
    <td>200
    </td>
-   <td>25
+   <td>20
    </td>
-   <td>1
+   <td>4
    </td>
   </tr>
 </table>
+
+Wood in particular can regrow. Each turn, every wood tile's wood amount increases by 1% of its current wood amount rounded up. Wood tiles that have been depleted will not regrow. Only wood tiles with less than 400 wood will regrow.
 
 #### Collection Mechanics
 
@@ -107,9 +109,9 @@ If two units attempt to move to the same tile that is not a [CityTile](#CityTile
 Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
-- Pillage - Reduce the [Road](#Roads) level of the tile the unit is on by 0.25
+- Pillage - Reduce the [Road](#Roads) level of the tile the unit is on by 0.5
 - Transfer - Send any amount of single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
-- Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 Wood in their cargo and the tile is empty.
+- Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 Wood in their cargo and the tile is empty. If building is succesful, 100 wood is consumed and a new [CityTile](#CityTiles) is built with 0 starting resources.
 
 #### Carts
 
@@ -159,7 +161,7 @@ As [Carts](#Carts) travel across the map, they start to create roads which allow
 
 Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
-Roads can also be destroyed by [Workers](#Workers) via the pillage action which reduces road level by 0.25 each time.
+Roads can also be destroyed by [Workers](#Workers) via the pillage action which reduces road level by 0.5 each time.
 
 ### Day/Night Cycle
 
