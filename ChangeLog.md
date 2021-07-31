@@ -1,5 +1,30 @@
 # Change Log
 
+### v2.0.2
+
+- Wood auto regrows each turn by 1% of its current valued rounded upwards and is capped at 400. Wood tiles with more than 400 wood do not regrow.
+- Uranium made more powerful. Collect at 4/turn and convert in ratio of 1 uranium to 20 fuel
+- Pilage rate bumped up to 0.5
+- Resource generation has been tweaked
+- Starter kits now updated with main.py files that will output stderr to kaggle servers, previously it did not
+- Maps are restricted to square sizes only now, with sizes being 12, 16, 24, 32
+- Bug fixes
+
+Full Changelog:
+
+New: 
+
+- Wood auto regrows each turn by 1% of its current valued rounded upwards and is capped at 400. Wood tiles with more than 400 wood do not regrow.
+- Uranium made more powerful. Collect at 4/turn and convert in ratio of 1 uranium to 20 fuel
+- Pilage rate bumped up to 0.5
+- Resource generation has been tweaked
+
+Fixes:
+- Resources sorted correctly
+- Workers now actually spend 100 wood to build cities.
+- Starter kits now updated with main.py files that will output stderr to kaggle servers, previously it did not
+
+
 ### v1.2.2
 
 Changes:
