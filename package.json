@@ -1,6 +1,6 @@
 {
   "name": "@lux-ai/2021-challenge",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "The design for the first Lux AI Challenge",
   "main": "lib/es5/index.js",
   "types": "lib/es5/index.d.ts",
@@ -35,7 +35,7 @@
   "homepage": "https://github.com/Lux-AI-Challenge/LuxDesign#readme",
   "dependencies": {
     "colors": "^1.4.0",
-    "dimensions-ai": "^5.0.2",
+    "dimensions-ai": "^5.1.2",
     "jszip": "^3.5.0",
     "nanoid": "^3.1.12",
     "seedrandom": "^3.0.5",
@@ -43,10 +43,10 @@
   },
   "sideEffects": false,
   "devDependencies": {
-    "@types/seedrandom": "^2.4.28",
     "@types/chai": "^4.2.12",
     "@types/mocha": "^8.0.3",
     "@types/node": "^14.6.2",
+    "@types/seedrandom": "^2.4.28",
     "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
