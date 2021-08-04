@@ -1,3 +1,21 @@
-#!/bin/bash
+#!/bin/sh
 
-emcc -s FORCE_FILESYSTEM=1 -s INITIAL_MEMORY=134217728 --pre-js internals/init_fs.js main.cpp -o main.js
+# create image if necessary
+docker build -t luxaicpp
+
+# start container
+docker start 
+
+# run something instead
+docker run -it --name test --rm luxaicpp bash
+
+
+# copy bot to docker container
+docker cp . luxaicpp:/root                 
+
+docker cp luxaicpp:/root/main.out main.out
+
+
+
+# test bot
+kaggle-environments run --environment lux_ai_2021 --agents bot/main.py bot/main.py --render '{"mode": "json"}' --out out.json --debug=True
