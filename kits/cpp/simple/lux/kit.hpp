@@ -53,7 +53,7 @@ namespace kit
     {
     public:
         int id;
-        int turn = 0;
+        int turn = -1;
         int mapWidth = -1;
         int mapHeight = -1;
         lux::GameMap map;
