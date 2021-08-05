@@ -88,8 +88,8 @@ export interface LuxMatchConfigs {
     };
     /** How much lower fuel cost a city has during night if it has adjacent city tiles */
     CITY_ADJACENCY_BONUS: number;
-    /** wood resource cost for a worker to build a city */
-    CITY_WOOD_COST: number;
+    /** resource cost for a worker to build a city (agnostic to resource type, any CITY_BUILD_COST amount is good) */
+    CITY_BUILD_COST: number;
     /** grow rate of wood tiles */
     WOOD_GROWTH_RATE: number;
     /** max wood allowed in a wood tile */

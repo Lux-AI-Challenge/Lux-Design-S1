@@ -216,9 +216,10 @@ export class Game {
           `Agent ${cmd.agentID} tried to build CityTile with cooldown: ${unit.cooldown}`
         );
 
+        const cargoTotal = unit.cargo.wood + unit.cargo.coal + unit.cargo.uranium;
         check(
-          unit.cargo.wood < this.configs.parameters.CITY_WOOD_COST,
-          `Agent ${cmd.agentID} tried to build CityTile with insufficient wood ${unit.cargo.wood}`
+          cargoTotal < this.configs.parameters.CITY_BUILD_COST,
+          `Agent ${cmd.agentID} tried to build CityTile with insufficient materials wood + coal + uranium: ${cargoTotal}`
         );
 
         check(
@@ -590,7 +591,7 @@ export class Game {
             unit.type === Unit.Type.WORKER &&
             this.state.teamStates[unit.team].researched[type]
           ) {
-            workersToReceiveResources.push(unit);
+            workersToReceiveResources.push(unit as Worker);
           }
         });
       }

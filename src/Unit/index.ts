@@ -175,6 +175,21 @@ export class Worker extends Unit {
     return this.canAct();
   }
 
+  expendResourcesForCity(): void {
+    // use wood, then coal, then uranium for building
+    let spentResources = 0;
+    for (const rtype of ["wood", "coal", "uranium"]) {
+      if (spentResources + this.cargo[rtype] > this.configs.parameters.CITY_BUILD_COST) {
+        const rtypeSpent = this.configs.parameters.CITY_BUILD_COST - spentResources;
+        this.cargo[rtype] -= rtypeSpent;
+        break;
+      } else {
+        spentResources += this.cargo[rtype];
+        this.cargo[rtype] = 0;
+      }
+    }
+  }
+
   turn(game: Game): void {
     const cell = game.map.getCellByPos(this.pos);
     const isNight = game.isNight();
@@ -194,7 +209,7 @@ export class Worker extends Unit {
         );
       } else if (action instanceof SpawnCityAction) {
         game.spawnCityTile(action.team, this.pos.x, this.pos.y);
-        this.cargo.wood -= this.configs.parameters.CITY_WOOD_COST;
+        this.expendResourcesForCity();
       } else if (action instanceof PillageAction) {
         cell.road = Math.max(
           cell.road - this.configs.parameters.PILLAGE_RATE,

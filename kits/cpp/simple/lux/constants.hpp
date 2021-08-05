@@ -36,7 +36,7 @@ namespace lux
         },
         "WOOD_GROWTH_RATE": 1.01,
         "MAX_WOOD_AMOUNT": 400,
-        "CITY_WOOD_COST": 100,
+        "CITY_BUILD_COST": 100,
         "CITY_ADJACENCY_BONUS": 5,
         "RESOURCE_CAPACITY": {
           "WORKER": 100,

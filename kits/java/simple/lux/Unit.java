@@ -31,7 +31,7 @@ public class Unit {
   }
   public boolean canBuild(GameMap gameMap) {
     Cell cell = gameMap.getCellByPos(this.pos);
-    if (!cell.hasResource() && this.canAct() && this.cargo.wood >= GameConstants.PARAMETERS.CITY_WOOD_COST) return true;
+    if (!cell.hasResource() && this.canAct() && (this.cargo.wood + this.cargo.coal + this.cargo.uranium) >= GameConstants.PARAMETERS.CITY_BUILD_COST) return true;
     return false;
   }
   public boolean canAct() {
