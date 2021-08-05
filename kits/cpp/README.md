@@ -59,7 +59,7 @@ This method requires Docker, installation instructions are [here](https://docs.d
 
 Once Docker is installed, make sure it is running and now in the bot folder there is a compile.sh which is a wrapped around the `g++` compiler but running on Ubuntu 18.04 (the system that competition servers run on).
 
-You can compile a bot normally as so
+You can compile a bot normally and treat the tool as `g++` itself like so
 
 ```
 sh compile.sh main.cpp -O3 -std=c++11 -o main.out
@@ -112,5 +112,5 @@ As questions come up, this will be populated with frequently asked questions reg
 
 This is a known issue: https://github.com/Lux-AI-Challenge/Lux-Design-2021/issues/71
 
-Currently unresolved, as a result, we recommend using the kaggle-environments CLI tool to run matches instead
+Currently unresolved, as a result, we recommend using the kaggle-environments CLI tool to run matches instead.
 
