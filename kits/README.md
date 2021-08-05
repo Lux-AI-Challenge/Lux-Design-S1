@@ -144,7 +144,11 @@ Methods
 
 - `x(x: int, y: int) -> str` - returns the draw X annotation action. Will draw a unit sized X on the visualizer at the current turn centered at the [Cell](#Cell) at the given x, y coordinates
 
-- `line(x1: int, y1: int, x2: int, y2: int) -> str` - returns the draw line annotation action. Will draw a line from the center of the [Cell](#Cell) at (x1, y1) to the center of the [Cell](#Cell) at (x2, y2).
+- `line(x1: int, y1: int, x2: int, y2: int) -> str` - returns the draw line annotation action. Will draw a line from the center of the [Cell](#Cell) at (x1, y1) to the center of the [Cell](#Cell) at (x2, y2)
+
+- `text(x: int, y: int, message: str, fontsize: int = 16) -> str:` - returns the draw text annotation action. Will write text on top of the tile at (x, y) with the particular message and fontsize
+
+- `sidetext(message: str) -> str:` - returns the draw side text annotation action. Will write text that is displayed on that turn on the side of the visualizer
 
 Note that all of these will be colored according to the team that created the annotation (blue or orange)
 
