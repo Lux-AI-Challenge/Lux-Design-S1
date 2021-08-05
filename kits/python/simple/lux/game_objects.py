@@ -13,13 +13,11 @@ class Player:
         self.research_points = 0
         self.units: list[Unit] = []
         self.cities: Dict[str, City] = {}
+        self.city_tile_count = 0
     def researched_coal(self) -> bool:
         return self.research_points >= GAME_CONSTANTS["PARAMETERS"]["RESEARCH_REQUIREMENTS"]["COAL"]
     def researched_uranium(self) -> bool:
         return self.research_points >= GAME_CONSTANTS["PARAMETERS"]["RESEARCH_REQUIREMENTS"]["URANIUM"]
-    @property
-    def city_tile_count(self) -> int:
-        return sum([len(v.citytiles) for v in self.cities.values()])
 
 
 class City:

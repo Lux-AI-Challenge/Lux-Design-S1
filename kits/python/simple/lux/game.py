@@ -25,8 +25,10 @@ class Game:
     def _reset_player_states(self):
         self.players[0].units = []
         self.players[0].cities = {}
+        self.players[0].city_tile_count = 0
         self.players[1].units = []
         self.players[1].cities = {}
+        self.players[1].city_tile_count = 0
 
     def _update(self, messages):
         """
@@ -76,6 +78,7 @@ class Game:
                 city = self.players[team].cities[cityid]
                 citytile = city._add_city_tile(x, y, cooldown)
                 self.map.get_cell(x, y).citytile = citytile
+                self.players[team].city_tile_count += 1;
             elif input_identifier == INPUT_CONSTANTS.ROADS:
                 x = int(strs[1])
                 y = int(strs[2])
