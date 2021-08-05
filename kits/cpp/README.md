@@ -7,9 +7,9 @@ Make sure to check our discord or the Kaggle forum for announcements if there ar
 ## Getting Started
 
 To get started, download the `simple` or `simple-transpiled` folder from this repository or via these URLs: 
-- https://github.com/Lux-AI-Challenge/Lux-Design-2021/raw/master/kits/cpp/simple.tar.gz
+- https://github.com/Lux-AI-Challenge/Lux-Design-2021/raw/master/kits/cpp/simple/simple.tar.gz
 
-- https://github.com/Lux-AI-Challenge/Lux-Design-2021/raw/master/kits/cpp/simple-transpiled.tar.gz
+- https://github.com/Lux-AI-Challenge/Lux-Design-2021/raw/master/kits/cpp/simple-transpiled/simple-transpiled.tar.gz
 
 `simple` uses Docker to prepare bots for submission to the competition whereas `simple-transpiled` uses emscripten to transpile the bot to JS code to prepare for submission. `simple` is highly recommended. You will only need to use these tools just for submission, local development does not require these.
 
