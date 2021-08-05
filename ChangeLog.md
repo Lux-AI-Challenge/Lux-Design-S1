@@ -3,7 +3,16 @@
 ### v2.1.0
 
 - Any 100 resources are sufficient to build a city now
-- 
+- Changed syntax for text annotations
+- Starter kits have been updated with new readmes, apis, etc. and should be redownloaded
+
+Full Changelog:
+
+New:
+- Docker option for compilation for C++ bots (preferred) and arbitrarily any other languages that can be compiled to a machine executable
+
+Fixes: 
+- Java, Python, C++ kits have correct annotation commands
 
 ### v2.0.2
 
