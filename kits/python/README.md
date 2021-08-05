@@ -38,7 +38,7 @@ All of our kits follow a common API through which you can use to access various 
 
 Submissions need to be a .tar.gz bundle with main.py at the top level directory
 (not nested). To create a submission, `cd simple` then create the .tar.gz with
-`tar -czvf submission.tar.gz *`. Upload this under the My Submissions tab and
+`tar -czvf submission.tar.gz *`. Upload this under the [My Submissions tab](https://www.kaggle.com/c/lux-ai-2021/submissions) and
 you should be good to go! Your submission will start with a scheduled game vs
 itself to ensure everything is working.
 
