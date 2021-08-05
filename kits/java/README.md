@@ -6,7 +6,7 @@ Make sure to check our discord or the Kaggle forum for announcements if there ar
 
 ## Getting Started
 
-To get started, download the `simple` folder from this repository or via this URL: https://github.com/Lux-AI-Challenge/Lux-Design-2021/raw/master/kits/java/simple.zip
+To get started, download the `simple` folder from this repository or via this URL: https://github.com/Lux-AI-Challenge/Lux-Design-2021/raw/master/kits/java/simple/simple.tar.gz
 
 Then navigate to that folder via command line e.g. `cd simple` or for windows `chdir simple`.
 

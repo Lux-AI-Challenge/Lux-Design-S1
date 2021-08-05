@@ -67,7 +67,7 @@ export const runner = (argv: Args): void => {
     observe: false,
     defaultMatchConfigs: {
       agentOptions: {
-        runCommands: { '.py': ['python'] },
+        runCommands: { '.py': [argv.python] },
       },
       storeErrorLogs: storeLogs,
     },
