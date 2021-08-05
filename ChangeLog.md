@@ -1,5 +1,10 @@
 # Change Log
 
+### v2.1.0
+
+- Any 100 resources are sufficient to build a city now
+- 
+
 ### v2.0.2
 
 - Wood auto regrows each turn by 1% of its current valued rounded upwards and is capped at 400. Wood tiles with more than 400 wood do not regrow.

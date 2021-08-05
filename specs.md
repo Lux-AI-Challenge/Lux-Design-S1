@@ -6,7 +6,7 @@ The night is dark and full of terrors. Two teams must fight off the darkness, co
 
 ### Environment
 
-In the Lux AI Challenge Season 1, both teams control a team of [Units](#Units) and [CityTiles](#CityTile) that collect resources to fuel their Cities, with the main objective to own as many [CityTiles](#CityTiles) as possible at the end of the turn-based game. Both teams have complete information about the entire game state and will need to make use of that information to optimize resource collection, compete for resources against the opponent, and more. This document will go through the key features of this game.
+In the Lux AI Challenge Season 1, both teams control a team of [Units](#Units) and [CityTiles](#CityTile) that collect resources to fuel their Cities, with the main objective to own as many [CityTiles](#CityTiles) as possible at the end of the turn-based game. Both teams have complete information about the entire game state and will need to make use of that information to optimize resource collection, compete for scarce resources against the opponent, and build cities to gain points. This document will go through the key features of this game.
 
 ### The Map
 
@@ -75,7 +75,7 @@ At the end of each turn, [Workers](#Workers) automatically receive resources fro
 
 - Uranium, coal, then wood tiles do the following in order:
   - Determine the number of eligible workers (adjacent and have required research level)
-  - If there is enough resources left, each eligible worker receives up to the collection rate (or up to their carrying capacity)
+  - If there are enough resources left, each eligible worker receives up to the collection rate (or up to their carrying capacity)
   - If there aren't enough resources to give to all workers, the resources distributed are evenly divided between workers (rounded down to the nearest integer).
 
 ### Actions
@@ -110,15 +110,15 @@ Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
 - Pillage - Reduce the [Road](#Roads) level of the tile the unit is on by 0.5
-- Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
-- Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 Wood in their cargo and the tile is empty. If building is succesful, 100 wood is consumed and a new [CityTile](#CityTiles) is built with 0 starting resources.
+- Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to the latter's cargo-capcity. Excess is returned to the original unit.
+- Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 total resources of any type in their cargo (full cargo) and the tile is empty. If building is succesful, all carried resources are consumed and a new [CityTile](#CityTiles) is built with 0 starting resources.
 
 #### Carts
 
 Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
-- Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to latter's cargo-capcity.
+- Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to the latter's cargo-capcity. Excess is returned to the original unit.
 
 ### Cooldown
 
