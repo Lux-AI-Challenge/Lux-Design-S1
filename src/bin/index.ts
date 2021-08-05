@@ -52,6 +52,11 @@ const argv = yargs(process.argv.slice(2))
       describe: 'where to store the resulting replay file',
       type: 'string',
     },
+    python: {
+      describe: 'python interpreter to use. default is the default python',
+      type: 'string',
+      default: 'python'
+    }
   })
   .help()
   .parseSync();

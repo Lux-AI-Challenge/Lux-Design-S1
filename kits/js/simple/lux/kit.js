@@ -87,7 +87,7 @@ class Agent {
       id,
       map,
       players,
-      turn: 0,
+      turn: -1,
     };
   }
   /**
