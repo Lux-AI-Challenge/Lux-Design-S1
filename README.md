@@ -6,7 +6,7 @@ Welcome to the Lux AI Challenge Season 1!
 
 The Lux AI Challenge is a competition where competitors design agents to tackle a multi-variable optimization, resource gathering, and allocation problem in a 1v1 scenario against other competitors. In addition to optimization, successful agents must be capable of analyzing their opponents and developing appropriate policies to get the upper hand.
 
-Thanks to our sponsors [QuantCo](https://quantco.com/), [J Ventures](http://www.thejiangmen.com/), and qAImera, we have a $10,000 prize pool along with many other non-monetary prizes this year! For more information see https://www.lux-ai.org/sponsors-2021
+Thanks to our sponsors [QuantCo](https://quantco.com/), [J Ventures](http://www.thejiangmen.com/), and [QAImera](https://qaimera.com), we have a $10,000 prize pool along with many other non-monetary prizes this year! For more information see https://www.lux-ai.org/sponsors-2021
 
 Make sure to join our community discord at https://discord.gg/aWJt3UAcgn to chat, strategize, and learn with other competitors! We will be posting announcements on the Kaggle Forums and on the discord.
 
@@ -20,7 +20,7 @@ Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/
 
 Competition Leaderboard: Not yet released
 
-The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a local copy of the visualizer, see https://github.com/Lux-AI-Challenge/LuxViewer2021. You may also use the embedded visualizer on the Kaggle competition page.
+The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a local copy of the visualizer, see https://github.com/Lux-AI-Challenge/LuxViewer2021. You may also use the embedded visualizer on the Kaggle competition page or in jupyter notebooks.
 
 ![](./assets/game_replay.gif)
 
@@ -28,10 +28,12 @@ The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a l
 
 You will need Node.js version 12 or above. See installation instructions [here](https://nodejs.org/en/download/), you can just download the recommended version.
 
+The next parts detail the recommended setup to develop and compete your bot. For users who wish to use Python and Jupyter Notebooks, see online [tutorial notebook]().
+
 Open up the command line, and install the competition design with
 
 ```
-npm install -g @lux-ai/2021-challenge@1.2.2
+npm install -g @lux-ai/2021-challenge@latest
 ```
 
 You may ignore any warnings that show up, those are harmless. To run a match from the command line (CLI), simply run
@@ -40,7 +42,7 @@ You may ignore any warnings that show up, those are harmless. To run a match fro
 lux-ai-2021 path/to/botfile path/to/otherbotfile
 ```
 
-and the match will run with some logging and store error logs and a replay in a new `errorlogs` folder and `replays` folder
+and the match will run with some logging and store error logs and a replay in a new `errorlogs` folder and `replays` folder. Logs stored in the errorlogs will include all error output and anything printed to standard error by your agent. You can watch the replay stored in the replays folder using our visualizer.
 
 For a full list of commands from the CLI, run
 
@@ -56,6 +58,9 @@ The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits)
 - Javascript: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/js
 - C++: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/cpp
 - Java: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/java
+- Typescript: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/ts
+
+Want to use another language but it's not supported? Feel free to suggest that language to our issues or even better, create a starter kit for the community to use and make a PR to this repository.
 
 To stay up to date on changes and updates to the competition and the engine, see https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/ChangeLog.md or watch for announcements on the [forums](https://www.kaggle.com/c/hungry-geese/discussion) or the [Discord](https://discord.com/invite/DZSm47VHMz)
 
@@ -97,4 +102,4 @@ UI/UX Design by [Isa](https://github.com/p-isa)
 With balance testing help from [David](https://github.com/holypegasus)
 
 ## Sponsors
-We would like to thank our 3 sponsors, [QuantCo](https://quantco.com/), [J Ventures](http://www.thejiangmen.com/), and qAImera this year for allowing us to provide a prize pool and exciting opportunities to our competitors! For more information on them, check them out here: https://www.lux-ai.org/sponsors-2021
+We would like to thank our 3 sponsors, [QuantCo](https://quantco.com/), [J Ventures](http://www.thejiangmen.com/), and [QAImera](https://qaimera.com) this year for allowing us to provide a prize pool and exciting opportunities to our competitors! For more information on them, check them out here: https://www.lux-ai.org/sponsors-2021
