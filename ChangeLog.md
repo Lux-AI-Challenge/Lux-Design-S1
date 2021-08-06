@@ -23,6 +23,7 @@ Changes:
 
 Fixes: 
 - Java, Python, C++ kits have correct annotation commands
+- CLI tool's engine tiebreaker now matches Kaggle's
 
 ### v2.0.2
 
