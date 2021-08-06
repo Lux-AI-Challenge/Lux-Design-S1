@@ -58,6 +58,9 @@ export const runner = (argv: Args): void => {
       timeout: {
         max: maxtime,
       },
+      memory: {
+        limit: argv.memory * 1024 * 1024
+      }
     },
   });
   const dim = Dimension.create(lux2021, {
@@ -67,7 +70,7 @@ export const runner = (argv: Args): void => {
     observe: false,
     defaultMatchConfigs: {
       agentOptions: {
-        runCommands: { '.py': ['python'] },
+        runCommands: { '.py': [argv.python] },
       },
       storeErrorLogs: storeLogs,
     },

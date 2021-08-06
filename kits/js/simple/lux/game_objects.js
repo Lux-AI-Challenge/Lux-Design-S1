@@ -104,7 +104,7 @@ class Unit {
   /** whether or not the unit can build where it is right now */
   canBuild(gameMap) {
     let cell = gameMap.getCellByPos(this.pos);
-    if (!cell.hasResource() && this.canAct() && this.cargo.wood >= GAME_CONSTANTS.PARAMETERS.CITY_WOOD_COST) {
+    if (!cell.hasResource() && this.canAct() && (this.cargo.wood + this.cargo.coal + this.cargo.uranium) >= GAME_CONSTANTS.PARAMETERS.CITY_BUILD_COST) {
       return true;
     }
     return false;

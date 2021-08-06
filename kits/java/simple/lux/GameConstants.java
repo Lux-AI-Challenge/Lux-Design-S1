@@ -23,7 +23,7 @@ public final class GameConstants {
       public static final double WOOD_GROWTH_RATE = 1.01;
       public static final int MAX_WOOD_AMOUNT = 400;
       public static final int CITY_ADJACENCY_BONUS = 5;
-      public static final int CITY_WOOD_COST = 100;
+      public static final int CITY_BUILD_COST = 100;
       public static class RESOURCE_CAPACITY {
         public static final int WORKER = 100;
         public static final int CART = 2000;

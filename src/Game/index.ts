@@ -46,6 +46,7 @@ export class Game {
    */
   public cities: Map<string, City> = new Map();
 
+  // TODO: remove in future. this is not really used anywhere
   public stats: Game.Stats = {
     teamStats: {
       [Unit.TEAM.A]: {
@@ -216,9 +217,10 @@ export class Game {
           `Agent ${cmd.agentID} tried to build CityTile with cooldown: ${unit.cooldown}`
         );
 
+        const cargoTotal = unit.cargo.wood + unit.cargo.coal + unit.cargo.uranium;
         check(
-          unit.cargo.wood < this.configs.parameters.CITY_WOOD_COST,
-          `Agent ${cmd.agentID} tried to build CityTile with insufficient wood ${unit.cargo.wood}`
+          cargoTotal < this.configs.parameters.CITY_BUILD_COST,
+          `Agent ${cmd.agentID} tried to build CityTile with insufficient materials wood + coal + uranium: ${cargoTotal}`
         );
 
         check(
@@ -590,7 +592,7 @@ export class Game {
             unit.type === Unit.Type.WORKER &&
             this.state.teamStates[unit.team].researched[type]
           ) {
-            workersToReceiveResources.push(unit);
+            workersToReceiveResources.push(unit as Worker);
           }
         });
       }
@@ -909,7 +911,7 @@ export class Game {
           },
         },
       },
-      stats: deepCopy(this.stats),
+      // stats: deepCopy(this.stats),
       map: this.map.toStateObject(),
       cities,
     };

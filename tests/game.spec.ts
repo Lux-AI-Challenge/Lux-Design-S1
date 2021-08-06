@@ -58,6 +58,41 @@ describe('Test Game', () => {
     ).to.equal(2);
   });
 
+  it('should expend the correct resources for city building', () => {
+    const game = new Game({
+      width: 16,
+      height: 16,
+    });
+    const worker = game.spawnWorker(0, 14, 14);
+    worker.cargo = {
+      wood: 90,
+      coal: 100,
+      uranium: 40,
+    }
+    worker.expendResourcesForCity();
+    expect(worker.cargo.wood).to.equal(0);
+    expect(worker.cargo.coal).to.equal(90);
+    expect(worker.cargo.uranium).to.equal(40);
+    worker.cargo = {
+      wood: 20,
+      coal: 10,
+      uranium: 90,
+    }
+    worker.expendResourcesForCity();
+    expect(worker.cargo.wood).to.equal(0);
+    expect(worker.cargo.coal).to.equal(0);
+    expect(worker.cargo.uranium).to.equal(20);
+    worker.cargo = {
+      wood: 20,
+      coal: 79,
+      uranium: 1,
+    }
+    worker.expendResourcesForCity();
+    expect(worker.cargo.wood).to.equal(0);
+    expect(worker.cargo.coal).to.equal(0);
+    expect(worker.cargo.uranium).to.equal(0);
+  });
+
   describe('test validate commands', () => {
     let game: Game;
     let citytile23;

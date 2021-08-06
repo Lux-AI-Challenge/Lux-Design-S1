@@ -27,6 +27,9 @@ int main()
     Player opponent = gameState.players[(gameState.id + 1) % 2];
 
     GameMap gameMap = gameState.map;
+    cerr << "Hello" << "\n";
+
+    cerr << "Testing" << " i have " << player.cities.size() << " ciites\n";
 
     vector<Cell *> resourceTiles = vector<Cell *>();
     for (int y = 0; y < gameMap.height; y++)

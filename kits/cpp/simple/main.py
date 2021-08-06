@@ -19,7 +19,7 @@ def enqueue_output(out, queue):
     out.close()
 def cpp_agent(observation, configuration):
     """
-    a wrapper around a js agent
+    a wrapper around a c++ agent
     """
     global agent_processes, t, q
 
@@ -27,7 +27,7 @@ def cpp_agent(observation, configuration):
     ### Do not edit ###
     if agent_process is None:
         cwd = os.path.dirname(configuration["__raw_path__"])
-        agent_process = Popen(["node", "main.js"], stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=cwd)
+        agent_process = Popen(["./main.out"], stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=cwd)
         agent_processes[observation.player] = agent_process
         atexit.register(cleanup_process)
 

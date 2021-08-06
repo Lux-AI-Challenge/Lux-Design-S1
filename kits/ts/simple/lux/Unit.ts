@@ -53,7 +53,7 @@ export class Unit {
   /** whether or not the unit can build where it is right now */
   public canBuild(gameMap: GameMap): boolean {
     const cell = gameMap.getCellByPos(this.pos);
-    return !cell.hasResource() && this.canAct() && this.cargo.wood >= GAME_CONSTANTS.PARAMETERS.CITY_WOOD_COST;
+    return !cell.hasResource() && this.canAct() && (this.cargo.wood + this.cargo.coal + this.cargo.uranium) >= GAME_CONSTANTS.PARAMETERS.CITY_BUILD_COST;
   }
 
   /** whether or not the unit can act or not. This does not check for potential collisions into other units or enemy cities */

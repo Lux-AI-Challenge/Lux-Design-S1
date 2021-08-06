@@ -14,6 +14,11 @@ const argv = yargs(process.argv.slice(2))
       default: 2,
       type: 'number',
     },
+    memory: {
+      describe: 'max memory allowed for the bot in MB',
+      default: 4000,
+      type: 'number',
+    },
     maxtime: {
       describe: 'max time per turn for the bot',
       default: 1200,
@@ -52,6 +57,11 @@ const argv = yargs(process.argv.slice(2))
       describe: 'where to store the resulting replay file',
       type: 'string',
     },
+    python: {
+      describe: 'python interpreter to use. default is the default python',
+      type: 'string',
+      default: 'python'
+    }
   })
   .help()
   .parseSync();
