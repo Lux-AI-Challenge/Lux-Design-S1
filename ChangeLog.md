@@ -2,14 +2,24 @@
 
 ### v2.1.0
 
-- Any 100 resources are sufficient to build a city now
+- Docker option for compilation for C++ bots (preferred) and arbitrarily any other languages that can be compiled to a machine executable
+- Any 100 resources held by worker can be used to build a city. Will expend in order of wood, coal, then uranium to build a city (which in current specs means all held resources)
 - Changed syntax for text annotations
 - Starter kits have been updated with new readmes, apis, etc. and should be redownloaded
+- Python users can now specify which python command to use if their default python is not python 3.7 e.g. `lux-ai-2021 bot1 bot2 --python=python3`
 
 Full Changelog:
 
 New:
 - Docker option for compilation for C++ bots (preferred) and arbitrarily any other languages that can be compiled to a machine executable
+- Any 100 resources held by worker can be used to build a city. Will expend in order of wood, coal, then uranium to build a city (which in current specs means all held resources)
+- CLI tool accepts a `--memory` argument to specify max amount of memory in MB allowed for agents
+- Python users can now specify which python command to use if their default python is not python 3.7 e.g. `lux-ai-2021 bot1 bot2 --python=python3`
+
+
+Changes:
+- Changed syntax for text annotations
+- Starter kits have been updated with new readmes, apis, etc. and should be redownloaded
 
 Fixes: 
 - Java, Python, C++ kits have correct annotation commands
