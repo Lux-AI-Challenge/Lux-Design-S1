@@ -20,6 +20,7 @@ import { Replay } from './Replay';
 import { Cell } from './GameMap/cell';
 import { GameMap } from './GameMap';
 import { Resource } from './Resource';
+import { KaggleObservation, parseKaggleObs } from './Replay/parseKaggleObs';
 
 export class LuxDesignLogic {
   // Initialization step of each match
@@ -518,27 +519,39 @@ export class LuxDesignLogic {
         losingTeam = Unit.TEAM.A;
         break figureresults;
       }
-
-      // if tied still, count by fuel generation
-      if (
-        game.stats.teamStats[Unit.TEAM.A].fuelGenerated >
-        game.stats.teamStats[Unit.TEAM.B].fuelGenerated
-      ) {
-        break figureresults;
-      } else if (
-        game.stats.teamStats[Unit.TEAM.A].fuelGenerated <
-        game.stats.teamStats[Unit.TEAM.B].fuelGenerated
-      ) {
-        winningTeam = Unit.TEAM.B;
-        losingTeam = Unit.TEAM.A;
-        break figureresults;
+      // if tied still, return a tie
+      const results = {
+        ranks: [
+          { rank: 1, agentID: winningTeam },
+          { rank: 1, agentID: losingTeam },
+        ],
+        replayFile: null,
+      };
+      if (game.configs.storeReplay) {
+        results.replayFile = game.replay.replayFilePath;
       }
+      return results;
+      
+      // // if tied still, count by fuel generation
+      // if (
+      //   game.stats.teamStats[Unit.TEAM.A].fuelGenerated >
+      //   game.stats.teamStats[Unit.TEAM.B].fuelGenerated
+      // ) {
+      //   break figureresults;
+      // } else if (
+      //   game.stats.teamStats[Unit.TEAM.A].fuelGenerated <
+      //   game.stats.teamStats[Unit.TEAM.B].fuelGenerated
+      // ) {
+      //   winningTeam = Unit.TEAM.B;
+      //   losingTeam = Unit.TEAM.A;
+      //   break figureresults;
+      // }
 
-      // if still undecided, for now, go by random choice
-      if (state.rng() > 0.5) {
-        winningTeam = Unit.TEAM.B;
-        losingTeam = Unit.TEAM.A;
-      }
+      // // if still undecided, for now, go by random choice
+      // if (state.rng() > 0.5) {
+      //   winningTeam = Unit.TEAM.B;
+      //   losingTeam = Unit.TEAM.A;
+      // }
     }
 
     const results = {
@@ -562,7 +575,7 @@ export class LuxDesignLogic {
    */
   static reset(
     match: Match,
-    serializedState: SerializedState | Array<string>
+    serializedState: SerializedState | KaggleObservation
   ): void {
     /**
      * For this to work correctly, spawn all entities in first, then update any stats / global related things as
@@ -570,84 +583,87 @@ export class LuxDesignLogic {
      */
     const state: LuxMatchState = match.state;
     const game = state.game;
-    if (serializedState instanceof Array) {
-      throw new Error('not supported yet');
-    } else {
-      // update map first
-      const height = serializedState.map.length;
-      const width = serializedState.map[0].length;
-
-      const configs = {
-        ...game.configs,
-      };
-      configs.width = width;
-      configs.height = height;
-      game.map = new GameMap(configs);
-
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          const cellinfo = serializedState.map[y][x];
-          if (cellinfo.resource) {
-            game.map.addResource(
-              x,
-              y,
-              cellinfo.resource.type as Resource.Types,
-              cellinfo.resource.amount
-            );
-          }
-          const cell = game.map.getCell(x, y);
-          cell.road = cellinfo.road;
-        }
-      }
-
-      // spawn in cities
-      game.cities = new Map();
-      for (const cityid of Object.keys(serializedState.cities)) {
-        const cityinfo = serializedState.cities[cityid];
-        cityinfo.cityCells.forEach((ct) => {
-          const tile = game.spawnCityTile(
-            cityinfo.team,
-            ct.x,
-            ct.y,
-            cityinfo.id
-          );
-          tile.cooldown = ct.cooldown;
-        });
-        const city = game.cities.get(cityinfo.id);
-        city.fuel = cityinfo.fuel;
-      }
-
-      const teams = [Unit.TEAM.A, Unit.TEAM.B];
-      for (const team of teams) {
-        game.state.teamStates[team].researchPoints =
-          serializedState.teamStates[team].researchPoints;
-        game.state.teamStates[team].researched = deepCopy(
-          serializedState.teamStates[team].researched
-        );
-        game.state.teamStates[team].units.clear();
-        for (const unitid of Object.keys(
-          serializedState.teamStates[team].units
-        )) {
-          const unitinfo = serializedState.teamStates[team].units[unitid];
-          let unit: Unit;
-          if (unitinfo.type === Unit.Type.WORKER) {
-            unit = game.spawnWorker(team, unitinfo.x, unitinfo.y, unitid);
-          } else {
-            unit = game.spawnCart(team, unitinfo.x, unitinfo.y, unitid);
-          }
-          unit.cargo = deepCopy(unitinfo.cargo);
-          unit.cooldown = deepCopy(unitinfo.cooldown);
-        }
-      }
-
-      // update globals
-      game.state.turn = serializedState.turn;
-      game.globalCityIDCount = serializedState.globalCityIDCount;
-      game.globalUnitIDCount = serializedState.globalUnitIDCount;
-      game.stats = deepCopy(serializedState.stats);
-
-      // without this, causes some bugs
-      game.map.sortResourcesDeterministically();
+    function isKaggleObs(obs: SerializedState | KaggleObservation): obs is KaggleObservation {
+      return (obs as KaggleObservation).updates !== undefined;
     }
+    if (isKaggleObs(serializedState)) {
+      // handle reduced states (e.g. kaggle outputs)
+      serializedState = parseKaggleObs(serializedState);
+    } 
+    // update map first
+    const height = serializedState.map.length;
+    const width = serializedState.map[0].length;
+
+    const configs = {
+      ...game.configs,
+    };
+    configs.width = width;
+    configs.height = height;
+    game.map = new GameMap(configs);
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const cellinfo = serializedState.map[y][x];
+        if (cellinfo.resource) {
+          game.map.addResource(
+            x,
+            y,
+            cellinfo.resource.type as Resource.Types,
+            cellinfo.resource.amount
+          );
+        }
+        const cell = game.map.getCell(x, y);
+        cell.road = cellinfo.road;
+      }
+    }
+
+    // spawn in cities
+    game.cities = new Map();
+    for (const cityid of Object.keys(serializedState.cities)) {
+      const cityinfo = serializedState.cities[cityid];
+      cityinfo.cityCells.forEach((ct) => {
+        const tile = game.spawnCityTile(
+          cityinfo.team,
+          ct.x,
+          ct.y,
+          cityinfo.id
+        );
+        tile.cooldown = ct.cooldown;
+      });
+      const city = game.cities.get(cityinfo.id);
+      city.fuel = cityinfo.fuel;
+    }
+
+    const teams = [Unit.TEAM.A, Unit.TEAM.B];
+    for (const team of teams) {
+      game.state.teamStates[team].researchPoints =
+        serializedState.teamStates[team].researchPoints;
+      game.state.teamStates[team].researched = deepCopy(
+        serializedState.teamStates[team].researched
+      );
+      game.state.teamStates[team].units.clear();
+      for (const unitid of Object.keys(
+        serializedState.teamStates[team].units
+      )) {
+        const unitinfo = serializedState.teamStates[team].units[unitid];
+        let unit: Unit;
+        if (unitinfo.type === Unit.Type.WORKER) {
+          unit = game.spawnWorker(team, unitinfo.x, unitinfo.y, unitid);
+        } else {
+          unit = game.spawnCart(team, unitinfo.x, unitinfo.y, unitid);
+        }
+        unit.cargo = deepCopy(unitinfo.cargo);
+        unit.cooldown = deepCopy(unitinfo.cooldown);
+      }
+    }
+
+    // update globals
+    game.state.turn = serializedState.turn;
+    game.globalCityIDCount = serializedState.globalCityIDCount;
+    game.globalUnitIDCount = serializedState.globalUnitIDCount;
+    // game.stats = deepCopy(serializedState.stats);
+
+    // without this, causes some bugs
+    game.map.sortResourcesDeterministically();
   }
 }

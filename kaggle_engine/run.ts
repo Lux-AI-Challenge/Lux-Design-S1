@@ -2,6 +2,7 @@ import { create, Logger, Match, MatchEngine } from "dimensions-ai";
 import readline from "readline";
 import {
   LuxDesign,
+  LuxDesignLogic,
   LuxMatchConfigs,
   LuxMatchState,
 } from "@lux-ai/2021-challenge";
@@ -55,10 +56,24 @@ const main = async () => {
         ],
         configs
       );
+      if (json.state) {
+        LuxDesignLogic.reset(match, json.state);
+      }
+
       match.agents.forEach((agent, i) => {
         console.log(JSON.stringify(agent.messages));
         agent.messages = [];
       });
+
+      const state: LuxMatchState = match.state;
+      console.log(
+        JSON.stringify({
+          width: state.game.map.width,
+          height: state.game.map.height,
+          globalCityIDCount: state.game.globalCityIDCount,
+          globalUnitIDCount: state.game.globalUnitIDCount
+        })
+      );
       
     } else if (json.length) {
       const agents = [0, 1];
@@ -79,8 +94,16 @@ const main = async () => {
         agent.messages = [];
       });
 
-      // tell kaggle interpreter about match status
+      // tell kaggle interpreter about match status and some id values
       const state: LuxMatchState = match.state;
+      console.log(
+        JSON.stringify({
+          width: state.game.map.width,
+          height: state.game.map.height,
+          globalCityIDCount: state.game.globalCityIDCount,
+          globalUnitIDCount: state.game.globalUnitIDCount
+        })
+      );
       console.log(
         JSON.stringify({
           status: status,

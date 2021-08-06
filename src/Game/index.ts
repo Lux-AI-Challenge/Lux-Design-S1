@@ -46,6 +46,7 @@ export class Game {
    */
   public cities: Map<string, City> = new Map();
 
+  // TODO: remove in future. this is not really used anywhere
   public stats: Game.Stats = {
     teamStats: {
       [Unit.TEAM.A]: {
@@ -910,7 +911,7 @@ export class Game {
           },
         },
       },
-      stats: deepCopy(this.stats),
+      // stats: deepCopy(this.stats),
       map: this.map.toStateObject(),
       cities,
     };

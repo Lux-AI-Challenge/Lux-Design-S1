@@ -145,14 +145,14 @@ export interface SerializedState {
       resource?: { type: string; amount: number };
     }>
   >;
-  stats: Game.Stats;
+  // stats: Game.Stats;
   cities: Record<
     string,
     {
       cityCells: Array<{ x: number; y: number; cooldown: number }>;
       id: string;
       fuel: number;
-      lightupkeep: number;
+      lightupkeep?: number;
       team: number;
     }
   >;
