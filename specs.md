@@ -227,6 +227,6 @@ At the conclusion of 360 turns the winner is whichever team has the most [CityTi
 A game may end early if a team no longer has any more [Units](#Units) or [CityTiles](#CityTiles). Then the other team wins.
 
 ### Note on Game Rule Changes 
-(This is Also in the competition rules)
+(This is also in the [competition rules](https://www.kaggle.com/c/lux-ai-2021/rules)
 
 Our team at the Lux AI Challenge reserves the right to make any changes on game rules during the course of the competition. We will work to keep our decision-making as transparent as possible and avoid making changes late on in the competition.
