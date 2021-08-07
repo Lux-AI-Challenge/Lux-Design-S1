@@ -222,16 +222,11 @@ Actions in the game are first all validated against the current game state to se
 
 ### Win Conditions
 
-At the conclusion of 360 turns the winner is whichever team has the most [CityTiles](#CityTiles) on the map. If that is a tie, then we run a tiebreaker according to the following:
-
-1. Number of [Units](#Units)
-2. Total fuel generated
-3. Coin flip
+At the conclusion of 360 turns the winner is whichever team has the most [CityTiles](#CityTiles) on the map. If that is a tie, then whichever team has the most units owned on the board wins. If still a tie, the game is marked as a tie.
 
 A game may end early if a team no longer has any more [Units](#Units) or [CityTiles](#CityTiles). Then the other team wins.
 
-Note that the first tiebreaker will never change, however, the next 3 tiebreakers may change or be removed and we may allow ties in the competition.
-
-### Note on Game Rule Changes
+### Note on Game Rule Changes 
+(This is Also in the competition rules)
 
 Our team at the Lux AI Challenge reserves the right to make any changes on game rules during the course of the competition. We will work to keep our decision-making as transparent as possible and avoid making changes late on in the competition.
