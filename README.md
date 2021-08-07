@@ -28,7 +28,7 @@ The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a l
 
 You will need Node.js version 12 or above. See installation instructions [here](https://nodejs.org/en/download/), you can just download the recommended version.
 
-The next parts detail the recommended setup to develop and compete your bot. For users who wish to use Python and Jupyter Notebooks, see online [tutorial notebook]().
+The next parts detail the recommended setup to develop and compete your bot. For users who wish to use Python and Jupyter Notebooks / Kaggle Interactive Notebooks, feel free to skip this section and follow the [tutorial notebook](https://www.kaggle.com/stonet2000/lux-ai-season-1-jupyter-notebook-tutorial)
 
 Open up the command line, and install the competition design with
 
@@ -42,7 +42,7 @@ You may ignore any warnings that show up, those are harmless. To run a match fro
 lux-ai-2021 path/to/botfile path/to/otherbotfile
 ```
 
-and the match will run with some logging and store error logs and a replay in a new `errorlogs` folder and `replays` folder. Logs stored in the errorlogs will include all error output and anything printed to standard error by your agent. You can watch the replay stored in the replays folder using our visualizer.
+and the match will run with some logging and store error logs and a replay in a new `errorlogs` folder and `replays` folder. Logs stored in the errorlogs will include all error output and anything printed to standard error by your agent. You can watch the replay stored in the replays folder using our [visualizer](https://2021vis.lux-ai.org/).
 
 For a full list of commands from the CLI, run
 
@@ -60,9 +60,9 @@ The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits)
 - Java: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/java
 - Typescript: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/ts
 
-Want to use another language but it's not supported? Feel free to suggest that language to our issues or even better, create a starter kit for the community to use and make a PR to this repository.
+Want to use another language but it's not supported? Feel free to suggest that language to our issues or even better, create a starter kit for the community to use and make a PR to this repository. See our [CONTRIBUTING.md document](https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/CONTRIBUTING.md) for more information on this.
 
-To stay up to date on changes and updates to the competition and the engine, see https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/ChangeLog.md or watch for announcements on the [forums](https://www.kaggle.com/c/hungry-geese/discussion) or the [Discord](https://discord.com/invite/DZSm47VHMz)
+To stay up to date on changes and updates to the competition and the engine, watch for announcements on the [forums](https://www.kaggle.com/c/hungry-geese/discussion) or the [Discord](https://discord.com/invite/DZSm47VHMz). See https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/ChangeLog.md for a full change log.
 
 ## CLI Usage
 
