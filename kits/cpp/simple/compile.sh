@@ -17,18 +17,15 @@ setup () {
   fi
 
   if [ $need_container = true ]; then
-    container_id=$(docker run -it -d --name luxaicpp_compiler --rm luxaicpp_compiler bash)
+    container_id=$(docker run -it -d --name luxaicpp_compiler -v $(pwd)/:/root --rm luxaicpp_compiler bash)
     echo Started compile container $container_id
   fi
 }
 
 compile () {
-  docker cp . luxaicpp_compiler:/root
   
   # example main.cpp -O3 -o main.out
   docker exec -w /root luxaicpp_compiler g++ $@
-
-  docker cp luxaicpp_compiler:/root/main.out main.out
 }
 
 setup
