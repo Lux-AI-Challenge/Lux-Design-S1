@@ -14,7 +14,7 @@ fi
 
 setup () {
   if [ $need_build = true ]; then
-    docker build -t luxai $SCRIPT_DIR/
+    docker build -t luxai https://github.com/Lux-AI-Challenge/Lux-Design-2021/raw/master/Dockerfile
   fi
 
   if [ $need_container = true ]; then
