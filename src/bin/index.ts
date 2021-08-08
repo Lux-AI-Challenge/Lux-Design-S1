@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import yargs from 'yargs';
+import yargs, { number } from 'yargs';
 import { runner } from './runner';
 import { converter } from './converter';
 const argv = yargs(process.argv.slice(2))
@@ -22,6 +22,21 @@ const argv = yargs(process.argv.slice(2))
     maxtime: {
       describe: 'max time per turn for the bot',
       default: 1200,
+      type: 'number',
+    },
+    tournament: {
+      describe: 'run a tournament ranked by Trueskill by default on all file paths which will each be a player and their name will be the same as the path. Will automatically generate replays them in the replays folder if --storeReplay is true. The --seed and --out options are ignored. loglevel is now at the tournament level instead of match level, so no logs are shown for each match by itself. There are a lot of other configuration options for tournament running via this tool, but for those we recommend you just copy the code in src/runner.ts for running a tournament.',
+      default: false,
+      type: 'boolean'
+    },
+    rankSystem: {
+      describe: 'choice of ranking system to use when running a tournament with --tournament. Can be trueskill, elo, wins',
+      default: 'trueskill',
+      type: 'string',
+    },
+    maxConcurrentMatches: {
+      describe: 'maximum number of tournament matches runnable at the same time. Recommend to set this no higher than number of CPUs / 2',
+      default: 1,
       type: 'number',
     },
     convertToStateful: {

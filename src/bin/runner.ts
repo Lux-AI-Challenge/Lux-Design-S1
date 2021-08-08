@@ -1,15 +1,10 @@
 import { LuxDesign } from '../design';
 import * as Dimension from 'dimensions-ai';
 import { MatchDestroyedError } from 'dimensions-ai/lib/main/DimensionError';
-import { Logger } from 'dimensions-ai';
+import { Logger, Tournament } from 'dimensions-ai';
 import { Args } from '.';
+import { TournamentType } from 'dimensions-ai/lib/main/Tournament/TournamentTypes';
 export const runner = (argv: Args): void => {
-  // take in two files
-  const file1 = argv._[0] as string;
-  const file2 = argv._[1] as string;
-  if (!file1 || !file2) {
-    throw Error('Need two paths to agents');
-  }
   const maxtime = argv.maxtime;
   let loglevel = Dimension.Logger.LEVEL.INFO;
   switch (argv['loglevel']) {
@@ -75,7 +70,58 @@ export const runner = (argv: Args): void => {
       storeErrorLogs: storeLogs,
     },
   });
+  if (argv.tournament) {
+    const resultHandler = (results: any): Tournament.RankSystem.Results => {
+      // console.log(results)
+      return results;
 
+    }
+    // console.log(argv._)
+    // const competitors = JSON.parse(argv._[0] as string);
+    const competitors = [];
+    for (const file of argv._) {
+      competitors.push({file, name: file});
+    }
+    const tournament = dim.createTournament(competitors, {
+      name: 'Lux AI Season 1 Tournament',
+      type: TournamentType.LADDER,
+      rankSystem: argv.rankSystem as Tournament.RankSystemTypes,
+      agentsPerMatch: [2],
+      resultHandler,
+      loggingLevel: loglevel
+    });
+    tournament.run({
+      tournamentConfigs: {
+        maxConcurrentMatches: argv.maxConcurrentMatches,
+      },
+      consoleDisplay: true,
+      defaultMatchConfigs: {
+        storeReplay: storereplay,
+        statefulReplay,
+        debug: false,
+        width,
+        height,
+        runProfiler: false,
+        debugDelay: 150,
+        debugAnnotations: true,
+        engineOptions: {
+          noStdErr: false,
+          timeout: {
+            active: true,
+          },
+        },
+        mapType: 'random',
+        loggingLevel: Logger.LEVEL.NONE,
+      },
+    });
+  }
+  else {
+    // take in two files
+    const file1 = argv._[0] as string;
+    const file2 = argv._[1] as string;
+    if (!file1 || !file2) {
+      throw Error('Need two paths to agents');
+    }
   dim
     .runMatch(
       [
@@ -128,4 +174,5 @@ export const runner = (argv: Args): void => {
     .finally(() => {
       dim.cleanup();
     });
+  }
 };

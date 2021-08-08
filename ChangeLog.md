@@ -1,5 +1,9 @@
 # Change Log
 
+### v2.1.1
+
+- Add a tournament running tool to evaluate `n` agents using trueskill, elo, or win/tie/loss counts. See `--help` for instructions on using the `--tournament` option
+
 ### v2.1.0
 
 - Docker option for compilation for C++ bots (preferred) and arbitrarily any other languages that can be compiled to a machine executable

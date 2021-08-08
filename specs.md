@@ -88,8 +88,8 @@ A CityTile is a building that takes up one tile of space. Adjacent CityTiles col
 
 Actions
 
-- Build Worker - Build [Worker](#Workers) unit on top of this CityTile (cannot build a worker if there are more workers + carts than friendly CityTile)
-- Build Cart - Build [Carts](#Carts) unit on top of this CityTile (cannot build a cart if there are more workers + carts than friendly CityTile)
+- Build Worker - Build [Worker](#Workers) unit on top of this CityTile (cannot build a worker if current number of owned workers + carts equals the number of owned CityTiles)
+- Build Cart - Build [Carts](#Carts) unit on top of this CityTile (cannot build a cart if there are if current number of owned workers + carts equals the number of owned CityTiles)
 - Research - Increase your team’s Research Points by 1
 
 ### Units
