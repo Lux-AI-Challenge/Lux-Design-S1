@@ -40,6 +40,8 @@ All of our kits follow a common API through which you can use to access various 
 
 ## Submitting to Kaggle
 
+First, make sure you compile all your code using `javac`.
+
 Submissions need to be a .tar.gz bundle with main.py at the top level directory
 (not nested). To create a submission, `cd simple` then create the .tar.gz with
 `tar -czvf submission.tar.gz *`. Upload this under the [My Submissions tab](https://www.kaggle.com/c/lux-ai-2021/submissions) and

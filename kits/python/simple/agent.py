@@ -43,18 +43,6 @@ def agent(observation, configuration):
             if cell.has_resource():
                 resource_tiles.append(cell)
 
-    cities_to_build = 0
-    for k, city in player.cities.items():
-        if (city.fuel > city.get_light_upkeep() * GAME_CONSTANTS["PARAMETERS"]["NIGHT_LENGTH"] + 1000):
-            # if our city has enough fuel to survive the whole night and 1000 extra fuel, lets increment citiesToBuild and let our workers know we have room for more city tiles
-            cities_to_build += 1
-        for citytile in city.citytiles:
-            if citytile.can_act():
-                # you can use the following to get the citytile to research or build a worker
-                # commands.push(citytile.research());
-                # commands.push(citytile.buildWorker());
-                pass
-
     # we iterate over all our units and do something with them
     for unit in player.units:
         if unit.is_worker() and unit.can_act():
@@ -84,11 +72,7 @@ def agent(observation, configuration):
                                 closest_city_tile = city_tile
                     if closest_city_tile is not None:
                         move_dir = unit.pos.direction_to(closest_city_tile.pos)
-                        if cities_to_build > 0 and unit.pos.is_adjacent(closest_city_tile.pos) and unit.can_build(game_state.map):
-                            # here we consider building city tiles provided we are adjacent to a city tile and we can build
-                            actions.append(unit.build_city())        
-                        else:
-                            actions.append(unit.move(move_dir))
+                        actions.append(unit.move(move_dir))
 
     # you can add debug annotations using the functions in the annotate object
     # actions.append(annotate.circle(0, 0))

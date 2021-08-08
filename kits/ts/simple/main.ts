@@ -25,22 +25,7 @@ agent.run((gameState: GameState): Array<string> => {
       }
     }
   }
-
-  let citiesToBuild = 0;
-  player.cities.forEach((city) => {
-    // if our city has enough fuel to survive the whole night and 1000 extra fuel, lets increment citiesToBuild and let our workers know we have room for more city tiles
-    if (city.fuel > city.getLightUpkeep() * GAME_CONSTANTS.PARAMETERS.NIGHT_LENGTH + 1000) {
-      citiesToBuild += 1;
-    }
-    city.citytiles.forEach((citytile) => {
-      if (citytile.canAct()) {
-        // you can use the following to get the citytile to research or build a worker
-        // actions.push(citytile.research());
-        // actions.push(citytile.buildWorker());
-      }
-    });
-  });
-
+  
   // we iterate over all our units and do something with them
   for (let i = 0; i < player.units.length; i++) {
     const unit = player.units[i];
@@ -79,12 +64,7 @@ agent.run((gameState: GameState): Array<string> => {
           });
           if (closestCityTile != null) {
             const dir = unit.pos.directionTo(closestCityTile.pos);
-            if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile.pos) && unit.canBuild(gameMap)) {
-              // here we consider building city tiles provided we are adjacent to a city tile and we can build
-              actions.push(unit.buildCity());
-            } else {
-              actions.push(unit.move(dir));
-            }
+            actions.push(unit.move(dir));
           }
         }
       }

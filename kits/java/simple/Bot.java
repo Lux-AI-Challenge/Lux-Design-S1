@@ -29,22 +29,7 @@ public class Bot {
           }
         }
       }
-
-      int citiesToBuild = 0;
-      for (City city : player.cities.values()) {
-        // if our city has enough fuel to survive the whole night and 1000 extra fuel, lets increment citiesToBuild and let our workers know we have room for more city tiles
-        if (city.fuel > city.getLightUpkeep() * GameConstants.PARAMETERS.NIGHT_LENGTH + 1000) {
-          citiesToBuild += 1;
-        }
-        for (CityTile citytile : city.citytiles) {
-          if (citytile.canAct()) {
-            // you can use the following to get the citytile to research or build a worker
-            // actions.add(citytile.buildWorker());
-            // actions.add(citytile.research());
-          }
-        }
-      }
-
+      
       // we iterate over all our units and do something with them
       for (int i = 0; i < player.units.size(); i++) {
         Unit unit = player.units.get(i);
@@ -84,12 +69,7 @@ public class Bot {
               }
               if (closestCityTile != null) {
                 Direction dir = unit.pos.directionTo(closestCityTile.pos);
-                if (citiesToBuild > 0 && unit.pos.isAdjacent(closestCityTile.pos) && unit.canBuild(gameMap)) {
-                  // here we consider building city tiles provided we are adjacent to a city tile and we can build
-                  actions.add(unit.buildCity());
-                } else {
-                  actions.add(unit.move(dir));
-                }
+                actions.add(unit.move(dir));
               }
             }
           }
