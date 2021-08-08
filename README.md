@@ -50,7 +50,7 @@ For a full list of commands from the CLI, run
 lux-ai-2021 --help
 ```
 
-or go to the [next section](#CLI-Usage) to see more instructions on how to use the command line tool.
+or go to the [next section](#CLI-Usage) to see more instructions on how to use the command line tool. You may also run this all in docker using the `cli.sh`, see instructions here [#CLI-Docker].
 
 The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits) folder in this repository holds all of the available starter kits you can use to start competing and building an AI agent and show you how to get started with your language of choice and run a match with that bot. You can also follow the following direct links
 
@@ -88,6 +88,14 @@ By default the tool will generate minimum, **action-based**, replays that are sm
 Choose where the replay file is stored at by setting `--out=path/to/file.json`
 
 You can also change the logging levels by setting `--loglevel=x` for number x from 0 to 4. The default is 2 which will print to terminal all game warnings and errors.
+
+### CLI Docker
+
+This tool matches the lux-ai-2021 exactly, but runs on Ubuntu 18.04, the target system that the competition servers use. Make sure to first [install docker](https://docs.docker.com/get-docker/)
+
+To then use the lux-ai-2021 CLI tool, simply call `sh cli.sh` and it will accept the same exact arguments. On the first run, it will build a docker image and run a container in the background. Future runs will then be much faster. Moreover, this uses a bind mount, so you can edit files locally on your computer and they will be reflected in the docker container and vice versa. 
+
+The only caveat of this tool is that it has no access to files in directories above the current working directory (the output of the `pwd` command).
 
 ## Contributing
 
