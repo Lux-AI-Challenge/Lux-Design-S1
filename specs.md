@@ -1,14 +1,14 @@
-## Lux AI Season 1 Specifications
+# Lux AI Season 1 Specifications
 
-### Background
+## Background
 
 The night is dark and full of terrors. Two teams must fight off the darkness, collect resources, and advance through the ages. Daytime finds a desperate rush to gather and build the resources that can carry you through the impending night. Plan and expand carefully -- any city that fails to produce enough light will be consumed by darkness.
 
-### Environment
+## Environment
 
 In the Lux AI Challenge Season 1, both teams control a team of [Units](#Units) and [CityTiles](#CityTile) that collect resources to fuel their Cities, with the main objective to own as many [CityTiles](#CityTiles) as possible at the end of the turn-based game. Both teams have complete information about the entire game state and will need to make use of that information to optimize resource collection, compete for scarce resources against the opponent, and build cities to gain points. This document will go through the key features of this game.
 
-### The Map
+## The Map
 
 The world of Lux is represented as a 2d grid. Coordinates increase east (right) and south (down). The map is always a square and can be 12, 16, 24, or 32 tiles long. The (0, 0) coordinate is at the top left.
 
@@ -20,7 +20,7 @@ In order to prevent maps from favoring one player over another, it is guaranteed
 
 Each player will start with a single [CityTile](#CityTiles) and a single worker on that [CityTile](#CityTiles)
 
-### Resources
+## Resources
 
 There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing fuel efficiency). These resources are collected by workers, then dropped off once a worker moves on top of a [CityTile](#CityTiles) to then be converted into fuel for the city. Some resources require research points before they are possible to collect.
 
@@ -69,7 +69,7 @@ Wood in particular can regrow. Each turn, every wood tile's wood amount increase
   </tr>
 </table>
 
-#### Collection Mechanics
+### Collection Mechanics
 
 At the end of each turn, [Workers](#Workers) automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current formula:
 
@@ -78,11 +78,11 @@ At the end of each turn, [Workers](#Workers) automatically receive resources fro
   - If there are enough resources left, each eligible worker receives up to the collection rate (or up to their carrying capacity)
   - If there aren't enough resources to give to all workers, the resources distributed are evenly divided between workers (rounded down to the nearest integer).
 
-### Actions
+## Actions
 
 There are Units and CityTiles that can perform actions each turn given certain conditions. In general, all actions are simultaneously applied and are validated against the state of the game at the start of a turn. The next few sections describe the Units and CityTiles in detail.
 
-### CityTiles
+## CityTiles
 
 A CityTile is a building that takes up one tile of space. Adjacent CityTiles collectively form a City. Each CityTile can perform a single action provided the CityTile has a [Cooldown](#Cooldown) &lt; 1.
 
@@ -92,7 +92,7 @@ Actions
 - Build Cart - Build [Carts](#Carts) unit on top of this CityTile (cannot build a cart if there are if current number of owned workers + carts equals the number of owned CityTiles)
 - Research - Increase your team’s Research Points by 1
 
-### Units
+## Units
 
 There are two unit types, [Workers](#Workers), and [Carts](#Carts). Every unit can perform a single action once they have a [Cooldown](#Cooldown) &lt; 1.
 
@@ -104,7 +104,7 @@ There can be at most one unit on tiles without a [CityTile](#CityTiles). Moreove
 
 If two units attempt to move to the same tile that is not a [CityTile](#CityTiles), this is considered a collision and the move action is cancelled.
 
-#### Workers
+### Workers
 
 Actions
 
@@ -113,14 +113,14 @@ Actions
 - Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to the latter's cargo-capcity. Excess is returned to the original unit.
 - Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 total resources of any type in their cargo (full cargo) and the tile is empty. If building is succesful, all carried resources are consumed and a new [CityTile](#CityTiles) is built with 0 starting resources.
 
-#### Carts
+### Carts
 
 Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
 - Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to the latter's cargo-capcity. Excess is returned to the original unit.
 
-### Cooldown
+## Cooldown
 
 [CityTiles](#CityTiles), [Workers](#Workers) and [Carts](#Carts) all have a cooldown mechanic after each action. [Units](#Units) and [CityTiles](#CityTiles) can only perform an action when they have &lt; 1 Cooldown.
 
@@ -155,7 +155,7 @@ At the end of each turn, a unit’s Cooldown will reduce by 1
   </tr>
 </table>
 
-### Roads
+## Roads
 
 As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). Each turn, any tile that a [Cart](#Carts) starts on will have its road level increased by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
 
@@ -163,7 +163,7 @@ Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
 Roads can also be destroyed by [Workers](#Workers) via the pillage action which reduces road level by 0.5 each time.
 
-### Day/Night Cycle
+## Day/Night Cycle
 
 The Day/Night cycle consists of a 40 turn cycle, the first 30 turns being day turns, the last 10 being night turns. There are a total of 360 turns in a match, forming 9 cycles.
 
@@ -210,7 +210,7 @@ Should any [Unit](#Units) during the night run out of fuel, they will be removed
   </tr>
 </table>
 
-### Game Resolution order
+## Game Resolution order
 
 Actions in the game are first all validated against the current game state to see if they are valid. Then the actions, along with game events, are resolved in the following order
 
@@ -220,13 +220,13 @@ Actions in the game are first all validated against the current game state to se
 4. [Resource](#Resources) drops on [CityTiles](#CityTiles)
 5. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
 
-### Win Conditions
+## Win Conditions
 
 At the conclusion of 360 turns the winner is whichever team has the most [CityTiles](#CityTiles) on the map. If that is a tie, then whichever team has the most units owned on the board wins. If still a tie, the game is marked as a tie.
 
 A game may end early if a team no longer has any more [Units](#Units) or [CityTiles](#CityTiles). Then the other team wins.
 
-### Note on Game Rule Changes 
+## Note on Game Rule Changes 
 (This is also in the [competition rules](https://www.kaggle.com/c/lux-ai-2021/rules))
 
 Our team at the Lux AI Challenge reserves the right to make any changes on game rules during the course of the competition. We will work to keep our decision-making as transparent as possible and avoid making changes late on in the competition.
