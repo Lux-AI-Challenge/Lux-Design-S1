@@ -4,6 +4,8 @@ The night is dark and full of terrors. Two teams must fight off the darkness, co
 
 Welcome to the Lux AI Challenge Season 1!
 
+<img src="./assets/daynightshift.gif" style="width:50%" />
+
 The Lux AI Challenge is a competition where competitors design agents to tackle a multi-variable optimization, resource gathering, and allocation problem in a 1v1 scenario against other competitors. In addition to optimization, successful agents must be capable of analyzing their opponents and developing appropriate policies to get the upper hand.
 
 Thanks to our sponsors [QuantCo](https://quantco.com/), [J Ventures](http://www.thejiangmen.com/), and [QAImera](https://qaimera.com), we have a $10,000 prize pool along with many other non-monetary prizes this year! For more information see https://www.lux-ai.org/sponsors-2021
@@ -21,8 +23,6 @@ Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/
 Competition Leaderboard: Not yet released
 
 The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a local copy of the visualizer, see https://github.com/Lux-AI-Challenge/LuxViewer2021. You may also use the embedded visualizer on the Kaggle competition page or in jupyter notebooks.
-
-![](./assets/game_replay.gif)
 
 ## Getting Started
 
