@@ -79,16 +79,16 @@ int main()
           if (player.cities.size() > 0)
           {
             auto city_iter = player.cities.begin();
-            auto city = city_iter->second;
+            auto& city = city_iter->second;
 
             float closestDist = 999999;
             CityTile *closestCityTile;
-            for (auto citytile : city->citytiles)
+            for (auto& citytile : city.citytiles)
             {
-              float dist = citytile->pos.distanceTo(unit.pos);
+              float dist = citytile.pos.distanceTo(unit.pos);
               if (dist < closestDist)
               {
-                closestCityTile = citytile;
+                closestCityTile = &citytile;
                 closestDist = dist;
               }
             }

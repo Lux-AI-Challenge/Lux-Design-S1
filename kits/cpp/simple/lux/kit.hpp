@@ -140,7 +140,7 @@ namespace kit
                     string cityid = updates[i++];
                     float fuel = stof(updates[i++]);
                     float lightUpkeep = stof(updates[i++]);
-                    this->players[team].cities[cityid] = new lux::City(team, cityid, fuel, lightUpkeep);
+                    this->players[team].cities[cityid] = lux::City(team, cityid, fuel, lightUpkeep);
                 }
                 else if (input_identifier == INPUT_CONSTANTS::CITY_TILES)
                 {
@@ -150,7 +150,7 @@ namespace kit
                     int x = stoi(updates[i++]);
                     int y = stoi(updates[i++]);
                     float cooldown = stof(updates[i++]);
-                    lux::City * city = this->players[team].cities[cityid];
+                    lux::City * city = &players[team].cities[cityid];
                     lux::CityTile * citytile = city->addCityTile(x, y, cooldown);
                     this->map.getCell(x, y)->citytile = citytile;
                     players[team].cityTileCount += 1;
@@ -170,14 +170,6 @@ namespace kit
     private:
         void resetPlayerStates(){
             for (int team = 0; team < 2; team++) {
-                for (auto it : players[team].cities){
-                    lux::City *city = it.second;
-                    for (auto citytile : city->citytiles) {
-                        delete citytile;
-                    }
-                    city->citytiles.clear();
-                    delete city;
-                }
                 players[team].units.clear();
                 players[team].cities.clear();
                 players[team].cityTileCount = 0;

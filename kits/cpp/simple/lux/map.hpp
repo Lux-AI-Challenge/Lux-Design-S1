@@ -30,7 +30,7 @@ namespace lux
         {
             pos = Position(x, y);
         };
-        bool hasResource()
+        bool hasResource() const
         {
             return this->resource.amount > 0;
         }
@@ -40,32 +40,38 @@ namespace lux
     public:
         int width = -1;
         int height = -1;
-        vector<vector<Cell *>> map;
+        vector<vector<Cell>> map;
         GameMap(){};
-        GameMap(int width, int height)
+        GameMap(int width, int height) : width(width), height(height)
         {
-            this->width = width;
-            this->height = height;
-            map = vector<vector<Cell *>>(height, vector<Cell *>(width));
+            map = vector<vector<Cell>>(height, vector<Cell>(width));
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    map[y][x] = new Cell(x, y);
+                    map[y][x] = Cell(x, y);
                 }
             }
         };
-        Cell *getCellByPos(const Position &pos) const
+        Cell const *getCellByPos(const Position &pos) const
         {
-            return this->map[pos.y][pos.x];
+            return &map[pos.y][pos.x];
         }
-        Cell *getCell(int x, int y) const
+        Cell const *getCell(int x, int y) const
         {
-            return this->map[y][x];
+            return &map[y][x];
+        }
+        Cell *getCellByPos(const Position &pos)
+        {
+            return &map[pos.y][pos.x];
+        }
+        Cell *getCell(int x, int y)
+        {
+            return &map[y][x];
         }
         void _setResource(const ResourceType &type, int x, int y, int amount)
         {
-            Cell *cell = this->getCell(x, y);
+            Cell *cell = getCell(x, y);
             cell->resource = Resource();
             cell->resource.amount = amount;
             cell->resource.type = type;

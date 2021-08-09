@@ -101,16 +101,11 @@ namespace lux
     public:
         int researchPoints = 0;
         int team = -1;
-        vector<Unit> units;
-        map<string, City *> cities;
+        vector<Unit> units{};
+        map<string, City> cities{};
         int cityTileCount = 0;
         Player(){};
-        Player(int team_id)
-        {
-            team = team_id;
-            cities = map<string, City *>();
-            units = vector<Unit>();
-        };
+        Player(int team_id) : team(team_id) {}
         bool researchedCoal()
         {
             return this->researchPoints >= (int)GAME_CONSTANTS["PARAMETERS"]["RESEARCH_REQUIREMENTS"]["COAL"];
