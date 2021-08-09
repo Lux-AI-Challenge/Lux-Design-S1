@@ -79,6 +79,21 @@ describe('Test kits', () => {
     verifyCommands(cmds1, cmds2);
   }).timeout(10000);
 
+  it('should run c++', async () => {
+    let botList = [bots.js, bots.cpp];
+    const match = await luxdim.createMatch(botList, options);
+    const res = await match.run();
+
+    botList = [bots.cpp, bots.cpp];
+    const match2 = await luxdim.createMatch(botList, options);
+    const res2 = await match.run();
+    const state: LuxMatchState = match.state;
+    const state2: LuxMatchState = match.state;
+    const cmds1 = state.game.replay.data.allCommands;
+    const cmds2 = state2.game.replay.data.allCommands;
+    verifyCommands(cmds1, cmds2);
+  }).timeout(10000);
+
   it('should run python', async () => {
     let botList = [bots.js, bots.py];
     const match = await luxdim.createMatch(botList, options);
