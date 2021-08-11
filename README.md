@@ -66,6 +66,8 @@ To stay up to date on changes and updates to the competition and the engine, wat
 
 ## CLI Usage
 
+
+### CLI General 
 The CLI tool has several options. For example, one option is the seed and to set a seed of 100 simply run
 
 ```
@@ -88,6 +90,18 @@ By default the tool will generate minimum, **action-based**, replays that are sm
 Choose where the replay file is stored at by setting `--out=path/to/file.json`
 
 You can also change the logging levels by setting `--loglevel=x` for number x from 0 to 4. The default is 2 which will print to terminal all game warnings and errors.
+
+### CLI Leaderboard Evaluation
+
+You can run your own local leaderboard / tournament to evaluate several bots at once via
+
+```
+lux-ai-2021 --rankSystem="trueskill" --tournament path/to/agent1 path/to/agent2 path/to/agent3 path/to/agent4 ...
+```
+
+This will run a leaderboard ranked by trueskill. Agents are auto matched with opponents with similar ratings. Recommended to add `--storeReplay=false --storeLogs=false` as letting this run for a long time will generate a lot of replays and log files.
+
+See `lux-ai-2021` for more options.
 
 ### CLI Docker
 
