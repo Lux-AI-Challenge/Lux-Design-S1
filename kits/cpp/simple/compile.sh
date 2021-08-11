@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 need_build=false
 need_container=false

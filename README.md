@@ -50,7 +50,7 @@ For a full list of commands from the CLI, run
 lux-ai-2021 --help
 ```
 
-or go to the [next section](#CLI-Usage) to see more instructions on how to use the command line tool. You may also run this all in docker using the `cli.sh`, see instructions here [#CLI-Docker].
+or go to the [next section](#CLI-Usage) to see more instructions on how to use the command line tool, including generating stateful replays and running local leaderboards for evaluation. You may also run this all in docker using the `cli.sh` file in this repo, see instructions here [#cli-docker].
 
 The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits) folder in this repository holds all of the available starter kits you can use to start competing and building an AI agent and show you how to get started with your language of choice and run a match with that bot. You can also follow the following direct links
 
@@ -93,9 +93,17 @@ You can also change the logging levels by setting `--loglevel=x` for number x fr
 
 This tool matches the lux-ai-2021 exactly, but runs on Ubuntu 18.04, the target system that the competition servers use. Make sure to first [install docker](https://docs.docker.com/get-docker/)
 
-To then use the lux-ai-2021 CLI tool, simply call `sh cli.sh` and it will accept the same exact arguments. On the first run, it will build a docker image and run a container in the background. Future runs will then be much faster. Moreover, this uses a bind mount, so you can edit files locally on your computer and they will be reflected in the docker container and vice versa. 
+To then use the lux-ai-2021 CLI tool, simply call `bash cli.sh` and it will accept the same exact arguments. On the first run, it will build a docker image and run a container in the background. Future runs will then be much faster. Moreover, this uses a bind mount, so you can edit files locally on your computer and they will be reflected in the docker container and vice versa. 
 
 The only caveat of this tool is that it has no access to files in directories above the current working directory (the output of the `pwd` command).
+
+Moreover, this tool will not inherit the same installed python packages on your computer. To add packages, please download the Dockerfile from this repo into the same directory as the `cli.sh` file and add installation commands like so to the bottom of the file
+
+```docker
+RUN pip3 install <package_name>
+```
+
+After changing the Dockerfile, run `bash cli.sh clean` to clean the old docker stuff and then use `cli.sh` as usual.
 
 ## Contributing
 

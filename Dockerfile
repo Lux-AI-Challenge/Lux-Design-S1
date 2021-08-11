@@ -38,11 +38,19 @@ RUN npm i -g @lux-ai/2021-challenge@latest
 
 # install tooling for other languages
 
-# Python
-RUN apt-get install -y python3.8
-# set python3.8 as default
-RUN ln -s python3.8 /usr/bin/python
-
 # Java
 RUN apt-get install -y default-jre
 
+# Python
+RUN apt-get install -y python3.8
+RUN apt-get install -y python3-pip
+# set python3.8 as default
+RUN ln -s python3.8 /usr/bin/python
+
+
+# install python packages
+RUN pip3 install numpy
+RUN pip3 install scipy
+
+# C++
+RUN apt-get install g++ -y

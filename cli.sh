@@ -1,8 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 need_build=false
 need_container=false
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+if [ "$1" = "clean" ]; then
+  docker stop luxai_runner
+  docker rmi luxai
+  exit
+fi
 
 if [[ "$(docker images -q luxai 2> /dev/null)" == "" ]]; then
   need_build=true
@@ -14,7 +20,14 @@ fi
 
 setup () {
   if [ $need_build = true ]; then
-    docker build -t luxai https://github.com/Lux-AI-Challenge/Lux-Design-2021/raw/master/Dockerfile
+    if test -f "Dockerfile"; then
+      echo "Using local Dockerfile"
+      docker build -t luxai .
+    else
+    echo "Using local hosted Dockerfile"
+      docker build -t luxai https://github.com/Lux-AI-Challenge/Lux-Design-2021/raw/master/Dockerfile
+    fi
+    
   fi
 
   if [ $need_container = true ]; then
