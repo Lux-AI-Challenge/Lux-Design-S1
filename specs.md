@@ -212,13 +212,20 @@ Should any [Unit](#Units) during the night run out of fuel, they will be removed
 
 ## Game Resolution order
 
-Actions in the game are first all validated against the current game state to see if they are valid. Then the actions, along with game events, are resolved in the following order
+Actions in the game are first all validated against the current game state to see if they are valid. Then the actions, along with game events, are resolved in the following order and simultaneously within each step
 
 1. [CityTile](#CityTiles) actions
 2. [Unit](#Units) actions
-3. [Resource](#Resources) collection
-4. [Resource](#Resources) drops on [CityTiles](#CityTiles)
-5. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
+3. [Cooldowns](#Cooldown) are handled / computed for each unit and CityTile, after roads are pillaged by Unit actions.
+3. [Roads](#Roads) are created
+4. [Resource](#Resources) collection
+5. [Resource](#Resources) drops on [CityTiles](#CityTiles)
+6. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
+7. Regrow wood tiles that are not depleted to 0
+
+The only exception to the validation criteria is that units may smoothly between spaces, meaning if two units are adjacent, they can swap places in one turn. 
+
+Otherwise, actions such as one unit building a CityTile, then another unit moving ontop of the new CityTile, are not allowed as the current state does not have this newly built city and units cannot move on top of other units outside of CityTiles.
 
 ## Win Conditions
 
