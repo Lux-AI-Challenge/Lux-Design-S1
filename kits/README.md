@@ -110,7 +110,7 @@ Properties:
 Methods:
 
 - `get_cargo_space_left(): int` - returns the amount of space left in the cargo of this [Unit](#Unit). Note that any Resource takes up the same space, e.g. 70 wood takes up as much space as 70 uranium, but 70 uranium would produce much more fuel than wood when deposited at a [City](#City)
-- `can_build(): bool` - returns true if the [Unit](#Unit) can build a [City](#City) on the tile it is on now. False otherwise. Checks that the tile does not have a Resource over it still and the [Unit](#Unit) has a Cooldown of less than 1
+- `can_build(game_map: GameMap): bool` - returns true if the [Unit](#Unit) can build a [City](#City) on the tile it is on now. False otherwise. Checks that the tile does not have a Resource over it still and the [Unit](#Unit) has a Cooldown of less than 1
 - `can_act(): bool`  - returns true if the [Unit](#Unit) can perform an action. False otherwise. Essentially checks whether the Cooldown of the [Unit](#Unit) is less than 1
 - `move(dir): str` - returns the move action. When applied, [Unit](#Unit) will move in the specified direction by one [Unit](#Unit), provided there are no other units in the way or opposition cities. ([Units](#Unit) can stack on top of each other however when over a friendly [City](#City))
 - `transfer(dest_id, resourceType, amount): str` - returns the transfer action. Will transfer from this [Unit](#Unit) the selected Resource type by the desired amount to the [Unit](#Unit) with id `dest_id` given that both units are adjacent at the start of the turn. (This means that a destination [Unit](#Unit) can receive a transfer of resources by another [Unit](#Unit) but also move away from that [Unit](#Unit))
