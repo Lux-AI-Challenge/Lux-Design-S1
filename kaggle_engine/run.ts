@@ -37,7 +37,7 @@ const main = async () => {
         agentOptions: { detached: true },
         storeReplay: false,
         storeErrorLogs: false,
-        loggingLevel: Logger.LEVEL.WARN,
+        loggingLevel: parseInt(json.config.loglevel),
         seed: parseInt(json.config.seed),
         mapType: json.config.mapType,
         parameters: {
