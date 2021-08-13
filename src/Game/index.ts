@@ -795,7 +795,7 @@ export class Game {
         match.throw(
           action.team,
           new MatchWarn(
-            `Unit ${action.unitid} collided when trying to move to (${action.newcell.pos.x}, ${action.newcell.pos.y})`
+            `turn ${this.state.turn}; Unit ${action.unitid} collided when trying to move to (${action.newcell.pos.x}, ${action.newcell.pos.y})`
           )
         );
       }
