@@ -225,7 +225,7 @@ Actions in the game are first all validated against the current game state to se
 
 The only exception to the validation criteria is that units may smoothly between spaces, meaning if two units are adjacent, they can swap places in one turn. 
 
-Otherwise, actions such as one unit building a CityTile, then another unit moving ontop of the new CityTile, are not allowed as the current state does not have this newly built city and units cannot move on top of other units outside of CityTiles.
+Otherwise, actions such as one unit building a CityTile, then another unit moving on top of the new CityTile, are not allowed as the current state does not have this newly built city and units cannot move on top of other units outside of CityTiles.
 
 ## Win Conditions
 
