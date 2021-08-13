@@ -37,6 +37,7 @@ const main = async () => {
         agentOptions: { detached: true },
         storeReplay: false,
         storeErrorLogs: false,
+        loggingLevel: Logger.LEVEL.WARN,
         seed: parseInt(json.config.seed),
         mapType: json.config.mapType,
         parameters: {
@@ -47,11 +48,11 @@ const main = async () => {
         [
           {
             file: "blank",
-            name: "bot1",
+            name: "team-0",
           },
           {
             file: "blank",
-            name: "bot2",
+            name: "team-1",
           },
         ],
         configs
@@ -61,12 +62,12 @@ const main = async () => {
       }
 
       match.agents.forEach((agent, i) => {
-        console.log(JSON.stringify(agent.messages));
+        console.error(JSON.stringify(agent.messages));
         agent.messages = [];
       });
 
       const state: LuxMatchState = match.state;
-      console.log(
+      console.error(
         JSON.stringify({
           width: state.game.map.width,
           height: state.game.map.height,
@@ -90,13 +91,13 @@ const main = async () => {
 
       // log the match state back to kaggle's interpreter
       match.agents.forEach((agent) => {
-        console.log(JSON.stringify(agent.messages));
+        console.error(JSON.stringify(agent.messages));
         agent.messages = [];
       });
 
       // tell kaggle interpreter about match status and some id values
       const state: LuxMatchState = match.state;
-      console.log(
+      console.error(
         JSON.stringify({
           width: state.game.map.width,
           height: state.game.map.height,
@@ -104,7 +105,7 @@ const main = async () => {
           globalUnitIDCount: state.game.globalUnitIDCount
         })
       );
-      console.log(
+      console.error(
         JSON.stringify({
           status: status,
           turn: state.game.state.turn,
