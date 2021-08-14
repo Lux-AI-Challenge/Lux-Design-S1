@@ -1,5 +1,10 @@
 # Change Log
 
+### v2.2.0
+
+- Fix bug where a team can build an extra unit above unit cap if they build workers and carts simultaneously
+- Fix bug where empty resource tiles are sent to agents
+
 ### v2.1.1
 
 - Add a tournament running tool to evaluate `n` agents using trueskill, elo, or win/tie/loss counts. See `--help` for instructions on using the `--tournament` option
