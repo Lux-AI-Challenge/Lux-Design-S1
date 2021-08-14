@@ -217,11 +217,11 @@ Actions in the game are first all validated against the current game state to se
 1. [CityTile](#CityTiles) actions
 2. [Unit](#Units) actions
 3. [Cooldowns](#Cooldown) are handled / computed for each unit and CityTile, after roads are pillaged by Unit actions.
-3. [Roads](#Roads) are created
-4. [Resource](#Resources) collection
-5. [Resource](#Resources) drops on [CityTiles](#CityTiles)
-6. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
-7. Regrow wood tiles that are not depleted to 0
+4. [Roads](#Roads) are created
+5. [Resource](#Resources) collection
+6. [Resource](#Resources) drops on [CityTiles](#CityTiles)
+7. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
+8. Regrow wood tiles that are not depleted to 0
 
 The only exception to the validation criteria is that units may smoothly between spaces, meaning if two units are adjacent, they can swap places in one turn. 
 

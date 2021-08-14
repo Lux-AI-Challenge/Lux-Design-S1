@@ -317,6 +317,7 @@ export class LuxDesignLogic {
     );
 
     prunedMoveActions.forEach((action) => {
+      // if direction is center, ignore it
       if (action.direction !== Game.DIRECTIONS.CENTER) {
         game.getUnit(action.team, action.unitid).giveAction(action);
       }
