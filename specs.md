@@ -6,7 +6,7 @@ The night is dark and full of terrors. Two teams must fight off the darkness, co
 
 ## Environment
 
-In the Lux AI Challenge Season 1, both teams control a team of [Units](#Units) and [CityTiles](#CityTile) that collect resources to fuel their Cities, with the main objective to own as many [CityTiles](#CityTiles) as possible at the end of the turn-based game. Both teams have complete information about the entire game state and will need to make use of that information to optimize resource collection, compete for scarce resources against the opponent, and build cities to gain points. This document will go through the key features of this game.
+In the Lux AI Challenge Season 1, two competing teams control a team of [Units](#Units) and [CityTiles](#CityTile) that collect resources to fuel their Cities, with the main objective to own as many [CityTiles](#CityTiles) as possible at the end of the turn-based game. Both teams have complete information about the entire game state and will need to make use of that information to optimize resource collection, compete for scarce resources against the opponent, and build cities to gain points. This document will go through the key features of this game.
 
 ## The Map
 
