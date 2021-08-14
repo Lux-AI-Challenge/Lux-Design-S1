@@ -264,13 +264,13 @@ export class Game {
 
         if (action === Game.ACTIONS.BUILD_CART) {
           check(
-            this.cartUnitCapReached(team, acc.cartsBuilt),
-            `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but cart unit cap reached. Build more CityTiles!`
+            this.cartUnitCapReached(team, acc.cartsBuilt + acc.workersBuilt),
+            `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but unit cap reached. Build more CityTiles!`
           );
         } else {
           check(
-            this.workerUnitCapReached(team, acc.workersBuilt),
-            `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but worker unit cap reached. Build more CityTiles!`
+            this.workerUnitCapReached(team, acc.cartsBuilt + acc.workersBuilt),
+            `Agent ${cmd.agentID} tried to build unit on tile (${x}, ${y}) but unit cap reached. Build more CityTiles!`
           );
         }
 
