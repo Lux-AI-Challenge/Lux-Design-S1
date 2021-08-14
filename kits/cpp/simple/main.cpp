@@ -44,13 +44,24 @@ int main()
       }
     }
 
+    for (auto& c : player.cities) {
+      for (auto& ct : c.second.citytiles) {
+        cerr << gameMap.getCell(ct.pos.x, ct.pos.y)->citytile << ", " << &ct << endl;
+        assert(gameMap.getCell(ct.pos.x, ct.pos.y)->citytile == &ct);
+      }
+    }
+
     // we iterate over all our units and do something with them
     for (int i = 0; i < player.units.size(); i++)
     {
       Unit unit = player.units[i];
       if (unit.isWorker() && unit.canAct())
       {
-        if (unit.getCargoSpaceLeft() > 0)
+        if (unit.canBuild(gameMap))
+        {
+          actions.push_back(unit.buildCity());
+        }
+        else if (unit.getCargoSpaceLeft() > 0)
         {
           // if the unit is a worker and we have space in cargo, lets find the nearest resource tile and try to mine it
           Cell *closestResourceTile;
