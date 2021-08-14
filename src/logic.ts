@@ -272,16 +272,6 @@ export class LuxDesignLogic {
       }
     }
 
-    // remove resources that are depleted from map
-    const newResourcesMap: Array<Cell> = [];
-    for (let i = 0; i < game.map.resources.length; i++) {
-      const cell = game.map.resources[i];
-      if (cell.resource.amount > 0) {
-        newResourcesMap.push(cell);
-      }
-    }
-    game.map.resources = newResourcesMap;
-
     // give units and city tiles their validated actions to use
     actionsMap
       .get(Game.ACTIONS.BUILD_CITY)
@@ -368,6 +358,16 @@ export class LuxDesignLogic {
     if (game.isNight()) {
       this.handleNight(state);
     }
+
+    // remove resources that are depleted from map
+    const newResourcesMap: Array<Cell> = [];
+    for (let i = 0; i < game.map.resources.length; i++) {
+      const cell = game.map.resources[i];
+      if (cell.resource.amount > 0) {
+        newResourcesMap.push(cell);
+      }
+    }
+    game.map.resources = newResourcesMap;
 
     // regenerate forests
     game.regenerateTrees();
