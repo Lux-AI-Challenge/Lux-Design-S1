@@ -580,8 +580,6 @@ export class Game {
    * @param cell - a cell with a resource
    */
   handleResourceRelease(originalCell: Cell): void {
-    // TODO: Look into what happens if theres like only 1 uranium left or something.
-    // No workers will get any resources probably, but should this be what we let happen?
     if (originalCell.hasResource()) {
       const type = originalCell.resource.type;
       const cells = [originalCell, ...this.map.getAdjacentCells(originalCell)];
