@@ -6,7 +6,7 @@ The night is dark and full of terrors. Two teams must fight off the darkness, co
 
 ## Environment
 
-In the Lux AI Challenge Season 1, both teams control a team of [Units](#Units) and [CityTiles](#CityTile) that collect resources to fuel their Cities, with the main objective to own as many [CityTiles](#CityTiles) as possible at the end of the turn-based game. Both teams have complete information about the entire game state and will need to make use of that information to optimize resource collection, compete for scarce resources against the opponent, and build cities to gain points. This document will go through the key features of this game.
+In the Lux AI Challenge Season 1, two competing teams control a team of [Units](#Units) and [CityTiles](#CityTile) that collect resources to fuel their Cities, with the main objective to own as many [CityTiles](#CityTiles) as possible at the end of the turn-based game. Both teams have complete information about the entire game state and will need to make use of that information to optimize resource collection, compete for scarce resources against the opponent, and build cities to gain points. This document will go through the key features of this game.
 
 ## The Map
 
@@ -217,11 +217,11 @@ Actions in the game are first all validated against the current game state to se
 1. [CityTile](#CityTiles) actions
 2. [Unit](#Units) actions
 3. [Cooldowns](#Cooldown) are handled / computed for each unit and CityTile, after roads are pillaged by Unit actions.
-3. [Roads](#Roads) are created
-4. [Resource](#Resources) collection
-5. [Resource](#Resources) drops on [CityTiles](#CityTiles)
-6. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
-7. Regrow wood tiles that are not depleted to 0
+4. [Roads](#Roads) are created
+5. [Resource](#Resources) collection
+6. [Resource](#Resources) drops on [CityTiles](#CityTiles)
+7. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
+8. Regrow wood tiles that are not depleted to 0
 
 The only exception to the validation criteria is that units may smoothly between spaces, meaning if two units are adjacent, they can swap places in one turn. 
 
