@@ -23,10 +23,10 @@ int main()
     
     /** AI Code Goes Below! **/
 
-    Player player = gameState.players[gameState.id];
-    Player opponent = gameState.players[(gameState.id + 1) % 2];
+    Player &player = gameState.players[gameState.id];
+    Player &opponent = gameState.players[(gameState.id + 1) % 2];
 
-    GameMap gameMap = gameState.map;
+    GameMap &gameMap = gameState.map;
     cerr << "Hello" << "\n";
 
     cerr << "Testing" << " i have " << player.cities.size() << " ciites\n";
