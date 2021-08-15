@@ -56,10 +56,9 @@ namespace lux
         float lightUpkeep;
         City(){};
         City(int teamid, const string &cityid, float fuel, float lightUpkeep) : cityid(cityid), team(teamid), fuel(fuel), lightUpkeep(lightUpkeep) {}
-        CityTile* addCityTile(int x, int y, int cooldown)
+        void addCityTile(int x, int y, int cooldown)
         {
             citytiles.emplace_back(team, cityid, x, y, cooldown);
-            return &citytiles.back();
         }
         float getLightUpkeep()
         {

@@ -23,13 +23,10 @@ int main()
     
     /** AI Code Goes Below! **/
 
-    Player player = gameState.players[gameState.id];
-    Player opponent = gameState.players[(gameState.id + 1) % 2];
+    Player &player = gameState.players[gameState.id];
+    Player &opponent = gameState.players[(gameState.id + 1) % 2];
 
-    GameMap gameMap = gameState.map;
-    cerr << "Hello" << "\n";
-
-    cerr << "Testing" << " i have " << player.cities.size() << " ciites\n";
+    GameMap &gameMap = gameState.map;
 
     vector<Cell *> resourceTiles = vector<Cell *>();
     for (int y = 0; y < gameMap.height; y++)
@@ -79,11 +76,11 @@ int main()
           if (player.cities.size() > 0)
           {
             auto city_iter = player.cities.begin();
-            auto& city = city_iter->second;
+            auto &city = city_iter->second;
 
             float closestDist = 999999;
             CityTile *closestCityTile;
-            for (auto& citytile : city.citytiles)
+            for (auto &citytile : city.citytiles)
             {
               float dist = citytile.pos.distanceTo(unit.pos);
               if (dist < closestDist)
