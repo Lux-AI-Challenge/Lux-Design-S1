@@ -10,7 +10,6 @@ And of course, please be aware of and read the [Code Of Conduct](https://github.
 
 First clone this repository. Navigate to the cloned repository and run
 
-
 ```
 npm install
 ```
@@ -25,5 +24,13 @@ This repository is organized as follows
 
 ## Contributing Starter Kits
 
-If you are interested in contributing a starter kit for a language that is not currently supported, please message us on Discord or post on the forums. We are more than happy to work with you to integrate kits for new languages!
+If you are interested in contributing a starter kit for a language that is not currently supported, please post an issue about it on our [issue tracker](https://github.com/Lux-AI-Challenge/Lux-Design-2021/issues) so that people do not accidentally do the same things.
+
+Here are a few things to be aware of. The competition servers currently run on Ubuntu 18.04, and has Python, NodeJS, and Java installed on the system, along with a whole ton of other Python packages. Hence, any language that can compile to machine code / binaries can be easily added to the competition. 
+
+If you want to get started, we recommend copying the structure of the folder `src/kits/cpp`. We require you to provide a README similar to the other kit readme's, along with documentation on how to get started compiling code, then running a match using the compiled code. 
+
+Moreover, for compiled languages, we recommend also copying over the `compile.sh` script and `Dockerfile` in `src/kits/cpp/simple/` if the language's compiled binaries are OS dependent. For example, for the C++ kit, the dockerfile is used to compile the C++ agent code on Ubuntu 18.04 so then that code can be submitted to the competition servers.
+
+If you have any questions or need help adding a starter kit, the Lux AI team is more than happy to help! Message us anywhere (preferably Github).
 
