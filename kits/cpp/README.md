@@ -15,7 +15,7 @@ To get started, download the `simple` or `simple-transpiled` folder from this re
 
 Now navigate to that folder via command line e.g. `cd simple` or for windows `chdir simple`.
 
-Your main code will go into `main.cpp` and you can use create other files to help you as well. You should leave `main.py, compile.sh, package-lock.json, package.json` and the entire `lux` and `internals` subfolders alone. Read the `main.cpp` file to get an idea of how a bot is programmed and a feel for the C++ API.
+Your main code will go into `main.cpp` and you can create other files to help you as well. You should leave `main.py, compile.sh, package-lock.json, package.json` and the entire `lux` and `internals` subfolders alone. Read the `main.cpp` file to get an idea of how a bot is programmed and a feel for the C++ API.
 
 To be able to run on competition servers, we provide two options, either compile code on Ubuntu 18.04 into a binary via Docker, or transpile the code. Instructions for compilation are [here](#Compiling-Bot-for-submission), for transpilation are [here](#Transpiling-Bot-for-submission)
 
