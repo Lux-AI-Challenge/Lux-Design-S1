@@ -2,7 +2,7 @@
 
 This is the folder for the C++ kit. Please make sure to read the instructions as they are important regarding how you will write a bot and submit it to our servers.
 
-Make sure to check our discord or the Kaggle forum for announcements if there are any breaking changes.
+Make sure to check our [Discord](https://discord.gg/aWJt3UAcgn) or the [Kaggle forums](https://www.kaggle.com/c/lux-ai-2021/discussion) for announcements if there are any breaking changes.
 
 ## Getting Started
 
@@ -25,19 +25,20 @@ For transpiled bots you may test as so
 lux-ai-2021 main.js main.js --out=replay.json
 ```
 
-For bots you wish to compile normally
+For bots you wish to compile normally, compile them first into a single binary. We recommend running
+```
+g++ main.cpp -O3 -std=c++11 -o main.out
+```
+
+and then run a match as so
 
 ```
-lux-ai-2021 main.cpp main.cpp --out=replay.json
-# or use prebuilt executables if you want to compile them yourself
 lux-ai-2021 main.out main.out --out=replay.json
 ```
 
-will work. The lux ai CLI tool will try to compile the code first if the file has the extension `.cpp` and run it for local testing. If it is `.out`, it will execute it directly. By default the CLI tool runs `g++ main.cpp -O3 -std=c++11 -o main.out`. If you would like to change it, you may compile the code into binaries yourself and then test on those.
-
 ## Developing
 
-Now that you have some code and you checked that your code works by trying to submit something, you are now ready to starting programming your bot and having fun!
+Now that you have some code and you checked that your code works by trying to submit something, you are now ready to start programming your bot and having fun!
 
 If you haven't read it already, take a look at the [design specifications for the competition](https://lux-ai.org/specs-2021). This will go through the rules and objectives of the competition.
 
@@ -96,13 +97,7 @@ and this should generate a `main.wasm` and `main.js` file in your bot folder. To
 lux-ai-2021 main.js main.js --out=replay.json
 ```
 
-You can also test the untranspiled version of your bot via
-
-```
-lux-ai-2021 main.cpp main.cpp --out=replay.json
-```
-
-which will compile your C++ locally using `g++` on your computer. However, note that your submission bot **must include the transpiled version of the bot.** 
+Note that your submission **must include the transpiled version of the bot.** 
 
 ## FAQ
 
@@ -110,7 +105,5 @@ As questions come up, this will be populated with frequently asked questions reg
 
 **I get Error: spawn ETXTBSY when running a match**
 
-This is a known issue: https://github.com/Lux-AI-Challenge/Lux-Design-2021/issues/71
-
-Currently unresolved, as a result, we recommend using the kaggle-environments CLI tool to run matches instead.
+This is a known issue. See https://github.com/Lux-AI-Challenge/Lux-Design-2021/issues/71 for current resolution.
 
