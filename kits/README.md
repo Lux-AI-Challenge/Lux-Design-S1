@@ -1,8 +1,8 @@
 # Lux AI Season 1 Kits
 
-This folder contains all official kits provided by the Lux AI team or the Lux AI Challenge Season 1.
+This folder contains all official kits provided by the Lux AI team for the Lux AI Challenge Season 1.
 
-In each starter kit folder is a README and a folder called `simple` which gives you all the tools necessary to compete. Make sure to read the README document carefully. For debugging, you may log to standard error e.g. `console.error` or `print("hello", file=sys.stderr)`, this will be recorded and saved into a errorlogs folder for the match for each agent. You can also try out the [debug annotations](#Annotate) commands to draw onto the replay.
+In each starter kit folder is a README and a folder called `simple` which gives you all the tools necessary to compete. Make sure to read the README document carefully. For debugging, you may log to standard error e.g. `console.error` or `print("hello", file=sys.stderr)`, this will be recorded and saved into a errorlogs folder for the match for each agent and will be recorded by the competition servers. You can also try out the [debug annotations](#Annotate) commands to draw onto the replay.
 
 ## API
 
@@ -18,7 +18,7 @@ Additionally in the game state, are the following nested objects, `map` of type 
 
 ### <u>GameMap</u>
 
-The map is organized such that the top left corner of the map is at `(0, 0)` and the bottom right is at `(width, height)`
+The map is organized such that the top left corner of the map is at `(0, 0)` and the bottom right is at `(width, height)`. The map is always square.
 
 Properties:
 

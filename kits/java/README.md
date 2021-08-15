@@ -2,7 +2,7 @@
 
 This is the folder for the Java kit. Please make sure to read the instructions as they are important regarding how you will write a bot and submit it to the competition servers.
 
-Make sure to check our discord or the Kaggle forum for announcements if there are any breaking changes.
+Make sure to check our [Discord](https://discord.gg/aWJt3UAcgn) or the [Kaggle forums](https://www.kaggle.com/c/lux-ai-2021/discussion) for announcements if there are any breaking changes.
 
 ## Getting Started
 
@@ -32,7 +32,7 @@ Note that your submitted bot must include the compiled `.class` files with it or
 
 ## Developing
 
-Now that you have some code and you checked that your code works by trying to submit something, you are now ready to starting programming your bot and having fun!
+Now that you have some code and you checked that your code works by trying to submit something, you are now ready to start programming your bot and having fun!
 
 If you haven't read it already, take a look at the [design specifications for the competition](https://lux-ai.org/specs-2021). This will go through the rules and objectives of the competition.
 
