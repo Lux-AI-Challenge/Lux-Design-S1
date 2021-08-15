@@ -151,8 +151,7 @@ namespace kit
                     int y = stoi(updates[i++]);
                     float cooldown = stof(updates[i++]);
                     lux::City * city = &players[team].cities[cityid];
-                    lux::CityTile * citytile = city->addCityTile(x, y, cooldown);
-                    this->map.getCell(x, y)->citytile = citytile;
+                    city->addCityTile(x, y, cooldown);
                     players[team].cityTileCount += 1;
                 }
                 else if (input_identifier == INPUT_CONSTANTS::ROADS)
@@ -164,7 +163,19 @@ namespace kit
                     lux::Cell * cell = this->map.getCell(x, y);
                     cell->road = road;
                 }
-            };
+            }
+            for (lux::Player &player : players)
+            {
+                for (auto &element : player.cities)
+                {
+                    lux::City &city = element.second;
+                    for (lux::CityTile &citytile : city.citytiles)
+                    {
+                        const lux::Position &pos = citytile.pos;
+                        map.getCell(pos.x, pos.y)->citytile = &citytile;
+                    }
+                }
+            }
         }
 
     private:
