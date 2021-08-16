@@ -1,12 +1,10 @@
 import chai from 'chai';
 import 'mocha';
 import { Game } from '../src/Game';
-import { fail } from 'assert';
 import { Resource } from '../src/Resource';
-import { MatchWarn } from 'dimensions-ai';
 
 const expect = chai.expect;
-describe.only('Test resource transfer', () => {
+describe('Test resource transfer', () => {
   let game: Game;
     let citytile23;
     beforeEach(() => {
