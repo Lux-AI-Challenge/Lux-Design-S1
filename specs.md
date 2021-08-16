@@ -111,7 +111,7 @@ Actions
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
 - Pillage - Reduce the [Road](#Roads) level of the tile the unit is on by 0.5
 - Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to the latter's cargo-capcity. Excess is returned to the original unit.
-- Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 total resources of any type in their cargo (full cargo) and the tile is empty. If building is succesful, all carried resources are consumed and a new [CityTile](#CityTiles) is built with 0 starting resources.
+- Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 total resources of any type in their cargo (full cargo) and the tile is empty. If building is successful, all carried resources are consumed and a new [CityTile](#CityTiles) is built with 0 starting resources.
 
 ### Carts
 
