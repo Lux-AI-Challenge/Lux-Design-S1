@@ -64,7 +64,7 @@ describe('Test kits', () => {
       expect(match1_cmds).to.eql(match2_cmds);
     }
   };
-  it('c++ consistency test', async () => {
+  it.skip('c++ consistency test', async () => {
     let botList = [bots.js, bots.cppTranspiled];
     const match = await luxdim.createMatch(botList, options);
     const res = await match.run();
