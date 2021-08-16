@@ -223,7 +223,7 @@ Actions in the game are first all validated against the current game state to se
 7. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
 8. Regrow wood tiles that are not depleted to 0
 
-The only exception to the validation criteria is that units may smoothly between spaces, meaning if two units are adjacent, they can swap places in one turn. 
+The only exception to the validation criteria is that units may move smoothly between spaces, meaning if two units are adjacent, they can swap places in one turn. 
 
 Otherwise, actions such as one unit building a CityTile, then another unit moving on top of the new CityTile, are not allowed as the current state does not have this newly built city and units cannot move on top of other units outside of CityTiles.
 
