@@ -8,21 +8,15 @@ Welcome to the Lux AI Challenge Season 1!
 
 The Lux AI Challenge is a competition where competitors design agents to tackle a multi-variable optimization, resource gathering, and allocation problem in a 1v1 scenario against other competitors. In addition to optimization, successful agents must be capable of analyzing their opponents and developing appropriate policies to get the upper hand.
 
+To get started, go to our [Getting Started](#getting-started) section. The competition runs until December 6th 2021 and submissions are due at 11:59PM UTC on the competition page: https://www.kaggle.com/c/lux-ai-2021
+
 Thanks to our sponsors [QuantCo](https://quantco.com/), [J Ventures](http://www.thejiangmen.com/), and [QAImera](https://qaimera.com), we have a $10,000 prize pool along with many other non-monetary prizes this year! For more information see https://www.lux-ai.org/sponsors-2021
 
 Make sure to join our community discord at https://discord.gg/aWJt3UAcgn to chat, strategize, and learn with other competitors! We will be posting announcements on the Kaggle Forums and on the discord.
 
 This was built by the Lux AI Challenge team, using the [Dimensions](https://github.com/StoneT2000/Dimensions) package.
 
-To get started, go to our [Getting Started](#getting-started) section.
-
 Season 1 specifications can be found here: https://lux-ai.org/specs-2021. These detail how the game works and what rules your agent must abide by.
-
-Bot API Documentation: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits.
-
-Competition Leaderboard: Not yet released
-
-The visualizer for the competition is at https://2021vis.lux-ai.org/. To get a local copy of the visualizer, see https://github.com/Lux-AI-Challenge/LuxViewer2021. You may also use the embedded visualizer on the Kaggle competition page or in jupyter notebooks.
 
 ## Getting Started
 
@@ -42,7 +36,7 @@ You may ignore any warnings that show up, those are harmless. To run a match fro
 lux-ai-2021 path/to/botfile path/to/otherbotfile
 ```
 
-and the match will run with some logging and store error logs and a replay in a new `errorlogs` folder and `replays` folder. Logs stored in the errorlogs will include all error output and anything printed to standard error by your agent. You can watch the replay stored in the replays folder using our [visualizer](https://2021vis.lux-ai.org/).
+and the match will run with some logging and store error logs and a replay in a new `errorlogs` folder and `replays` folder. Logs stored in the errorlogs will include all error output and anything printed to standard error by your agent. You can watch the replay stored in the replays folder using our [visualizer](https://2021vis.lux-ai.org/). To watch the replay locally, follow instructions here https://github.com/Lux-AI-Challenge/LuxViewer2021/
 
 For a full list of commands from the CLI, run
 
@@ -99,9 +93,9 @@ You can run your own local leaderboard / tournament to evaluate several bots at 
 lux-ai-2021 --rankSystem="trueskill" --tournament path/to/agent1 path/to/agent2 path/to/agent3 path/to/agent4 ...
 ```
 
-This will run a leaderboard ranked by trueskill. Agents are auto matched with opponents with similar ratings. Recommended to add `--storeReplay=false --storeLogs=false` as letting this run for a long time will generate a lot of replays and log files.
+This will run a leaderboard ranked by trueskill and print results as a table to your console. Agents are auto matched with opponents with similar ratings. Recommended to add `--storeReplay=false --storeLogs=false` as letting this run for a long time will generate a lot of replays and log files.
 
-See `lux-ai-2021` for more options.
+See `lux-ai-2021 --help` for more options.
 
 ### CLI Docker
 
