@@ -46,7 +46,9 @@ lux-ai-2021 --help
 
 or go to the [next section](#CLI-Usage) to see more instructions on how to use the command line tool, including generating stateful replays and running local leaderboards for evaluation. You may also run this all in docker using the `cli.sh` file in this repo, see instructions [here](#cli-docker).
 
-The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits) folder in this repository holds all of the available starter kits you can use to start competing and building an AI agent and show you how to get started with your language of choice and run a match with that bot. You can also follow the following direct links
+Each programming language has a starter kit, you can find documentation here: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits
+
+The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits) folder in this repository holds all of the available starter kits you can use to start competing and building an AI agent and show you how to get started with your language of choice and run a match with that bot. can be found  You can also follow the following direct links
 
 - Python: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/python
 - Javascript: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/js
