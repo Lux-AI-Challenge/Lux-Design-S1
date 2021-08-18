@@ -1,5 +1,7 @@
 # Lux AI Season 1 Specifications
 
+For documentation on the API, see [this document](https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/kits/). To get started developing a bot, see our [Github](https://github.com/Lux-AI-Challenge/Lux-Design-2021)
+
 ## Background
 
 The night is dark and full of terrors. Two teams must fight off the darkness, collect resources, and advance through the ages. Daytime finds a desperate rush to gather and build the resources that can carry you through the impending night. Plan and expand carefully -- any city that fails to produce enough light will be consumed by darkness.
