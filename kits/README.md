@@ -101,7 +101,7 @@ Properties:
 
 - `pos: Position` - the [Position](#Position) of this [Unit](#Unit) on the map
 - `team: int` - the id of the team this [Unit](#Unit) belongs to.
-- `id: int` - the id of this [Unit](#Unit). This is unique and cannot be repeated by any other [Unit](#Unit) or [City](#City)
+- `id: str` - the id of this [Unit](#Unit). This is unique and cannot be repeated by any other [Unit](#Unit) or [City](#City)
 - `cooldown: float` - the current Cooldown of this [Unit](#Unit). Note that when this is less than 1, the [Unit](#Unit) can perform an action
 - `cargo.wood: int` - the amount of wood held by this [Unit](#Unit)
 - `cargo.coal: int` - the amount of coal held by this [Unit](#Unit)
