@@ -588,7 +588,7 @@ export class Game {
         cell.units.forEach((unit) => {
           if (
             unit.type === Unit.Type.WORKER &&
-            this.state.teamStates[unit.team].researched[type] && !cell.isCityTile()
+            this.state.teamStates[unit.team].researched[type]
           ) {
             workersToReceiveResources.push(unit as Worker);
           }
