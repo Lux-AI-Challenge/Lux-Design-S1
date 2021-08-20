@@ -1,5 +1,9 @@
 # Change Log
 
+### v3.0.0
+
+- TBD
+
 ### v2.2.0
 
 - Fix bug where a team can build an extra unit above unit cap if they build workers and carts simultaneously
