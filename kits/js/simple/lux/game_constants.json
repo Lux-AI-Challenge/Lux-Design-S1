@@ -34,13 +34,13 @@
     },
     "WORKER_COLLECTION_RATE": {
       "WOOD": 20,
-      "COAL": 10,
-      "URANIUM": 4
+      "COAL": 5,
+      "URANIUM": 2
     },
     "RESOURCE_TO_FUEL_RATE": {
       "WOOD": 1,
-      "COAL": 5,
-      "URANIUM": 20
+      "COAL": 10,
+      "URANIUM": 40
     },
     "RESEARCH_REQUIREMENTS": {
       "COAL": 50,

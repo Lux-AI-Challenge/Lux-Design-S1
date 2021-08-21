@@ -58,9 +58,9 @@ Wood in particular can regrow. Each turn, every wood tile's wood amount increase
    </td>
    <td>50
    </td>
-   <td>5
-   </td>
    <td>10
+   </td>
+   <td>5
    </td>
   </tr>
   <tr>
@@ -68,9 +68,9 @@ Wood in particular can regrow. Each turn, every wood tile's wood amount increase
    </td>
    <td>200
    </td>
-   <td>20
+   <td>40
    </td>
-   <td>4
+   <td>2
    </td>
   </tr>
 </table>
@@ -83,6 +83,10 @@ At the end of each turn, [Workers](#Workers) automatically receive resources fro
   - Determine the number of eligible workers (adjacent and have required research level)
   - If there are enough resources left, each eligible worker receives up to the collection rate (or up to their carrying capacity)
   - If there aren't enough resources to give to all workers, the resources distributed are evenly divided between workers (rounded down to the nearest integer).
+
+[Workers](#Workers) will always receive resources from the North, then West, Center, East, then South directions in that order.
+
+[Workers](#Workers) cannot mine while on [CityTiles](#CityTiles). Instead, if there is at least one Worker on a CityTile, that CityTile will automatically collect adjacent resources at the same rate as a worker each turn and directly convert it all to fuel. The collection mechanic for a CityTile is the same as a worker and you can treat a CityTile as an individual Worker collecting resources.
 
 ## Actions
 
@@ -217,6 +221,8 @@ Should any [Unit](#Units) during the night run out of fuel, they will be removed
 </table>
 
 ## Game Resolution order
+
+To help avoid confusion over smaller details of how each turn is resolved, we provide the game resolution order here and how actions are applied.
 
 Actions in the game are first all validated against the current game state to see if they are valid. Then the actions, along with game events, are resolved in the following order and simultaneously within each step
 

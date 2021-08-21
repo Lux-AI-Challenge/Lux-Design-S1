@@ -335,18 +335,7 @@ export class LuxDesignLogic {
     }
 
     // distribute all resources in order of decreasing fuel efficiency
-    const miningOrder = [
-      Resource.Types.URANIUM,
-      Resource.Types.COAL,
-      Resource.Types.WOOD,
-    ];
-    for (const curType of miningOrder) {
-      game.map.resources
-        .filter((cell) => cell.resource.type === curType)
-        .forEach((cell) => {
-          game.handleResourceRelease(cell);
-        });
-    }
+    game.distributeAllResources();
 
     // now we make all units with cargo drop all resources on the city they are standing on
     for (const team of teams) {
