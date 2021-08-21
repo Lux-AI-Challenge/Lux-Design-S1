@@ -253,7 +253,7 @@ const generateAllResources = (
   coalResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 500 + Math.floor(rng() * 150);
+        const amt = 250 + Math.floor(rng() * 75);
         resourcesMap[y][x] = { type: Resource.Types.COAL, amt };
         if (symmetry === SYMMETRY.VERTICAL) {
           resourcesMap[y][width - x - 1] = { amt, type: Resource.Types.COAL };
@@ -274,7 +274,7 @@ const generateAllResources = (
   uraniumResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 500 + Math.floor(rng() * 100);
+        const amt = 250 + Math.floor(rng() * 50);
         resourcesMap[y][x] = { type: Resource.Types.URANIUM, amt };
         if (symmetry === SYMMETRY.VERTICAL) {
           resourcesMap[y][width - x - 1] = {
