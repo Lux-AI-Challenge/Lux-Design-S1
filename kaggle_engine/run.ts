@@ -5,7 +5,7 @@ import {
   LuxDesignLogic,
   LuxMatchConfigs,
   LuxMatchState,
-} from "@lux-ai/2021-challenge";
+} from "../lib/es6";
 import { DeepPartial } from "dimensions-ai/lib/main/utils/DeepPartial";
 
 const lux2021 = new LuxDesign("lux_ai_2021");
