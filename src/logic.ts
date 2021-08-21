@@ -268,7 +268,7 @@ export class LuxDesignLogic {
           actionsMap.set(action.action, newactionArray);
         }
       } catch (err) {
-        match.throw(agentID, err);
+        match.log.warn(`${match.agents[agentID].file} | ${err.message}`);
       }
     }
 
@@ -329,7 +329,7 @@ export class LuxDesignLogic {
         try {
           unit.handleTurn(game);
         } catch (err) {
-          match.throw(unit.team, err);
+          match.log.warn(`${match.agents[unit.team].file} | ${err.message}`);
         }
       });
     }
