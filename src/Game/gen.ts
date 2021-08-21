@@ -202,8 +202,8 @@ const validateResourcesMap = (
     });
   });
   if (data.wood < 2000) return false;
-  if (data.coal < 3000) return false;
-  if (data.uranium < 600) return false;
+  if (data.coal < 1500) return false;
+  if (data.uranium < 300) return false;
   return true;
 };
 const generateAllResources = (
