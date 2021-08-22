@@ -7,6 +7,7 @@ This update includes some spec changes that **require you to immediately update 
 - Coal and Uranium's fuel per unit have been doubled, but collection rate has been halved
 - The average amount of Coal and Uranium per resource tile at the start of a game has been halved
 - Workers can no longer mine while on a CityTile. Instead, if there is at least one worker on a CityTile, that CityTile will automatically collect adjacent resources at the same rate as a worker each turn and directly convert it all to fuel.
+- Bug fix: If an agent errors out, the CLI tool now does the same thing the competition servers do, and lets game play out but errored out agents cannot make any actions
 
 Motivation:
 - Previously you could exploit the following simple strategy and win quite easily with little effort: Build a long line of CityTiles. At the head of it, stack all of your worker units. Now as you move this line of CityTiles to new resource locations, the stack of worker units will all instant mine and deposit resources as fuel extremely fast and this is very unbalanced. Our goals with game designs are to always maintain some kind of logarithimc curve on a time+skill vs bot performance graph, with this simple strategy adding a discontinuity to that.

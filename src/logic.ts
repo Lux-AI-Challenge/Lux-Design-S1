@@ -215,38 +215,6 @@ export class LuxDesignLogic {
       game.replay.data.allCommands.push(commands);
     }
 
-    // check if any agents are terminated and finish game if so
-    // FRONTEND needs to pass in psuedo isTerminated() function that returns true on the turn an agent terminated itself
-    const agentsTerminated = match.agents.map((agent) => agent.isTerminated());
-
-    if (agentsTerminated[0] || agentsTerminated[1]) {
-      // if at least 1 agent was terminated, destroy the terminated agents' cities and units
-      game.cities.forEach((city) => {
-        if (agentsTerminated[city.team]) {
-          game.destroyCity(city.id);
-        }
-      });
-      const teams = [Unit.TEAM.A, Unit.TEAM.B];
-      for (const team of teams) {
-        if (agentsTerminated[team]) {
-          game.state.teamStates[team].units.forEach((unit) => {
-            game.destroyUnit(unit.team, unit.id);
-          });
-        }
-      }
-      if (state.configs.debug) {
-        await this.debugViewer(game);
-      }
-      game.state.turn++;
-      if (game.replay.statefulReplay) {
-        game.replay.writeState(game);
-      }
-      if (game.configs.storeReplay) {
-        game.replay.writeOut(this.getResults(match));
-      }
-      return 'finished' as Match.Status.FINISHED;
-    }
-
     // loop over commands and validate and map into internal action representations
     const actionsMap: Map<Game.ACTIONS, Array<Action>> = new Map();
     Object.values(Game.ACTIONS).forEach((val) => {
@@ -256,7 +224,6 @@ export class LuxDesignLogic {
     const accumulatedActionStats = game._genInitialAccumulatedActionStats();
     for (let i = 0; i < commands.length; i++) {
       // get the command and the agent that issued it and handle appropriately
-      const agentID = commands[i].agentID;
       try {
         const action = game.validateCommand(
           commands[i],
