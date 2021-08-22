@@ -30,7 +30,7 @@ Each player will start with a single [CityTile](#CityTiles) and a single worker 
 
 There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing fuel efficiency). These resources are collected by workers, then dropped off once a worker moves on top of a [CityTile](#CityTiles) to then be converted into fuel for the city. Some resources require research points before they are possible to collect.
 
-Wood in particular can regrow. Each turn, every wood tile's wood amount increases by 1% of its current wood amount rounded up. Wood tiles that have been depleted will not regrow. Only wood tiles with less than 400 wood will regrow.
+Wood in particular can regrow. Each turn, every wood tile's wood amount increases by 1% of its current wood amount rounded up. Wood tiles that have been depleted will not regrow. Only wood tiles with less than 500 wood will regrow.
 
 <table>
   <tr>
@@ -167,7 +167,7 @@ At the end of each turn, a unit’s Cooldown will reduce by 1
 
 ## Roads
 
-As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). Each turn, any tile that a [Cart](#Carts) starts on will have its road level increased by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
+As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). At the end of each turn, any tile that a [Cart](#Carts) starts on will have its road level increased by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
 
 Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
