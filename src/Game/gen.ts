@@ -241,7 +241,7 @@ const generateAllResources = (
   });
   const coalResourcesMap = generateResourceMap(
     rng,
-    0.1,
+    0.11,
     0.02,
     halfWidth,
     halfHeight,
@@ -286,7 +286,10 @@ const generateAllResources = (
         const ny = y + d[1];
         if (nx < 0 || ny < 0 || nx >= halfHeight || ny >= halfWidth) continue;
         if (rng() < 0.05) {
-          let amt = 350 + Math.floor(rng() * 50);
+          let amt = 250 + Math.floor(rng() * 50);
+          if (resource.type === 'coal') {
+            amt = 350 + Math.floor(rng() * 75);
+          }
           if (resource.type === 'wood') {
             amt = Math.min(100 + Math.floor(rng() * 200), 500);
           }
