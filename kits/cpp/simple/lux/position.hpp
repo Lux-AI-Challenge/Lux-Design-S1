@@ -31,6 +31,10 @@ namespace lux
         {
             return this->x == pos.x && this->y == pos.y;
         }
+        bool operator!=(const Position &pos)
+        {
+            return !(operator==(pos));
+        }
 
         Position translate(const DIRECTIONS &direction, int units)
         {
