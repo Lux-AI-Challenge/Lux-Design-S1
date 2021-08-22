@@ -21,7 +21,7 @@ const argv = yargs(process.argv.slice(2))
     },
     maxtime: {
       describe: 'max time per turn for the bot',
-      default: 1200,
+      default: 3000,
       type: 'number',
     },
     tournament: {

@@ -124,50 +124,74 @@ export class LuxDesignLogic {
 
     const promises: Array<Promise<boolean>> = [];
     const teams = [Unit.TEAM.A, Unit.TEAM.B];
-
     // send research points
     teams.forEach((team) => {
       const pts = game.state.teamStates[team].researchPoints;
-      promises.push(match.sendAll(`rp ${team} ${pts}`));
+      match.agents.forEach((agent) => {
+        if (!agent.isTerminated()) {
+          promises.push(match.send(`rp ${team} ${pts}`, agent));
+        }
+      });
     });
 
     // send resource information
+    // only send if agents not terminated
     map.resources.forEach((cell) => {
-      promises.push(
-        match.sendAll(
-          `r ${cell.resource.type} ${cell.pos.x} ${cell.pos.y} ${cell.resource.amount}`
-        )
-      );
+      match.agents.forEach((agent) => {
+        if (!agent.isTerminated()) {
+          promises.push(
+            match.send(
+              `r ${cell.resource.type} ${cell.pos.x} ${cell.pos.y} ${cell.resource.amount}`,
+              agent
+            )
+          );
+        }
+      });
     });
 
     // send unit information
     teams.forEach((team) => {
       const units = game.getTeamsUnits(team);
       units.forEach((unit) => {
-        promises.push(
-          match.sendAll(
-            `u ${unit.type} ${team} ${unit.id} ${unit.pos.x} ${unit.pos.y} ${unit.cooldown} ${unit.cargo.wood} ${unit.cargo.coal} ${unit.cargo.uranium}`
-          )
-        );
+        match.agents.forEach((agent) => {
+          if (!agent.isTerminated()) {
+            promises.push(
+              match.send(
+                `u ${unit.type} ${team} ${unit.id} ${unit.pos.x} ${unit.pos.y} ${unit.cooldown} ${unit.cargo.wood} ${unit.cargo.coal} ${unit.cargo.uranium}`,
+                agent
+              )
+            );
+          }
+        });
       });
     });
 
     // send city information
     game.cities.forEach((city) => {
-      promises.push(
-        match.sendAll(
-          `c ${city.team} ${city.id} ${city.fuel} ${city.getLightUpkeep()}`
-        )
-      );
+      match.agents.forEach((agent) => {
+        if (!agent.isTerminated()) {
+          promises.push(
+            match.send(
+              `c ${city.team} ${city.id} ${city.fuel} ${city.getLightUpkeep()}`,
+              agent
+            )
+          );
+        }
+      });
     });
 
     game.cities.forEach((city) => {
       city.citycells.forEach((cell) => {
-        promises.push(
-          match.sendAll(
-            `ct ${city.team} ${city.id} ${cell.pos.x} ${cell.pos.y} ${cell.citytile.cooldown}`
-          )
-        );
+        match.agents.forEach((agent) => {
+          if (!agent.isTerminated()) {
+            promises.push(
+              match.send(
+                `ct ${city.team} ${city.id} ${cell.pos.x} ${cell.pos.y} ${cell.citytile.cooldown}`,
+                agent
+              )
+            );
+          }
+        });
       });
     });
 
@@ -177,7 +201,11 @@ export class LuxDesignLogic {
         const cd = game.map.getCell(x, y).getRoad();
         // ignore cooldowns of 0
         if (cd !== 0) {
-          promises.push(match.sendAll(`ccd ${x} ${y} ${cd}`));
+          match.agents.forEach((agent) => {
+            if (!agent.isTerminated()) {
+              promises.push(match.send(`ccd ${x} ${y} ${cd}`, agent));
+            }
+          });
         }
       }
     }
@@ -343,7 +371,14 @@ export class LuxDesignLogic {
     /** Agent Update Section */
     await this.sendAllAgentsGameInformation(match);
     // tell all agents updates are done
-    await match.sendAll('D_DONE');
+    const donemsgs: Promise<boolean>[] = [];
+    match.agents.forEach((agent) => {
+      if (!agent.isTerminated()) {
+        donemsgs.push(match.send('D_DONE', agent));
+      }
+    })
+    
+    await Promise.all(donemsgs);
 
     if (matchOver) {
       if (game.replay) {
@@ -488,7 +523,7 @@ export class LuxDesignLogic {
         results.replayFile = game.replay.replayFilePath;
       }
       return results;
-      
+
       // // if tied still, count by fuel generation
       // if (
       //   game.stats.teamStats[Unit.TEAM.A].fuelGenerated >
@@ -540,13 +575,15 @@ export class LuxDesignLogic {
      */
     const state: LuxMatchState = match.state;
     const game = state.game;
-    function isKaggleObs(obs: SerializedState | KaggleObservation): obs is KaggleObservation {
+    function isKaggleObs(
+      obs: SerializedState | KaggleObservation
+    ): obs is KaggleObservation {
       return (obs as KaggleObservation).updates !== undefined;
     }
     if (isKaggleObs(serializedState)) {
       // handle reduced states (e.g. kaggle outputs)
       serializedState = parseKaggleObs(serializedState);
-    } 
+    }
     // update map first
     const height = serializedState.map.length;
     const width = serializedState.map[0].length;
@@ -579,12 +616,7 @@ export class LuxDesignLogic {
     for (const cityid of Object.keys(serializedState.cities)) {
       const cityinfo = serializedState.cities[cityid];
       cityinfo.cityCells.forEach((ct) => {
-        const tile = game.spawnCityTile(
-          cityinfo.team,
-          ct.x,
-          ct.y,
-          cityinfo.id
-        );
+        const tile = game.spawnCityTile(cityinfo.team, ct.x, ct.y, cityinfo.id);
         tile.cooldown = ct.cooldown;
       });
       const city = game.cities.get(cityinfo.id);

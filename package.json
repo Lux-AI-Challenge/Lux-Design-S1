@@ -35,7 +35,7 @@
   "homepage": "https://github.com/Lux-AI-Challenge/LuxDesign#readme",
   "dependencies": {
     "colors": "^1.4.0",
-    "dimensions-ai": "^5.1.2",
+    "dimensions-ai": "^5.1.3",
     "jszip": "^3.5.0",
     "nanoid": "^3.1.12",
     "seedrandom": "^3.0.5",
