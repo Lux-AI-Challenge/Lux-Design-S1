@@ -114,7 +114,6 @@ export const generateGame = (
         halfHeight
       );
     }
-    console.log({retries})
     resourcesMap.forEach((row, y) => {
       row.forEach((val, x) => {
         if (val !== null) {
@@ -235,7 +234,7 @@ const generateAllResources = (
   woodResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = Math.min(100 + Math.floor(rng() * 100), 400);
+        const amt = Math.min(100 + Math.floor(rng() * 200), 500);
         resourcesMap[y][x] = { type: Resource.Types.WOOD, amt };
       }
     });
@@ -251,14 +250,14 @@ const generateAllResources = (
   coalResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 250 + Math.floor(rng() * 75);
+        const amt = 350 + Math.floor(rng() * 75);
         resourcesMap[y][x] = { type: Resource.Types.COAL, amt };
       }
     });
   });
   const uraniumResourcesMap = generateResourceMap(
     rng,
-    0.05,
+    0.06,
     0.04,
     halfWidth,
     halfHeight,
@@ -276,6 +275,27 @@ const generateAllResources = (
   for (let i = 0; i < 10; i++) {
     resourcesMap = gravitateResources(resourcesMap);
   }
+
+  // perturb resources
+  for (let y = 0; y < halfHeight; y++) {
+    for (let x = 0; x < halfWidth; x++) {
+      const resource = resourcesMap[y][x];
+      if (resource === null) continue;
+      for (const d of MOVE_DELTAS) {
+        const nx = x + d[0];
+        const ny = y + d[1];
+        if (nx < 0 || ny < 0 || nx >= halfHeight || ny >= halfWidth) continue;
+        if (rng() < 0.05) {
+          let amt = 350 + Math.floor(rng() * 50);
+          if (resource.type === 'wood') {
+            amt = Math.min(100 + Math.floor(rng() * 200), 500);
+          }
+          resourcesMap[ny][nx] = { type: resource.type, amt };
+        }
+      }
+    }
+  }
+
   for (let y = 0; y < halfHeight; y++) {
     for (let x = 0; x < halfWidth; x++) {
       const resource = resourcesMap[y][x];
@@ -286,7 +306,6 @@ const generateAllResources = (
         }
     }
   }
-      //  
   return resourcesMap;
 };
 const generateResourceMap = (
