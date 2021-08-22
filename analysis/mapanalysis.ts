@@ -36,9 +36,11 @@ const options = {
 const stats = {
 
 }
-const run = async () => {
-  for (let i =0 ; i < 10000; i++) {
+const run = async (times = 10000) => {
+  const stime = new Date();
+  for (let i =0 ; i < times; i++) {
     options.seed = i;
+    // console.log("Gen", i)
     const match = await luxdim.createMatch(['temp', 'temp'], options);
     const state: LuxMatchState = match.state;
     const resources = {
@@ -74,7 +76,10 @@ const run = async () => {
   //     }
   //   }
   // }
+  const etime = new Date();
+  const dt = etime.getTime() - stime.getTime();
+  console.log(`Took ${dt}ms, ${times/dt} maps / ms`)
   fs.writeFileSync("mapgendist.json", JSON.stringify(stats))
   // console.log(JSON.stringify(stats))
 }
-run();
+run(10000);
