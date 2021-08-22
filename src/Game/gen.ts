@@ -225,7 +225,7 @@ const generateAllResources = (
   }
   const woodResourcesMap = generateResourceMap(
     rng,
-    0.192,
+    0.21,
     0.01,
     halfWidth,
     halfHeight,
@@ -234,7 +234,7 @@ const generateAllResources = (
   woodResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = Math.min(100 + Math.floor(rng() * 200), 500);
+        const amt = Math.min(300 + Math.floor(rng() * 100), 500);
         resourcesMap[y][x] = { type: Resource.Types.WOOD, amt };
       }
     });
@@ -257,7 +257,7 @@ const generateAllResources = (
   });
   const uraniumResourcesMap = generateResourceMap(
     rng,
-    0.06,
+    0.055,
     0.04,
     halfWidth,
     halfHeight,
@@ -266,7 +266,7 @@ const generateAllResources = (
   uraniumResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 250 + Math.floor(rng() * 50);
+        const amt = 300 + Math.floor(rng() * 50);
         resourcesMap[y][x] = { type: Resource.Types.URANIUM, amt };
       }
     });
@@ -286,12 +286,12 @@ const generateAllResources = (
         const ny = y + d[1];
         if (nx < 0 || ny < 0 || nx >= halfHeight || ny >= halfWidth) continue;
         if (rng() < 0.05) {
-          let amt = 250 + Math.floor(rng() * 50);
+          let amt = 300 + Math.floor(rng() * 50);
           if (resource.type === 'coal') {
             amt = 350 + Math.floor(rng() * 75);
           }
           if (resource.type === 'wood') {
-            amt = Math.min(100 + Math.floor(rng() * 200), 500);
+            amt = Math.min(300 + Math.floor(rng() * 100), 500);
           }
           resourcesMap[ny][nx] = { type: resource.type, amt };
         }
