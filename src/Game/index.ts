@@ -831,12 +831,7 @@ export class Game {
     // reverts a given action such that cellsToActionsToThere has no collisions due to action and all related actions
     const revertAction = (action: MoveAction): void => {
       if (match) {
-        match.throw(
-          action.team,
-          new MatchWarn(
-            `turn ${this.state.turn}; Unit ${action.unitid} collided when trying to move to (${action.newcell.pos.x}, ${action.newcell.pos.y})`
-          )
-        );
+        match.log.warn(`${`turn ${this.state.turn}; Unit ${action.unitid} collided when trying to move ${action.direction} to (${action.newcell.pos.x}, ${action.newcell.pos.y})`}`);
       }
       const origcell = this.map.getCellByPos(
         this.getUnit(action.team, action.unitid).pos
