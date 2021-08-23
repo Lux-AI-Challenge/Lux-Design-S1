@@ -102,7 +102,9 @@ export const generateGame = (
       halfWidth,
       halfHeight
     );
+    let retries = 0;
     while (!validateResourcesMap(resourcesMap)) {
+      retries += 1;
       resourcesMap = generateAllResources(
         rng,
         symmetry,
@@ -202,8 +204,8 @@ const validateResourcesMap = (
     });
   });
   if (data.wood < 2000) return false;
-  if (data.coal < 3000) return false;
-  if (data.uranium < 600) return false;
+  if (data.coal < 1500) return false;
+  if (data.uranium < 300) return false;
   return true;
 };
 const generateAllResources = (
@@ -214,7 +216,7 @@ const generateAllResources = (
   halfWidth: number,
   halfHeight: number
 ) => {
-  const resourcesMap: Array<{ amt: number; type: Resource.Types } | any> = [];
+  let resourcesMap: Array<{ amt: number; type: Resource.Types } | any> = [];
   for (let i = 0; i < height; i++) {
     resourcesMap.push([]);
     for (let j = 0; j < width; j++) {
@@ -223,7 +225,7 @@ const generateAllResources = (
   }
   const woodResourcesMap = generateResourceMap(
     rng,
-    0.192,
+    0.21,
     0.01,
     halfWidth,
     halfHeight,
@@ -232,19 +234,14 @@ const generateAllResources = (
   woodResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = Math.min(100 + Math.floor(rng() * 100), 400);
+        const amt = Math.min(300 + Math.floor(rng() * 100), 500);
         resourcesMap[y][x] = { type: Resource.Types.WOOD, amt };
-        if (symmetry === SYMMETRY.VERTICAL) {
-          resourcesMap[y][width - x - 1] = { amt, type: Resource.Types.WOOD };
-        } else {
-          resourcesMap[height - y - 1][x] = { amt, type: Resource.Types.WOOD };
-        }
       }
     });
   });
   const coalResourcesMap = generateResourceMap(
     rng,
-    0.1,
+    0.11,
     0.02,
     halfWidth,
     halfHeight,
@@ -253,19 +250,14 @@ const generateAllResources = (
   coalResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 500 + Math.floor(rng() * 150);
+        const amt = 350 + Math.floor(rng() * 75);
         resourcesMap[y][x] = { type: Resource.Types.COAL, amt };
-        if (symmetry === SYMMETRY.VERTICAL) {
-          resourcesMap[y][width - x - 1] = { amt, type: Resource.Types.COAL };
-        } else {
-          resourcesMap[height - y - 1][x] = { amt, type: Resource.Types.COAL };
-        }
       }
     });
   });
   const uraniumResourcesMap = generateResourceMap(
     rng,
-    0.05,
+    0.055,
     0.04,
     halfWidth,
     halfHeight,
@@ -274,22 +266,49 @@ const generateAllResources = (
   uraniumResourcesMap.forEach((row, y) => {
     row.forEach((val, x) => {
       if (val === 1) {
-        const amt = 500 + Math.floor(rng() * 100);
+        const amt = 300 + Math.floor(rng() * 50);
         resourcesMap[y][x] = { type: Resource.Types.URANIUM, amt };
-        if (symmetry === SYMMETRY.VERTICAL) {
-          resourcesMap[y][width - x - 1] = {
-            amt,
-            type: Resource.Types.URANIUM,
-          };
-        } else {
-          resourcesMap[height - y - 1][x] = {
-            amt,
-            type: Resource.Types.URANIUM,
-          };
-        }
       }
     });
   });
+
+  for (let i = 0; i < 10; i++) {
+    resourcesMap = gravitateResources(resourcesMap);
+  }
+
+  // perturb resources
+  for (let y = 0; y < halfHeight; y++) {
+    for (let x = 0; x < halfWidth; x++) {
+      const resource = resourcesMap[y][x];
+      if (resource === null) continue;
+      for (const d of MOVE_DELTAS) {
+        const nx = x + d[0];
+        const ny = y + d[1];
+        if (nx < 0 || ny < 0 || nx >= halfHeight || ny >= halfWidth) continue;
+        if (rng() < 0.05) {
+          let amt = 300 + Math.floor(rng() * 50);
+          if (resource.type === 'coal') {
+            amt = 350 + Math.floor(rng() * 75);
+          }
+          if (resource.type === 'wood') {
+            amt = Math.min(300 + Math.floor(rng() * 100), 500);
+          }
+          resourcesMap[ny][nx] = { type: resource.type, amt };
+        }
+      }
+    }
+  }
+
+  for (let y = 0; y < halfHeight; y++) {
+    for (let x = 0; x < halfWidth; x++) {
+      const resource = resourcesMap[y][x];
+      if (symmetry === SYMMETRY.VERTICAL) {
+          resourcesMap[y][width - x - 1] = resource;
+        } else {
+          resourcesMap[height - y - 1][x] = resource;
+        }
+    }
+  }
   return resourcesMap;
 };
 const generateResourceMap = (
@@ -370,8 +389,129 @@ const simulateGOL = (arr: Array<Array<number>>, options: GOLOptions) => {
   }
 };
 
+const kernelForce = (resourcesMap: any[], rx: number, ry: number) => {
+  const force = [0, 0];
+  const resource = resourcesMap[ry][rx];
+  const kernelSize = 5;
+  for (let y = ry - kernelSize; y < ry + kernelSize; y++) {
+    for (let x = rx - kernelSize; x < rx + kernelSize; x++) {
+      if (x < 0 || y < 0 || x >= resourcesMap[0].length || y >= resourcesMap.length) continue;
+      const r2 = resourcesMap[y][x]
+      if (r2 !== null) {
+        const dx = rx - x;
+        const dy = ry - y;
+        const mdist = Math.abs(dx) + Math.abs(dy);
+        if (r2.type !== resource.type) {
+          if (dx !== 0) force[0] += Math.pow(dx/mdist, 2) * Math.sign(dx);
+          if (dy !== 0) force[1] += Math.pow(dy/mdist, 2) * Math.sign(dy);
+        } else {
+          if (dx !== 0) force[0] -= Math.pow(dx/mdist, 2) * Math.sign(dx);
+          if (dy !== 0) force[1] -= Math.pow(dy/mdist, 2) * Math.sign(dy);
+        }
+      }
+    }
+  }
+  return force;
+}
+
+/**
+ * Gravitate like to like, push different resources away from each other.
+ * 
+ * Add's a force direction to each cell.
+ */
+const gravitateResources = (resourcesMap) => {
+  const newResourcesMap = [];
+  for (let y = 0; y < resourcesMap.length; y++) {
+    newResourcesMap.push([]);
+    for (let x  = 0; x < resourcesMap[y].length; x++) {
+      newResourcesMap[y].push(null);
+      const res = resourcesMap[y][x];
+      if (res !== null) {
+        const f = kernelForce(resourcesMap, x, y);
+        resourcesMap[y][x].force = f;
+      }
+    }
+  }
+  for (let y = 0; y < resourcesMap.length; y++) {
+    for (let x  = 0; x < resourcesMap[y].length; x++) {
+      const res = resourcesMap[y][x];
+      if (res !== null) {
+        let nx = x + Math.sign(res.force[0])*1;
+        let ny = y + Math.sign(res.force[1])*1;
+        if (nx < 0) nx = 0;
+        if (ny < 0) ny = 0;
+        if (nx >= resourcesMap[0].length) nx = resourcesMap[0].length-1;
+        if (ny >= resourcesMap.length) ny = resourcesMap.length- 1;
+        if (newResourcesMap[ny][nx] === null) {
+          newResourcesMap[ny][nx] = res;
+        } else {
+          newResourcesMap[y][x] = res;
+        }
+      }
+    }
+  }
+  return newResourcesMap;
+}
+
 export interface GenerationConfigs {
   width: number;
   height: number;
   seed: number;
 }
+const printMap = (resourcesMap) => {
+  for (let y = 0; y < resourcesMap.length; y++) {
+    let str = '';
+    for (let x  = 0; x < resourcesMap[y].length; x++) {
+      const res = resourcesMap[y][x];
+      if (res === null) {
+        str +="0 ".grey
+      } else {
+        switch(res.type) {
+          case 'wood':
+            str += "X ".yellow
+            break;
+          case 'coal':
+            str += "X ".black
+            break;
+          case 'uranium':
+            str += "X ".magenta
+            break;
+        }
+      }
+    }
+    console.log(str)
+  }
+}
+// const rng = seedrandom(`gen_${23122929}`);
+// const size = mapSizes[Math.floor(rng() * mapSizes.length)];
+// let halfWidth = size;
+// let halfHeight = size;
+// let symmetry = SYMMETRY.HORIZONTAL;
+// if (rng() < 0.5) {
+//   symmetry = SYMMETRY.VERTICAL;
+//   halfWidth = size / 2;
+// } else {
+//   halfHeight = size / 2;
+// }
+// let resourcesMap = generateAllResources(
+//   rng,
+//   symmetry,
+//   size,
+//   size,
+//   halfWidth,
+//   halfHeight
+// );
+// console.log("Initial Resource Half Map")
+// printMap(resourcesMap)
+// for (let i = 0; i < 10; i++) {
+  
+//   // console.log(resourcesMap[4][0])
+//   // console.log("gravitating")
+//   if (i %2 == 0) {
+//     console.log(`Resource Half Map after ${i + 1} gravitation steps`)
+//     resourcesMap = gravitateResources(resourcesMap)
+//     printMap(resourcesMap)
+//   }
+// }
+
+        

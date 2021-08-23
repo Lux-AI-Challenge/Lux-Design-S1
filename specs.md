@@ -30,7 +30,7 @@ Each player will start with a single [CityTile](#CityTiles) and a single worker 
 
 There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing fuel efficiency). These resources are collected by workers, then dropped off once a worker moves on top of a [CityTile](#CityTiles) to then be converted into fuel for the city. Some resources require research points before they are possible to collect.
 
-Wood in particular can regrow. Each turn, every wood tile's wood amount increases by 1% of its current wood amount rounded up. Wood tiles that have been depleted will not regrow. Only wood tiles with less than 400 wood will regrow.
+Wood in particular can regrow. Each turn, every wood tile's wood amount increases by 1% of its current wood amount rounded up. Wood tiles that have been depleted will not regrow. Only wood tiles with less than 500 wood will regrow.
 
 <table>
   <tr>
@@ -58,9 +58,9 @@ Wood in particular can regrow. Each turn, every wood tile's wood amount increase
    </td>
    <td>50
    </td>
-   <td>5
-   </td>
    <td>10
+   </td>
+   <td>5
    </td>
   </tr>
   <tr>
@@ -68,9 +68,9 @@ Wood in particular can regrow. Each turn, every wood tile's wood amount increase
    </td>
    <td>200
    </td>
-   <td>20
+   <td>40
    </td>
-   <td>4
+   <td>2
    </td>
   </tr>
 </table>
@@ -83,6 +83,10 @@ At the end of each turn, [Workers](#Workers) automatically receive resources fro
   - Determine the number of eligible workers (adjacent and have required research level)
   - If there are enough resources left, each eligible worker receives up to the collection rate (or up to their carrying capacity)
   - If there aren't enough resources to give to all workers, the resources distributed are evenly divided between workers (rounded down to the nearest integer).
+
+[Workers](#Workers) will always receive resources from the North, then West, Center, East, then South directions in that order.
+
+[Workers](#Workers) cannot mine while on [CityTiles](#CityTiles). Instead, if there is at least one Worker on a CityTile, that CityTile will automatically collect adjacent resources at the same rate as a worker each turn and directly convert it all to fuel. The collection mechanic for a CityTile is the same as a worker and you can treat a CityTile as an individual Worker collecting resources.
 
 ## Actions
 
@@ -130,9 +134,9 @@ Actions
 
 [CityTiles](#CityTiles), [Workers](#Workers) and [Carts](#Carts) all have a cooldown mechanic after each action. [Units](#Units) and [CityTiles](#CityTiles) can only perform an action when they have &lt; 1 Cooldown.
 
-After an action is performed, the unit’s Cooldown will increase by a Base Cooldown and then decrease by the level of the [Road](#Roads) it **started its turn on.** [CityTiles](#CityTiles) however will always get their Cooldown increased by 10.
+At the **end of each turn**, after [Road](#roads) have been built and pillaged, each unit's Cooldown decreases by 1 and further decreases by the level of the [Road](#Roads) the unit is on at the end of the turn. CityTiles are not affected by road levels however, cooldown decreases by 1 only for them. The minimum Cooldown is 0.
 
-At the end of each turn, a unit’s Cooldown will reduce by 1
+After an action is performed, the unit’s Cooldown will increase by a Base Cooldown.
 
 <table>
   <tr>
@@ -163,11 +167,13 @@ At the end of each turn, a unit’s Cooldown will reduce by 1
 
 ## Roads
 
-As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). Each turn, any tile that a [Cart](#Carts) starts on will have its road level increased by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
+As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). At the end of each turn, [Cart](#Carts) will upgrade the road level of the tile it ends on by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
 
 Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
 Roads can also be destroyed by [Workers](#Workers) via the pillage action which reduces road level by 0.5 each time.
+
+If a City is consumed by darkness, the road level of all tiles in the City's CityTiles will go back to 0.
 
 ## Day/Night Cycle
 
@@ -218,16 +224,18 @@ Should any [Unit](#Units) during the night run out of fuel, they will be removed
 
 ## Game Resolution order
 
+To help avoid confusion over smaller details of how each turn is resolved, we provide the game resolution order here and how actions are applied.
+
 Actions in the game are first all validated against the current game state to see if they are valid. Then the actions, along with game events, are resolved in the following order and simultaneously within each step
 
-1. [CityTile](#CityTiles) actions
-2. [Unit](#Units) actions
-3. [Cooldowns](#Cooldown) are handled / computed for each unit and CityTile, after roads are pillaged by Unit actions.
-4. [Roads](#Roads) are created
-5. [Resource](#Resources) collection
-6. [Resource](#Resources) drops on [CityTiles](#CityTiles)
-7. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
-8. Regrow wood tiles that are not depleted to 0
+1. [CityTile](#CityTiles) actions along with increased cooldown
+2. [Unit](#Units) actions along with increased cooldown
+3. [Roads](#Roads) are created
+4. [Resource](#Resources) collection
+5. [Resource](#Resources) drops on [CityTiles](#CityTiles)
+6. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
+7. Regrow wood tiles that are not depleted to 0
+8. [Cooldowns](#Cooldown) are handled / computed for each unit and CityTile
 
 The only exception to the validation criteria is that units may move smoothly between spaces, meaning if two units are adjacent, they can swap places in one turn. 
 

@@ -1,5 +1,22 @@
 # Change Log
 
+### v3.0.0
+
+This update includes some spec changes that **require you to immediately update your CLI tool and or kaggle-environments** to the latest version
+
+- Coal and Uranium's fuel per unit have been doubled, but collection rate has been halved
+- The average amount of Coal and Uranium per resource tile at the start of a game has been approximately halved
+- Workers can no longer mine while on a CityTile. Instead, if there is at least one worker on a CityTile, that CityTile will automatically collect adjacent resources at the same rate as a worker each turn and directly convert it all to fuel.
+- Bug fix: If an agent errors out, the CLI tool now does the same thing the competition servers do, and lets game play out but errored out agents cannot make any actions
+- Map generation updated to create more dense, separated clusters of like resources
+- Max wood per tile bumped to 500
+
+Motivation:
+- Previously you could exploit the following simple strategy and win quite easily with little effort: Build a long line of CityTiles. At the head of it, stack all of your worker units. Now as you move this line of CityTiles to new resource locations, the stack of worker units will all instant mine and deposit resources as fuel extremely fast and this is very unbalanced. Our goals with game designs are to always maintain some kind of logarithimc curve on a time+skill vs bot performance graph, with this simple strategy adding a discontinuity to that.
+- Changes to Coal and Uranium raise the opportunity cost of building CityTiles with Uranium and Coal whilst keeping the total fuel value in a map the same now. This is to encourage more use of Wood which is an interesting resource as it must be collected early on but also conserved as it becomes more important in the late game. This variation we believe will help diversify strategies more with regards to wood collection
+- Furthermore, raising the opportunity cost of losing a unit of coal or uranium at night may encourage more varied strategies with handling night time, potentially encouraging the use of roads and or other combination of aspects of the game
+- Changes here are kept small and directed such that these should not affect current leadeboard rankings much
+
 ### v2.2.0
 
 - Fix bug where a team can build an extra unit above unit cap if they build workers and carts simultaneously

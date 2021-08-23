@@ -92,7 +92,7 @@ describe('Test kits', () => {
     const cmds1 = state.game.replay.data.allCommands;
     const cmds2 = state2.game.replay.data.allCommands;
     verifyCommands(cmds1, cmds2);
-  }).timeout(10000);
+  }).timeout(12000);
 
   it('should run python', async () => {
     let botList = [bots.js, bots.py];

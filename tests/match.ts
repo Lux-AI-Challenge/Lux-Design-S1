@@ -1,3 +1,6 @@
+// scratch cmds
+// ts-node src/bin/index.ts tests/bots/pyorganic/main.py tests/bots/pyorganic/main.py --out=out.json
+
 import * as Dimensions from 'dimensions-ai';
 // test running a match
 import { LuxDesign } from '../src';

@@ -124,50 +124,74 @@ export class LuxDesignLogic {
 
     const promises: Array<Promise<boolean>> = [];
     const teams = [Unit.TEAM.A, Unit.TEAM.B];
-
     // send research points
     teams.forEach((team) => {
       const pts = game.state.teamStates[team].researchPoints;
-      promises.push(match.sendAll(`rp ${team} ${pts}`));
+      match.agents.forEach((agent) => {
+        if (!agent.isTerminated()) {
+          promises.push(match.send(`rp ${team} ${pts}`, agent));
+        }
+      });
     });
 
     // send resource information
+    // only send if agents not terminated
     map.resources.forEach((cell) => {
-      promises.push(
-        match.sendAll(
-          `r ${cell.resource.type} ${cell.pos.x} ${cell.pos.y} ${cell.resource.amount}`
-        )
-      );
+      match.agents.forEach((agent) => {
+        if (!agent.isTerminated()) {
+          promises.push(
+            match.send(
+              `r ${cell.resource.type} ${cell.pos.x} ${cell.pos.y} ${cell.resource.amount}`,
+              agent
+            )
+          );
+        }
+      });
     });
 
     // send unit information
     teams.forEach((team) => {
       const units = game.getTeamsUnits(team);
       units.forEach((unit) => {
-        promises.push(
-          match.sendAll(
-            `u ${unit.type} ${team} ${unit.id} ${unit.pos.x} ${unit.pos.y} ${unit.cooldown} ${unit.cargo.wood} ${unit.cargo.coal} ${unit.cargo.uranium}`
-          )
-        );
+        match.agents.forEach((agent) => {
+          if (!agent.isTerminated()) {
+            promises.push(
+              match.send(
+                `u ${unit.type} ${team} ${unit.id} ${unit.pos.x} ${unit.pos.y} ${unit.cooldown} ${unit.cargo.wood} ${unit.cargo.coal} ${unit.cargo.uranium}`,
+                agent
+              )
+            );
+          }
+        });
       });
     });
 
     // send city information
     game.cities.forEach((city) => {
-      promises.push(
-        match.sendAll(
-          `c ${city.team} ${city.id} ${city.fuel} ${city.getLightUpkeep()}`
-        )
-      );
+      match.agents.forEach((agent) => {
+        if (!agent.isTerminated()) {
+          promises.push(
+            match.send(
+              `c ${city.team} ${city.id} ${city.fuel} ${city.getLightUpkeep()}`,
+              agent
+            )
+          );
+        }
+      });
     });
 
     game.cities.forEach((city) => {
       city.citycells.forEach((cell) => {
-        promises.push(
-          match.sendAll(
-            `ct ${city.team} ${city.id} ${cell.pos.x} ${cell.pos.y} ${cell.citytile.cooldown}`
-          )
-        );
+        match.agents.forEach((agent) => {
+          if (!agent.isTerminated()) {
+            promises.push(
+              match.send(
+                `ct ${city.team} ${city.id} ${cell.pos.x} ${cell.pos.y} ${cell.citytile.cooldown}`,
+                agent
+              )
+            );
+          }
+        });
       });
     });
 
@@ -177,7 +201,11 @@ export class LuxDesignLogic {
         const cd = game.map.getCell(x, y).getRoad();
         // ignore cooldowns of 0
         if (cd !== 0) {
-          promises.push(match.sendAll(`ccd ${x} ${y} ${cd}`));
+          match.agents.forEach((agent) => {
+            if (!agent.isTerminated()) {
+              promises.push(match.send(`ccd ${x} ${y} ${cd}`, agent));
+            }
+          });
         }
       }
     }
@@ -215,38 +243,6 @@ export class LuxDesignLogic {
       game.replay.data.allCommands.push(commands);
     }
 
-    // check if any agents are terminated and finish game if so
-    // FRONTEND needs to pass in psuedo isTerminated() function that returns true on the turn an agent terminated itself
-    const agentsTerminated = match.agents.map((agent) => agent.isTerminated());
-
-    if (agentsTerminated[0] || agentsTerminated[1]) {
-      // if at least 1 agent was terminated, destroy the terminated agents' cities and units
-      game.cities.forEach((city) => {
-        if (agentsTerminated[city.team]) {
-          game.destroyCity(city.id);
-        }
-      });
-      const teams = [Unit.TEAM.A, Unit.TEAM.B];
-      for (const team of teams) {
-        if (agentsTerminated[team]) {
-          game.state.teamStates[team].units.forEach((unit) => {
-            game.destroyUnit(unit.team, unit.id);
-          });
-        }
-      }
-      if (state.configs.debug) {
-        await this.debugViewer(game);
-      }
-      game.state.turn++;
-      if (game.replay.statefulReplay) {
-        game.replay.writeState(game);
-      }
-      if (game.configs.storeReplay) {
-        game.replay.writeOut(this.getResults(match));
-      }
-      return 'finished' as Match.Status.FINISHED;
-    }
-
     // loop over commands and validate and map into internal action representations
     const actionsMap: Map<Game.ACTIONS, Array<Action>> = new Map();
     Object.values(Game.ACTIONS).forEach((val) => {
@@ -256,7 +252,6 @@ export class LuxDesignLogic {
     const accumulatedActionStats = game._genInitialAccumulatedActionStats();
     for (let i = 0; i < commands.length; i++) {
       // get the command and the agent that issued it and handle appropriately
-      const agentID = commands[i].agentID;
       try {
         const action = game.validateCommand(
           commands[i],
@@ -268,7 +263,7 @@ export class LuxDesignLogic {
           actionsMap.set(action.action, newactionArray);
         }
       } catch (err) {
-        match.throw(agentID, err);
+        match.log.warn(`${err.message}`);
       }
     }
 
@@ -329,24 +324,13 @@ export class LuxDesignLogic {
         try {
           unit.handleTurn(game);
         } catch (err) {
-          match.throw(unit.team, err);
+          match.log.warn(`${err.message}`);
         }
       });
     }
 
     // distribute all resources in order of decreasing fuel efficiency
-    const miningOrder = [
-      Resource.Types.URANIUM,
-      Resource.Types.COAL,
-      Resource.Types.WOOD,
-    ];
-    for (const curType of miningOrder) {
-      game.map.resources
-        .filter((cell) => cell.resource.type === curType)
-        .forEach((cell) => {
-          game.handleResourceRelease(cell);
-        });
-    }
+    game.distributeAllResources();
 
     // now we make all units with cargo drop all resources on the city they are standing on
     for (const team of teams) {
@@ -384,10 +368,19 @@ export class LuxDesignLogic {
       game.replay.writeState(game);
     }
 
+    game.runCooldowns();
+
     /** Agent Update Section */
     await this.sendAllAgentsGameInformation(match);
     // tell all agents updates are done
-    await match.sendAll('D_DONE');
+    const donemsgs: Promise<boolean>[] = [];
+    match.agents.forEach((agent) => {
+      if (!agent.isTerminated()) {
+        donemsgs.push(match.send('D_DONE', agent));
+      }
+    })
+    
+    await Promise.all(donemsgs);
 
     if (matchOver) {
       if (game.replay) {
@@ -532,7 +525,7 @@ export class LuxDesignLogic {
         results.replayFile = game.replay.replayFilePath;
       }
       return results;
-      
+
       // // if tied still, count by fuel generation
       // if (
       //   game.stats.teamStats[Unit.TEAM.A].fuelGenerated >
@@ -584,13 +577,15 @@ export class LuxDesignLogic {
      */
     const state: LuxMatchState = match.state;
     const game = state.game;
-    function isKaggleObs(obs: SerializedState | KaggleObservation): obs is KaggleObservation {
+    function isKaggleObs(
+      obs: SerializedState | KaggleObservation
+    ): obs is KaggleObservation {
       return (obs as KaggleObservation).updates !== undefined;
     }
     if (isKaggleObs(serializedState)) {
       // handle reduced states (e.g. kaggle outputs)
       serializedState = parseKaggleObs(serializedState);
-    } 
+    }
     // update map first
     const height = serializedState.map.length;
     const width = serializedState.map[0].length;
@@ -623,12 +618,7 @@ export class LuxDesignLogic {
     for (const cityid of Object.keys(serializedState.cities)) {
       const cityinfo = serializedState.cities[cityid];
       cityinfo.cityCells.forEach((ct) => {
-        const tile = game.spawnCityTile(
-          cityinfo.team,
-          ct.x,
-          ct.y,
-          cityinfo.id
-        );
+        const tile = game.spawnCityTile(cityinfo.team, ct.x, ct.y, cityinfo.id);
         tile.cooldown = ct.cooldown;
       });
       const city = game.cities.get(cityinfo.id);

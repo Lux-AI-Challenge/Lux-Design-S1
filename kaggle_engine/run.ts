@@ -5,7 +5,7 @@ import {
   LuxDesignLogic,
   LuxMatchConfigs,
   LuxMatchState,
-} from "@lux-ai/2021-challenge";
+} from "../lib/es6";
 import { DeepPartial } from "dimensions-ai/lib/main/utils/DeepPartial";
 
 const lux2021 = new LuxDesign("lux_ai_2021");
@@ -32,12 +32,22 @@ const main = async () => {
 
     // initialize a match
     if (json.type && json.type === "start") {
+      let mapwidth = parseInt(json.config.width);
+      let mapheight = parseInt(json.config.height);
+      if (mapwidth == -1) {
+        mapwidth = undefined;
+      }
+      if (mapheight == -1) {
+        mapheight = undefined;
+      }
       const configs: DeepPartial<LuxMatchConfigs & Match.Configs> = {
         detached: true,
         agentOptions: { detached: true },
         storeReplay: false,
         storeErrorLogs: false,
         loggingLevel: parseInt(json.config.loglevel),
+        width: mapwidth,
+        height: mapheight,
         seed: parseInt(json.config.seed),
         mapType: json.config.mapType,
         parameters: {

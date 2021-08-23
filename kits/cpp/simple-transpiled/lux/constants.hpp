@@ -35,7 +35,7 @@ namespace lux
           "CART": 10
         },
         "WOOD_GROWTH_RATE": 1.01,
-        "MAX_WOOD_AMOUNT": 400,
+        "MAX_WOOD_AMOUNT": 500,
         "CITY_BUILD_COST": 100,
         "CITY_ADJACENCY_BONUS": 5,
         "RESOURCE_CAPACITY": {
@@ -44,13 +44,13 @@ namespace lux
         },
         "WORKER_COLLECTION_RATE": {
           "WOOD": 20,
-          "COAL": 10,
-          "URANIUM": 4
+          "COAL": 5,
+          "URANIUM": 2
         },
         "RESOURCE_TO_FUEL_RATE": {
           "WOOD": 1,
-          "COAL": 5,
-          "URANIUM": 20
+          "COAL": 10,
+          "URANIUM": 40
         },
         "RESEARCH_REQUIREMENTS": {
           "COAL": 50,
