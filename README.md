@@ -46,15 +46,15 @@ lux-ai-2021 --help
 
 or go to the [next section](#CLI-Usage) to see more instructions on how to use the command line tool, including generating stateful replays and running local leaderboards for evaluation. You may also run this all in docker using the `cli.sh` file in this repo, see instructions [here](#cli-docker).
 
-Each programming language has a starter kit, you can find documentation here: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits
+Each programming language has a starter kit, you can find general API documentation here: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits
 
-The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits) folder in this repository holds all of the available starter kits you can use to start competing and building an AI agent and show you how to get started with your language of choice and run a match with that bot. can be found  You can also follow the following direct links
+The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits) folder in this repository holds all of the available starter kits you can use to start competing and building an AI agent and show you how to get started with your language of choice and run a match with that bot can be found. **We strongly recommend reading through the documentation for your language of choice** in the links below
 
-- Python: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/python
-- Javascript: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/js
-- C++: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/cpp
-- Java: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/java
-- Typescript: https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/ts
+- [Python](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/python)
+- [Javascript](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/js)
+- [C++](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/cpp)
+- [Java](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/java)
+- [Typescript](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/ts)
 
 Want to use another language but it's not supported? Feel free to suggest that language to our issues or even better, create a starter kit for the community to use and make a PR to this repository. See our [CONTRIBUTING.md document](https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/CONTRIBUTING.md) for more information on this.
 
