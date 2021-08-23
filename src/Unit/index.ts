@@ -121,6 +121,10 @@ export class Cart extends Unit {
     const cell = game.map.getCellByPos(this.pos);
     const isNight = game.isNight();
     const cooldownMultiplier = isNight ? 2 : 1;
+    
+    this.cooldown -= cell.getRoad();
+    this.cooldown = Math.max(this.cooldown - 1, 0);
+
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       if (action instanceof MoveAction) {
@@ -128,7 +132,6 @@ export class Cart extends Unit {
         this.cooldown +=
           this.configs.parameters.UNIT_ACTION_COOLDOWN.CART *
           cooldownMultiplier;
-        this.cooldown -= cell.getRoad();
       } else if (action instanceof TransferAction) {
         game.transferResources(
           action.team,
@@ -140,7 +143,6 @@ export class Cart extends Unit {
         this.cooldown +=
           this.configs.parameters.UNIT_ACTION_COOLDOWN.CART *
           cooldownMultiplier;
-        this.cooldown -= cell.getRoad();
       }
     }
 
@@ -153,7 +155,6 @@ export class Cart extends Unit {
       game.stats.teamStats[this.team].roadsBuilt +=
         this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE;
     }
-    this.cooldown = Math.max(this.cooldown - 1, 0);
   }
 }
 
@@ -194,6 +195,10 @@ export class Worker extends Unit {
     const cell = game.map.getCellByPos(this.pos);
     const isNight = game.isNight();
     const cooldownMultiplier = isNight ? 2 : 1;
+
+    this.cooldown -= cell.getRoad();
+    this.cooldown = Math.max(this.cooldown - 1, 0);
+
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
       let acted = true;
@@ -222,9 +227,8 @@ export class Worker extends Unit {
         this.cooldown +=
           this.configs.parameters.UNIT_ACTION_COOLDOWN.WORKER *
           cooldownMultiplier;
-        this.cooldown -= cell.getRoad();
       }
     }
-    this.cooldown = Math.max(this.cooldown - 1, 0);
+    
   }
 }

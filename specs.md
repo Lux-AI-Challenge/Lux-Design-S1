@@ -134,9 +134,9 @@ Actions
 
 [CityTiles](#CityTiles), [Workers](#Workers) and [Carts](#Carts) all have a cooldown mechanic after each action. [Units](#Units) and [CityTiles](#CityTiles) can only perform an action when they have &lt; 1 Cooldown.
 
-After an action is performed, the unit’s Cooldown will increase by a Base Cooldown and then decrease by the level of the [Road](#Roads) it **started its turn on.** [CityTiles](#CityTiles) however will always get their Cooldown increased by 10.
+At the **start of each turn**, each unit's Cooldown decreases by 1 and further decreases by the level of the [Road](#Roads) the unit is on at the start of the turn. CityTiles are not affected by road levels however, cooldown decreases by 1 only for them. The minimum Cooldown is 0.
 
-At the end of each turn, a unit’s Cooldown will reduce by 1
+After an action is performed, the unit’s Cooldown will increase by a Base Cooldown.
 
 <table>
   <tr>
@@ -172,6 +172,8 @@ As [Carts](#Carts) travel across the map, they start to create roads which allow
 Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
 Roads can also be destroyed by [Workers](#Workers) via the pillage action which reduces road level by 0.5 each time.
+
+If a City is consumed by darkness, the road level of all tiles in the City's CityTiles will go back to 0.
 
 ## Day/Night Cycle
 
@@ -226,9 +228,9 @@ To help avoid confusion over smaller details of how each turn is resolved, we pr
 
 Actions in the game are first all validated against the current game state to see if they are valid. Then the actions, along with game events, are resolved in the following order and simultaneously within each step
 
-1. [CityTile](#CityTiles) actions
-2. [Unit](#Units) actions
-3. [Cooldowns](#Cooldown) are handled / computed for each unit and CityTile, after roads are pillaged by Unit actions.
+1. [Cooldowns](#Cooldown) are handled / computed for each unit and CityTile
+2. [CityTile](#CityTiles) actions
+3. [Unit](#Units) actions
 4. [Roads](#Roads) are created
 5. [Resource](#Resources) collection
 6. [Resource](#Resources) drops on [CityTiles](#CityTiles)
