@@ -134,7 +134,7 @@ Actions
 
 [CityTiles](#CityTiles), [Workers](#Workers) and [Carts](#Carts) all have a cooldown mechanic after each action. [Units](#Units) and [CityTiles](#CityTiles) can only perform an action when they have &lt; 1 Cooldown.
 
-At the **start of each turn**, each unit's Cooldown decreases by 1 and further decreases by the level of the [Road](#Roads) the unit is on at the start of the turn. CityTiles are not affected by road levels however, cooldown decreases by 1 only for them. The minimum Cooldown is 0.
+At the **end of each turn**, after [Road](#roads) have been built and pillaged, each unit's Cooldown decreases by 1 and further decreases by the level of the [Road](#Roads) the unit is on at the end of the turn. CityTiles are not affected by road levels however, cooldown decreases by 1 only for them. The minimum Cooldown is 0.
 
 After an action is performed, the unit’s Cooldown will increase by a Base Cooldown.
 
@@ -167,7 +167,7 @@ After an action is performed, the unit’s Cooldown will increase by a Base Cool
 
 ## Roads
 
-As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). At the end of each turn, any tile that a [Cart](#Carts) starts on will have its road level increased by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
+As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). At the end of each turn, [Cart](#Carts) will upgrade the road level of the tile it ends on by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
 
 Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
@@ -228,14 +228,14 @@ To help avoid confusion over smaller details of how each turn is resolved, we pr
 
 Actions in the game are first all validated against the current game state to see if they are valid. Then the actions, along with game events, are resolved in the following order and simultaneously within each step
 
-1. [Cooldowns](#Cooldown) are handled / computed for each unit and CityTile
-2. [CityTile](#CityTiles) actions
-3. [Unit](#Units) actions
-4. [Roads](#Roads) are created
-5. [Resource](#Resources) collection
-6. [Resource](#Resources) drops on [CityTiles](#CityTiles)
-7. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
-8. Regrow wood tiles that are not depleted to 0
+1. [CityTile](#CityTiles) actions along with increased cooldown
+2. [Unit](#Units) actions along with increased cooldown
+3. [Roads](#Roads) are created
+4. [Resource](#Resources) collection
+5. [Resource](#Resources) drops on [CityTiles](#CityTiles)
+6. If night time, make [Units](#Units) consume resources and [CityTiles](#CityTiles) consume fuel
+7. Regrow wood tiles that are not depleted to 0
+8. [Cooldowns](#Cooldown) are handled / computed for each unit and CityTile
 
 The only exception to the validation criteria is that units may move smoothly between spaces, meaning if two units are adjacent, they can swap places in one turn. 
 

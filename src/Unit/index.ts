@@ -121,9 +121,6 @@ export class Cart extends Unit {
     const cell = game.map.getCellByPos(this.pos);
     const isNight = game.isNight();
     const cooldownMultiplier = isNight ? 2 : 1;
-    
-    this.cooldown -= cell.getRoad();
-    this.cooldown = Math.max(this.cooldown - 1, 0);
 
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];
@@ -146,10 +143,11 @@ export class Cart extends Unit {
       }
     }
 
-    // auto create roads by increasing the cooldown value of a cell
-    if (cell.getRoad() < this.configs.parameters.MAX_ROAD) {
-      cell.road = Math.min(
-        cell.road + this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE,
+    const endcell = game.map.getCellByPos(this.pos);
+    // auto create roads by increasing the cooldown value of the the cell unit is on currently
+    if (endcell.getRoad() < this.configs.parameters.MAX_ROAD) {
+      endcell.road = Math.min(
+        endcell.road + this.configs.parameters.CART_ROAD_DEVELOPMENT_RATE,
         this.configs.parameters.MAX_ROAD
       );
       game.stats.teamStats[this.team].roadsBuilt +=
@@ -195,9 +193,6 @@ export class Worker extends Unit {
     const cell = game.map.getCellByPos(this.pos);
     const isNight = game.isNight();
     const cooldownMultiplier = isNight ? 2 : 1;
-
-    this.cooldown -= cell.getRoad();
-    this.cooldown = Math.max(this.cooldown - 1, 0);
 
     if (this.currentActions.length === 1) {
       const action = this.currentActions[0];

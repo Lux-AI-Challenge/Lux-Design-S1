@@ -556,6 +556,16 @@ export class Game {
     }
   }
 
+  runCooldowns(): void {
+    [Unit.TEAM.A, Unit.TEAM.B].forEach((team) => {
+      const units = this.getTeamsUnits(team);
+      units.forEach((unit) => {
+        unit.cooldown -= this.map.getCellByPos(unit.pos).getRoad();
+        unit.cooldown = Math.max(unit.cooldown - 1, 0);
+      });
+    });
+  }
+
   /**
    * Move specified unit in specified direction
    */

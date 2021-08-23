@@ -368,6 +368,8 @@ export class LuxDesignLogic {
       game.replay.writeState(game);
     }
 
+    game.runCooldowns();
+
     /** Agent Update Section */
     await this.sendAllAgentsGameInformation(match);
     // tell all agents updates are done
