@@ -10,7 +10,7 @@ The night is dark and full of terrors. Two teams must fight off the darkness, co
 
 In the Lux AI Challenge Season 1, two competing teams control a team of [Units](#Units) and [CityTiles](#CityTile) that collect resources to fuel their Cities, with the main objective to own as many [CityTiles](#CityTiles) as possible at the end of the turn-based game. Both teams have complete information about the entire game state and will need to make use of that information to optimize resource collection, compete for scarce resources against the opponent, and build cities to gain points.
 
-Each competitor must program their own agent in their language of choice. Each turn, your agent gets 1 second of time to submit their actions, excess time is not saved across turns. Each game, you are given a pool of 60 seconds that is tapped into each time you go over a turn's 1 second limit. Upon using up all 60 seconds and going over the 1 second limit, your agent loses.
+Each competitor must program their own agent in their language of choice. Each turn, your agent gets 3 seconds of time to submit their actions, excess time is not saved across turns. Each game, you are given a pool of 60 seconds that is tapped into each time you go over a turn's 3 second limit. Upon using up all 60 seconds and going over the 3 second limit, your agent freezes and can no longer submit additional actions.
 
 The rest of the document will go through the key features of this game.
 
