@@ -25,23 +25,23 @@ namespace lux
             this->cooldown = cooldown;
         }
         /** Whether or not this unit can research or build */
-        bool canAct()
+        bool canAct() const
         {
             return this->cooldown < 1;
         };
         /** returns command to ask this tile to research this turn */
-        string research()
+        string research() const
         {
             return "r " + to_string(this->pos.x) + " " + to_string(this->pos.y);
 
         };
         /** returns command to ask this tile to build a worker this turn */
-        string buildWorker()
+        string buildWorker() const
         {
             return "bw " + to_string(this->pos.x) + " " + to_string(this->pos.y);
         }
         /** returns command to ask this tile to build a cart this turn */
-        string buildCart()
+        string buildCart() const
         {
             return "bc " + to_string(this->pos.x) + " " + to_string(this->pos.y);
         }

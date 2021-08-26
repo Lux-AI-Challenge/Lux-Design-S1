@@ -36,15 +36,15 @@ namespace lux
             this->cargo.coal = coal;
             this->cargo.uranium = uranium;
         };
-        bool isWorker()
+        bool isWorker() const
         {
             return this->type == 0;
         }
-        bool isCart()
+        bool isCart() const
         {
             return this->type == 1;
         }
-        int getCargoSpaceLeft()
+        int getCargoSpaceLeft() const
         {
             int spaceused = this->cargo.wood + this->cargo.coal + this->cargo.uranium;
             if (this->type == 0)
@@ -58,40 +58,54 @@ namespace lux
         }
 
         /** whether or not the unit can act or not */
-        bool canAct()
+        bool canAct() const
         {
             return this->cooldown < 1;
         }
 
         /** whether or not the unit can build where it is right now */
-        bool canBuild(const GameMap &gameMap) {
+        bool canBuild(const GameMap &gameMap) const
+        {
             auto cell = gameMap.getCellByPos(this->pos);
-            if (!cell->hasResource() && this->canAct() && (this->cargo.wood + this->cargo.coal + this->cargo.uranium) >= GAME_CONSTANTS["PARAMETERS"]["CITY_BUILD_COST"]) {
+            if (!cell->hasResource() && this->canAct() && (this->cargo.wood + this->cargo.coal + this->cargo.uranium) >= GAME_CONSTANTS["PARAMETERS"]["CITY_BUILD_COST"])
+            {
                 return true;
             }
             return false;
         }
 
         /** return the command to move unit in the given direction */
-        string move(const DIRECTIONS &dir)
+        string move(const DIRECTIONS &dir) const
         {
             return "m " + this->id + " " + (char)dir;
         }
 
         /** return the command to transfer a resource from a source unit to a destination unit as specified by their ids or the units themselves */
-        string transfer(const string &src_unit_id, const string &dest_unit_id, const ResourceType &resourceType, int amount)
+        string transfer(const string &src_unit_id, const string &dest_unit_id, const ResourceType &resourceType, int amount) const
         {
-            return "t " + src_unit_id + " " + dest_unit_id + " " + to_string(resourceType) + " " + to_string(amount);
+            string resourceName;
+            switch (resourceType)
+            {
+            case ResourceType::wood:
+                resourceName = "wood";
+                break;
+            case ResourceType::coal:
+                resourceName = "coal";
+                break;
+            case ResourceType::uranium:
+                resourceName = "uranium";
+                break;
+            }
+            return "t " + src_unit_id + " " + dest_unit_id + " " + resourceName + " " + to_string(amount);
         }
-
         /** return the command to build a city right under the worker */
-        string buildCity()
+        string buildCity() const
         {
             return "bcity " + this->id;
         }
 
         /** return the command to pillage whatever is underneath the worker */
-        string pillage()
+        string pillage() const
         {
             return "p " + this->id;
         }
