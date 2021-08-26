@@ -181,7 +181,7 @@ The Day/Night cycle consists of a 40 turn cycle, the first 30 turns being day tu
 
 During the night, [Units](#Units) and Cities need to produce light to survive. Each turn of night, each [Unit](#Units) and [CityTile](#CityTiles) will consume an amount of fuel, see table below for rates. [Units](#Units) in particular will use their carried resources to produce light whereas [CityTiles](#CityTiles) will use their fuel to produce light.
 
-[Workers](#Workers) and [Carts](#Carts) will only need to consume resources if they are not on a [CityTile](#CityTiles). When outside the City, Workers and [Carts](#Carts) must consume whole units of resources to satisfy their night needs, e.g. if a worker carries 1 wood and 5 uranium on them, they will consume a full wood for 1 fuel, then a full uranium to fulfill the last 3 fuel requirements, wasting 17 fuel. [Units](#Units) will always consume the least efficient resources first.
+[Workers](#Workers) and [Carts](#Carts) will only need to consume resources if they are not on a [CityTile](#CityTiles). When outside the City, Workers and [Carts](#Carts) must consume whole units of resources to satisfy their night needs, e.g. if a worker carries 1 wood and 5 uranium on them, they will consume a full wood for 1 fuel, then a full uranium to fulfill the last 3 fuel requirements, wasting 37 fuel. [Units](#Units) will always consume the least efficient resources first.
 
 Lastly, at night, [Units](#Units) gain 2x more Base [Cooldown](#Cooldown)
 
