@@ -23,6 +23,21 @@ import { Replay } from '../Replay';
 import { deepCopy } from '../utils';
 import { Position } from '../GameMap/position';
 
+class ResourceRequest {
+  constructor(
+    public readonly fromPos: Position, 
+    public readonly amount: number,
+    public readonly worker?: Worker,
+    public readonly city?: City,
+  ) {}
+
+
+  public equals(other: ResourceRequest): boolean {
+    return this.fromPos.equals(other.fromPos) && this.worker?.id === other.worker?.id && 
+      this.amount === other.amount && this.city?.id === other.city?.id;
+  }
+}
+
 /**
  * Holds basically all game data, including the map.
  *
@@ -584,13 +599,132 @@ export class Game {
       Resource.Types.WOOD,
     ];
     for (const curType of miningOrder) {
-      this.map.resources
-        .filter((cell) => cell.resource.type === curType)
-        .forEach((cell) => {
-          this.handleResourceRelease(cell);
-        });
+      this.handleResourceTypeRelease(curType);
     }
   }
+
+  resourceMiningRate(type: Resource.Types): number {
+    switch (type) {
+      case Resource.Types.WOOD:
+        return this.configs.parameters.WORKER_COLLECTION_RATE.WOOD;
+      case Resource.Types.COAL:
+        return this.configs.parameters.WORKER_COLLECTION_RATE.COAL;
+      case Resource.Types.URANIUM:
+        return this.configs.parameters.WORKER_COLLECTION_RATE.URANIUM;
+    }
+  }
+
+  resourceConversionRate(type: Resource.Types): number {
+    switch (type) {
+      case Resource.Types.WOOD:
+        return this.configs.parameters.RESOURCE_TO_FUEL_RATE.WOOD;
+      case Resource.Types.COAL:
+        return this.configs.parameters.RESOURCE_TO_FUEL_RATE.COAL;
+      case Resource.Types.URANIUM:
+        return this.configs.parameters.RESOURCE_TO_FUEL_RATE.URANIUM;
+    }
+  }
+
+  /**
+   * For each unit, check current and orthoganally adjancent cells for that resource
+   * type. If found, request as much as we can carry from these cells. In the case of un-even 
+   * amounts, the unit will request an equal amount from all tiles to fill their cargo, then
+   * discard the rest. (for example on 3 wood tiles with 60 wood it would request 17 to each
+   * wood tile and discard/waste the extra 1 wood mined).
+   * 
+   * If the unit is on a city tile, only one request will be made (even if there are 
+   * multiple workers on the tile )and the resources will be deposited into the city as fuel.
+   * 
+   * Once all units have requested resources, distrubte the resources, reducing requests
+   * requests if it would exceed the current value. In this case the remaining
+   * will be distributed evenly, with the leftovers discarded.
+   * 
+   * @param resourceType - the type of the resource
+   */
+  handleResourceTypeRelease(resourceType: Resource.Types): void {
+    // build up the resource requests
+    const requests = this.createResourceRequests(resourceType);
+
+    // resolve resource requests
+    this.resolveResourceRequests(resourceType, requests);
+  }
+
+  createResourceRequests(resourceType: Resource.Types): Map<string, ResourceRequest[]> {
+    const miningRate = this.resourceMiningRate(resourceType);
+    const reqs = new Map<string,ResourceRequest[]>();
+    [Unit.TEAM.A, Unit.TEAM.B].forEach((team) => {
+      const units = this.getTeamsUnits(team);
+      if (!this.state.teamStates[team].researched[resourceType]) {
+        return;
+      }
+      units.forEach((unit) => {
+        if (unit?.type !== Unit.Type.WORKER) {
+          return;
+        }
+        const minable = Game.ALL_DIRECTIONS.map(dir => this.map.getCellByPos(unit.pos.translate(dir))).filter(cell => cell.resource?.type === resourceType && cell.resource.amount > 0);
+        const mineAmount = Math.min(Math.ceil(unit.getCargoSpaceLeft()/minable.length), miningRate);
+        minable.forEach(cell => {
+          if (!reqs.has(cell.pos.toString())) {
+            reqs.set(cell.pos.toString(), []);
+          }
+          const unitCell = this.map.getCellByPos(unit.pos);
+          const req = new ResourceRequest(
+            unit.pos,
+            mineAmount,
+            unitCell.isCityTile() ? undefined : unit as Worker, // should be city tile
+            unitCell.isCityTile() ? this.cities.get(unitCell.citytile.cityid) : undefined,
+          )
+          const hasReq = reqs.get(cell.pos.toString()).some(r => r.equals(req))
+          if (!hasReq) {
+            reqs.get(cell.pos.toString()).push(req);
+          }
+        });
+      });
+    });
+    return reqs;
+  }
+
+  resolveResourceRequests(resourceType: Resource.Types, requests: Map<string, ResourceRequest[]>): void {
+    requests.forEach((reqs: ResourceRequest[], posStr: String) => {
+      const position = Position.fromString(posStr);
+      let amountLeft = this.map.getCell(position.x, position.y).resource.amount;
+      let amounts = reqs.map(r => r.amount);
+      while(amounts.length > 0 && amounts.reduce((a, b) => a + b) > 0 && amountLeft > 0) {
+        // calculate the smallest amount we should fill
+        // should be equal to the lowest request, or the amount that 
+        // mines out the tile
+        // ie if you have three requests [10, 20, 20] fill 10 first
+        const toFill = Math.min(Math.min(...amounts), Math.floor(amountLeft / reqs.length));
+        reqs.forEach(r => {
+          if(r.city) {
+            r.city.fuel += toFill * this.resourceConversionRate(resourceType);
+          } else {
+            const toGive = Math.min(r.worker.getCargoSpaceLeft(), toFill);
+            r.worker.cargo[resourceType] += toGive;
+          }
+        });
+
+        amounts = amounts.map(n => n - toFill);
+        amountLeft = toFill * reqs.length
+        if (amountLeft < reqs.length) {
+          amountLeft = 0;
+        }
+        let i = 0;
+        while(i < amounts.length) {
+          if (amounts[i] === 0) {
+            amounts.splice(i, 1);
+            reqs.splice(i, 1);
+          } else {
+            i++;
+          }
+        }
+      }
+      // set the remaining amount to be the new cell total
+      const cell = this.map.getCellByPos(position);
+      cell.resource.amount = amountLeft;
+    });
+  }
+
 
   /**
    * For cells with resources, this will release the resource to all adjacent workers (including any unit on top) in a
@@ -1068,6 +1202,14 @@ export namespace Game {
     WEST = 'w',
     CENTER = 'c',
   }
+
+  export const ALL_DIRECTIONS = [
+    DIRECTIONS.NORTH,
+    DIRECTIONS.EAST,
+    DIRECTIONS.SOUTH,
+    DIRECTIONS.WEST,
+    DIRECTIONS.CENTER,
+  ]
 }
 
 /**
