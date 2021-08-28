@@ -6,7 +6,7 @@ import { GameMap } from '../GameMap';
 import { Cart, Worker } from '../Unit';
 import { LuxMatchConfigs, SerializedState } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
-import { AgentCompileTimeoutError, MatchWarn } from 'dimensions-ai/lib/main/DimensionError';
+import { MatchWarn } from 'dimensions-ai/lib/main/DimensionError';
 import { MatchEngine, Match } from 'dimensions-ai';
 import {
   Action,
