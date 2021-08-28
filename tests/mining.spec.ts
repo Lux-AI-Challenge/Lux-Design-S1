@@ -84,7 +84,32 @@ describe('Test resource collection and distribution', () => {
     expect(w3.cargo.wood).to.equal(Math.floor((5 * rates.WOOD) / 12));
     expect(cell.resource.amount).to.equal(0);
   });
-  it('should distribute in order of North, West, Center, East, then South resource cells ', () => {
+  it('should distribute equally to cargo capacity', () => {
+    const cellC = game.map.getCell(4, 4);
+    game.map.addResource(4, 4, Resource.Types.WOOD, rates.WOOD);
+    const cellN = game.map.getCell(4, 3);
+    game.map.addResource(4, 3, Resource.Types.WOOD, rates.WOOD);
+    const cellS = game.map.getCell(4, 5);
+    game.map.addResource(4, 5, Resource.Types.WOOD, rates.WOOD);
+    game.map.sortResourcesDeterministically();
+
+    const w1 = game.spawnWorker(0, 4, 4);
+    w1.cargo.wood =
+      DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER -
+      rates.WOOD * 2;
+
+    game.distributeAllResources();
+    expect(w1.cargo.wood).to.equal(
+      DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER
+    );
+
+    // w1 has space to receive 40 wood, so it's split evenly 
+    // evenly to fill at 14
+    expect(cellC.resource.amount).to.equal(6);
+    expect(cellN.resource.amount).to.equal(6);
+    expect(cellS.resource.amount).to.equal(6);
+  });
+  it('should distribute equally ', () => {
     const cellC = game.map.getCell(4, 4);
     game.map.addResource(4, 4, Resource.Types.WOOD, rates.WOOD);
     const cellN = game.map.getCell(4, 3);
@@ -107,13 +132,17 @@ describe('Test resource collection and distribution', () => {
       DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER
     );
 
-    // w1 has space to receive 2 tiles of wood collection, so only North and West are emptied, rest remain the same
-    expect(cellC.resource.amount).to.equal(rates.WOOD);
-    expect(cellN.resource.amount).to.equal(0);
-    expect(cellW.resource.amount).to.equal(0);
-    expect(cellE.resource.amount).to.equal(rates.WOOD);
-    expect(cellS.resource.amount).to.equal(rates.WOOD);
+    // w1 has space to receive 40 wood, so it's split evenly 
+    // to fill 
+    expect(cellC.resource.amount).to.equal(12);
+    expect(cellN.resource.amount).to.equal(12);
+    expect(cellW.resource.amount).to.equal(12);
+    expect(cellE.resource.amount).to.equal(12);
+    expect(cellS.resource.amount).to.equal(12);
   });
+
+
+
   it('should distribute resources to a CityTile with at least 1 unit on there ', () => {
     const cellN = game.map.getCell(4, 3);
     game.map.addResource(4, 3, Resource.Types.WOOD, rates.WOOD * 2);

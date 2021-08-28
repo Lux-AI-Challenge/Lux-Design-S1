@@ -6,7 +6,7 @@ import { GameMap } from '../GameMap';
 import { Cart, Worker } from '../Unit';
 import { LuxMatchConfigs, SerializedState } from '../types';
 import { DEFAULT_CONFIGS } from '../defaults';
-import { MatchWarn } from 'dimensions-ai/lib/main/DimensionError';
+import { AgentCompileTimeoutError, MatchWarn } from 'dimensions-ai/lib/main/DimensionError';
 import { MatchEngine, Match } from 'dimensions-ai';
 import {
   Action,
@@ -688,14 +688,14 @@ export class Game {
     requests.forEach((reqs: ResourceRequest[], posStr: String) => {
       const position = Position.fromString(posStr);
       let amountLeft = this.map.getCell(position.x, position.y).resource.amount;
-      let amounts = reqs.map(r => r.amount);
-      while(amounts.length > 0 && amounts.reduce((a, b) => a + b) > 0 && amountLeft > 0) {
+      let amountsReqs = reqs.map(r => [r.amount, r]);
+      while(amountsReqs.length > 0 && amountsReqs.map(e => e[0] as number).reduce((a, b) => a + b) > 0 && amountLeft > 0) {
         // calculate the smallest amount we should fill
         // should be equal to the lowest request, or the amount that 
         // mines out the tile
         // ie if you have three requests [10, 20, 20] fill 10 first
-        const toFill = Math.min(Math.min(...amounts), Math.floor(amountLeft / reqs.length));
-        reqs.forEach(r => {
+        const toFill = Math.min(Math.min(...(amountsReqs.map(e => e[0] as number))), Math.floor(amountLeft / amountsReqs.length));
+        amountsReqs.map(e => e[1] as ResourceRequest).forEach(r => {
           if(r.city) {
             r.city.fuel += toFill * this.resourceConversionRate(resourceType);
           } else {
@@ -704,20 +704,12 @@ export class Game {
           }
         });
 
-        amounts = amounts.map(n => n - toFill);
-        amountLeft = toFill * reqs.length
-        if (amountLeft < reqs.length) {
+        amountsReqs = amountsReqs.map(([amount, req]: [number, ResourceRequest]) => [amount - toFill, req]);
+        amountLeft -= toFill * amountsReqs.length
+        if (amountLeft < amountsReqs.length) {
           amountLeft = 0;
         }
-        let i = 0;
-        while(i < amounts.length) {
-          if (amounts[i] === 0) {
-            amounts.splice(i, 1);
-            reqs.splice(i, 1);
-          } else {
-            i++;
-          }
-        }
+        amountsReqs = amountsReqs.filter(([amount, _]: [number, ResourceRequest]) => amount > 0);
       }
       // set the remaining amount to be the new cell total
       const cell = this.map.getCellByPos(position);
