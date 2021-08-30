@@ -19,7 +19,7 @@ describe('Test resource collection and distribution', () => {
     cell.setResource(Resource.Types.WOOD, rates.WOOD * 10);
     const w1 = game.spawnWorker(0, 4, 4);
     const w2 = game.spawnWorker(1, 4, 5);
-    game.handleResourceRelease(cell);
+    game.distributeAllResources();
     expect(w1.cargo.wood).to.equal(rates.WOOD);
     expect(w2.cargo.wood).to.equal(rates.WOOD);
     expect(cell.resource.amount).to.equal(rates.WOOD * 8);
@@ -30,7 +30,7 @@ describe('Test resource collection and distribution', () => {
     cell.setResource(Resource.Types.WOOD, rates.WOOD);
     const w1 = game.spawnWorker(0, 4, 4);
     const w2 = game.spawnWorker(1, 4, 5);
-    game.handleResourceRelease(cell);
+    game.distributeAllResources();
     expect(w1.cargo.wood).to.equal(Math.floor(rates.WOOD / 2));
     expect(w2.cargo.wood).to.equal(Math.floor(rates.WOOD / 2));
     expect(cell.resource.amount).to.equal(0);
@@ -40,7 +40,7 @@ describe('Test resource collection and distribution', () => {
     cell.setResource(Resource.Types.WOOD, rates.WOOD + 1);
     const w1 = game.spawnWorker(0, 4, 4);
     const w2 = game.spawnWorker(1, 4, 5);
-    game.handleResourceRelease(cell);
+    game.distributeAllResources();
     expect(w1.cargo.wood).to.equal(Math.floor(rates.WOOD / 2));
     expect(w2.cargo.wood).to.equal(Math.floor(rates.WOOD / 2));
     expect(cell.resource.amount).to.equal(0);
@@ -54,7 +54,7 @@ describe('Test resource collection and distribution', () => {
       DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER - rates.WOOD / 2;
     const w2 = game.spawnWorker(1, 4, 5);
     const w3 = game.spawnWorker(1, 4, 3);
-    game.handleResourceRelease(cell);
+    game.distributeAllResources();
     // shouldn't be able to go over cargo capacity and only mine half as much as usual
     expect(w1.cargo.wood).to.equal(
       DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER
@@ -74,7 +74,7 @@ describe('Test resource collection and distribution', () => {
       Math.floor(rates.WOOD / 6);
     const w2 = game.spawnWorker(1, 4, 5);
     const w3 = game.spawnWorker(1, 4, 3);
-    game.handleResourceRelease(cell);
+    game.distributeAllResources();
 
     expect(w1.cargo.wood).to.equal(
       DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER
@@ -84,7 +84,32 @@ describe('Test resource collection and distribution', () => {
     expect(w3.cargo.wood).to.equal(Math.floor((5 * rates.WOOD) / 12));
     expect(cell.resource.amount).to.equal(0);
   });
-  it('should distribute in order of North, West, Center, East, then South resource cells ', () => {
+  it('should distribute equally to cargo capacity', () => {
+    const cellC = game.map.getCell(4, 4);
+    game.map.addResource(4, 4, Resource.Types.WOOD, rates.WOOD);
+    const cellN = game.map.getCell(4, 3);
+    game.map.addResource(4, 3, Resource.Types.WOOD, rates.WOOD);
+    const cellS = game.map.getCell(4, 5);
+    game.map.addResource(4, 5, Resource.Types.WOOD, rates.WOOD);
+    game.map.sortResourcesDeterministically();
+
+    const w1 = game.spawnWorker(0, 4, 4);
+    w1.cargo.wood =
+      DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER -
+      rates.WOOD * 2;
+
+    game.distributeAllResources();
+    expect(w1.cargo.wood).to.equal(
+      DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER
+    );
+
+    // w1 has space to receive 40 wood, so it's split evenly 
+    // evenly to fill at 14
+    expect(cellC.resource.amount).to.equal(6);
+    expect(cellN.resource.amount).to.equal(6);
+    expect(cellS.resource.amount).to.equal(6);
+  });
+  it('should distribute equally ', () => {
     const cellC = game.map.getCell(4, 4);
     game.map.addResource(4, 4, Resource.Types.WOOD, rates.WOOD);
     const cellN = game.map.getCell(4, 3);
@@ -107,13 +132,17 @@ describe('Test resource collection and distribution', () => {
       DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER
     );
 
-    // w1 has space to receive 2 tiles of wood collection, so only North and West are emptied, rest remain the same
-    expect(cellC.resource.amount).to.equal(rates.WOOD);
-    expect(cellN.resource.amount).to.equal(0);
-    expect(cellW.resource.amount).to.equal(0);
-    expect(cellE.resource.amount).to.equal(rates.WOOD);
-    expect(cellS.resource.amount).to.equal(rates.WOOD);
+    // w1 has space to receive 40 wood, so it's split evenly 
+    // to fill 
+    expect(cellC.resource.amount).to.equal(12);
+    expect(cellN.resource.amount).to.equal(12);
+    expect(cellW.resource.amount).to.equal(12);
+    expect(cellE.resource.amount).to.equal(12);
+    expect(cellS.resource.amount).to.equal(12);
   });
+
+
+
   it('should distribute resources to a CityTile with at least 1 unit on there ', () => {
     const cellN = game.map.getCell(4, 3);
     game.map.addResource(4, 3, Resource.Types.WOOD, rates.WOOD * 2);
@@ -153,7 +182,7 @@ describe('Test resource collection and distribution', () => {
     game.handleResourceDeposit(w1);
     expect(w1.getCargoSpaceLeft()).to.equal(DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER);
   });
-  it('should not distribute resources to a CityTile with at no units on there ', () => {
+  it('should not distribute resources to a CityTile with no units on there or carts on there', () => {
     const cellN = game.map.getCell(4, 3);
     game.map.addResource(4, 3, Resource.Types.WOOD, rates.WOOD * 2);
     const cellW = game.map.getCell(3, 4);
@@ -163,6 +192,8 @@ describe('Test resource collection and distribution', () => {
     const cellS = game.map.getCell(4, 5);
     game.map.addResource(4, 5, Resource.Types.COAL, rates.COAL);
     const cityTile = game.spawnCityTile(0, 4, 4);
+    const cityTileWithCart = game.spawnCityTile(0, 3, 3);
+    const cart = game.spawnCart(0, 3, 3);
     game.map.sortResourcesDeterministically();
     game.state.teamStates[0].researchPoints = 60;
     game.state.teamStates[0].researched.coal = true;
@@ -175,5 +206,7 @@ describe('Test resource collection and distribution', () => {
     expect(cellE.resource.amount).to.equal(rates.URANIUM * 2);
     expect(cellS.resource.amount).to.equal(rates.COAL);
     expect(game.cities.get(cityTile.cityid).fuel).to.equal(0);
+    expect(game.cities.get(cityTileWithCart.cityid).fuel).to.equal(0);
+    expect(cart.getCargoSpaceLeft()).to.equal(DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.CART);
   });
 });
