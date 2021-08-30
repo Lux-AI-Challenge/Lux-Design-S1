@@ -661,7 +661,12 @@ export class Game {
         if (unit.type !== Unit.Type.WORKER) {
           return;
         }
-        const minable = Game.ALL_DIRECTIONS.map(dir => this.map.getCellByPos(unit.pos.translate(dir))).filter(cell => cell.resource?.type === resourceType && cell.resource.amount > 0);
+        const minable = Game.ALL_DIRECTIONS.map(dir => unit.pos.translate(dir)).filter(pos => {
+          if (!this.map.inMap(pos)) return false;
+          const cell = this.map.getCellByPos(pos);
+          if (!cell.hasResource()) return false;
+          return cell.resource?.type === resourceType && cell.resource.amount > 0
+        }).map((pos => this.map.getCellByPos(pos)));
         const mineAmount = Math.min(Math.ceil(unit.getCargoSpaceLeft()/minable.length), miningRate);
         minable.forEach(cell => {
           if (!reqs.has(cell.pos.toString())) {

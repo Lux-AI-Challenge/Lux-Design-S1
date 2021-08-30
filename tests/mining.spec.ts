@@ -5,7 +5,7 @@ import { Game } from '../src/Game';
 import { Resource } from '../src/Resource';
 import { DEFAULT_CONFIGS } from '../src/defaults';
 
-describe('Test resource collection and distribution', () => {
+describe.only('Test resource collection and distribution', () => {
   let game: Game;
   const rates = DEFAULT_CONFIGS.parameters.WORKER_COLLECTION_RATE;
   beforeEach(() => {
@@ -108,6 +108,39 @@ describe('Test resource collection and distribution', () => {
     expect(cellC.resource.amount).to.equal(6);
     expect(cellN.resource.amount).to.equal(6);
     expect(cellS.resource.amount).to.equal(6);
+  });
+  it('should distribute equally to cargo capacity between units with varying space left', () => {
+    const cellC = game.map.getCell(4, 4);
+    game.map.addResource(4, 4, Resource.Types.WOOD, rates.WOOD);
+    const cellN = game.map.getCell(4, 3);
+    game.map.addResource(4, 3, Resource.Types.WOOD, rates.WOOD);
+    const cellS = game.map.getCell(4, 5);
+    game.map.addResource(4, 5, Resource.Types.WOOD, rates.WOOD);
+    game.map.sortResourcesDeterministically();
+
+    const w1 = game.spawnWorker(0, 4, 4);
+    const w2 = game.spawnWorker(0, 4, 5);
+
+    // w1 is at the center and requests 14 from all adjacent wood
+    // w2 is down south and requests 20 from 2 tiles.
+    // total, 2/3 wood tiles are contested.
+    // the contested ones need to give 14 to w1 and 20 to w2. Since this is not possible, it divy's up what it has and gives 10 to each
+    // the uncontested one then simply gives w1 what it requested (despite being suboptimal but this is fair)
+    w1.cargo.wood =
+      DEFAULT_CONFIGS.parameters.RESOURCE_CAPACITY.WORKER -
+      rates.WOOD * 2;
+
+    game.distributeAllResources();
+    expect(w1.cargo.wood).to.equal(
+      94
+    );
+    expect(w2.cargo.wood).to.equal(
+      20
+    );
+
+    expect(cellC.resource.amount).to.equal(0);
+    expect(cellN.resource.amount).to.equal(6);
+    expect(cellS.resource.amount).to.equal(0);
   });
   it('should distribute equally ', () => {
     const cellC = game.map.getCell(4, 4);
