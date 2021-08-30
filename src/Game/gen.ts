@@ -203,9 +203,10 @@ const validateResourcesMap = (
       }
     });
   });
-  if (data.wood < 2000) return false;
-  if (data.coal < 1500) return false;
-  if (data.uranium < 300) return false;
+  const size = Math.pow(resourcesMap.length, 2);
+  if (data.wood < 2000 / size * 256) return false;
+  if (data.coal < 1500 / size * 256) return false;
+  if (data.uranium < 300 / size * 256) return false;
   return true;
 };
 const generateAllResources = (
@@ -225,7 +226,7 @@ const generateAllResources = (
   }
   const woodResourcesMap = generateResourceMap(
     rng,
-    0.21,
+    0.20,
     0.01,
     halfWidth,
     halfHeight,
@@ -241,7 +242,7 @@ const generateAllResources = (
   });
   const coalResourcesMap = generateResourceMap(
     rng,
-    0.11,
+    0.09,
     0.02,
     halfWidth,
     halfHeight,
@@ -257,8 +258,8 @@ const generateAllResources = (
   });
   const uraniumResourcesMap = generateResourceMap(
     rng,
-    0.055,
     0.04,
+    0.01,
     halfWidth,
     halfHeight,
     { deathLimit: 1, birthLimit: 6 }
@@ -272,8 +273,10 @@ const generateAllResources = (
     });
   });
 
-  for (let i = 0; i < 10; i++) {
-    resourcesMap = gravitateResources(resourcesMap);
+  for (let i = 0; i < 20; i++) {
+    resourcesMap = gravitateResources(resourcesMap, halfWidth, halfHeight);
+    printMap(resourcesMap)
+    console.log()
   }
 
   // perturb resources
@@ -392,6 +395,8 @@ const simulateGOL = (arr: Array<Array<number>>, options: GOLOptions) => {
 const kernelForce = (resourcesMap: any[], rx: number, ry: number) => {
   const force = [0, 0];
   const resource = resourcesMap[ry][rx];
+  const width = resourcesMap[0].length;
+  const height = resourcesMap.length;
   const kernelSize = 5;
   for (let y = ry - kernelSize; y < ry + kernelSize; y++) {
     for (let x = rx - kernelSize; x < rx + kernelSize; x++) {
@@ -408,6 +413,10 @@ const kernelForce = (resourcesMap: any[], rx: number, ry: number) => {
           if (dx !== 0) force[0] -= Math.pow(dx/mdist, 2) * Math.sign(dx);
           if (dy !== 0) force[1] -= Math.pow(dy/mdist, 2) * Math.sign(dy);
         }
+        const dx2 = Math.max(width - rx, rx);
+        const dy2 = Math.max(height - ry, ry);
+        force[0] += Math.pow(1 / (dx2), 2) * (rx > width / 2 ? -1 : 1) / .1;
+        force[1] += Math.pow(1 / (dy2), 2) * (ry > height / 2 ? -1 : 1) / .1;
       }
     }
   }
@@ -419,7 +428,7 @@ const kernelForce = (resourcesMap: any[], rx: number, ry: number) => {
  * 
  * Add's a force direction to each cell.
  */
-const gravitateResources = (resourcesMap) => {
+const gravitateResources = (resourcesMap, halfWidth, halfHeight) => {
   const newResourcesMap = [];
   for (let y = 0; y < resourcesMap.length; y++) {
     newResourcesMap.push([]);
@@ -440,12 +449,21 @@ const gravitateResources = (resourcesMap) => {
         let ny = y + Math.sign(res.force[1])*1;
         if (nx < 0) nx = 0;
         if (ny < 0) ny = 0;
-        if (nx >= resourcesMap[0].length) nx = resourcesMap[0].length-1;
-        if (ny >= resourcesMap.length) ny = resourcesMap.length- 1;
+        if (nx >= halfWidth) nx = halfWidth-1;
+        if (ny >= halfHeight) ny = halfHeight- 1;
         if (newResourcesMap[ny][nx] === null) {
           newResourcesMap[ny][nx] = res;
+        } else if (newResourcesMap[y][x] === null) {
+          newResourcesMap[y][x] = res;          
         } else {
-          newResourcesMap[y][x] = res;
+          for (const d of MOVE_DELTAS) {
+            nx = (x + d[0]) % halfWidth;
+            ny = (y + d[1]) % halfHeight;
+            if (newResourcesMap[ny][nx] === null) {
+              newResourcesMap[ny][nx] = res;
+              break;
+            }
+          }
         }
       }
     }
