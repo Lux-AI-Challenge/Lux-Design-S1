@@ -658,7 +658,7 @@ export class Game {
         return;
       }
       units.forEach((unit) => {
-        if (unit?.type !== Unit.Type.WORKER) {
+        if (unit.type !== Unit.Type.WORKER) {
           return;
         }
         const minable = Game.ALL_DIRECTIONS.map(dir => this.map.getCellByPos(unit.pos.translate(dir))).filter(cell => cell.resource?.type === resourceType && cell.resource.amount > 0);
@@ -685,7 +685,7 @@ export class Game {
   }
 
   resolveResourceRequests(resourceType: Resource.Types, requests: Map<string, ResourceRequest[]>): void {
-    requests.forEach((reqs: ResourceRequest[], posStr: String) => {
+    requests.forEach((reqs: ResourceRequest[], posStr: string) => {
       const position = Position.fromString(posStr);
       let amountLeft = this.map.getCell(position.x, position.y).resource.amount;
       let amountsReqs = reqs.map(r => [r.amount, r]);
@@ -716,119 +716,6 @@ export class Game {
       cell.resource.amount = amountLeft;
     });
   }
-
-
-  /**
-   * For cells with resources, this will release the resource to all adjacent workers (including any unit on top) in a
-   * even manner and taking in account for the worker's team's research level. This is effectively a worker mining.
-   *
-   * Workers adjacent will only receive resources if they can mine it. They will
-   * never receive more than they carry
-   *
-   * This function is called on cells in the order of uranium, coal, then wood resource deposits
-   *
-   *
-   * @param cell - a cell with a resource
-   */
-  handleResourceRelease(originalCell: Cell): void {
-    if (originalCell.hasResource()) {
-      const type = originalCell.resource.type;
-      const cells = [originalCell, ...this.map.getAdjacentCells(originalCell)];
-      const workersToReceiveResources: Array<Worker | CityTile> = [];
-      for (const cell of cells) {
-        if (cell.isCityTile() && cell.units.size > 0 && this.state.teamStates[cell.citytile.team].researched[type]) {
-          workersToReceiveResources.push(cell.citytile);
-        } else {
-          cell.units.forEach((unit) => {
-            // note, this loop only appends one unit to the array since we can only have one unit per city tile
-            if (
-              unit.type === Unit.Type.WORKER &&
-              this.state.teamStates[unit.team].researched[type]
-            ) {
-              workersToReceiveResources.push(unit as Worker);
-            }
-          });
-        }
-        
-      }
-      const isWorker = (pet: Worker | CityTile): pet is Worker => {
-        return (pet as Worker).cargo !== undefined;
-      }
-
-      let rate: number;
-      let conversionRate: number;
-      switch (type) {
-        case Resource.Types.WOOD:
-          rate = this.configs.parameters.WORKER_COLLECTION_RATE.WOOD;
-          conversionRate = this.configs.parameters.RESOURCE_TO_FUEL_RATE.WOOD;
-          break;
-        case Resource.Types.COAL:
-          rate = this.configs.parameters.WORKER_COLLECTION_RATE.COAL;
-          conversionRate = this.configs.parameters.RESOURCE_TO_FUEL_RATE.COAL;
-          break;
-        case Resource.Types.URANIUM:
-          rate = this.configs.parameters.WORKER_COLLECTION_RATE.URANIUM;
-          conversionRate = this.configs.parameters.RESOURCE_TO_FUEL_RATE.URANIUM;
-          break;
-      }
-      // find out how many resources to distribute and release
-      let amountToDistribute = rate * workersToReceiveResources.length;
-      let amountDistributed = 0;
-      // distribute only as much as the cell contains
-      amountToDistribute = Math.min(
-        amountToDistribute,
-        originalCell.resource.amount
-      );
-
-      // distribute resources as evenly as possible
-
-      // sort from least space to most so those with more capacity will have the correct distribution of resources before we reach cargo capacity
-      workersToReceiveResources.sort(
-        (a, b) => {
-          if (isWorker(a) && isWorker(b)) {
-            return a.getCargoSpaceLeft() - b.getCargoSpaceLeft()
-          } else if (isWorker(a)) {
-            return 1;
-          } else if (isWorker(b)) {
-            return -1;
-          }
-        }
-      );
-
-      workersToReceiveResources.forEach((entity, i) => {
-        const spaceLeft = isWorker(entity) ? entity.getCargoSpaceLeft() : 9999999;
-        const maxReceivable =
-          amountToDistribute / (workersToReceiveResources.length - i);
-
-        const distributeAmount = Math.min(spaceLeft, maxReceivable, rate);
-        // we give workers a floored amount for sake of integers and effectiely waste the remainder
-        if (isWorker(entity)) {
-          entity.cargo[type] += Math.floor(distributeAmount);
-        } else {
-          const city = this.cities.get(entity.cityid);
-          city.fuel += conversionRate * Math.floor(distributeAmount);
-        }
-
-        amountDistributed += distributeAmount;
-
-        // update stats
-        this.stats.teamStats[entity.team].resourcesCollected[type] +=
-          Math.floor(distributeAmount);
-
-        // subtract how much was given.
-        amountToDistribute -= distributeAmount;
-      });
-
-      originalCell.resource.amount -= amountDistributed;
-
-      // fixes a rare bug where sometimes JS will subtract a floating point (caused by a division somewhere)
-      // and cause a 0 value to equal to the floating point approx equal to 7e-15
-      if (originalCell.resource.amount < 1e-10) {
-        originalCell.resource.amount = 0;
-      }
-    }
-  }
-
   /**
    * Auto deposit resources of unit to tile it is on
    */
