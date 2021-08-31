@@ -6,13 +6,13 @@ Make sure to check our [Discord](https://discord.gg/aWJt3UAcgn) or the [Kaggle f
 
 ## Getting Started
 
-To get started, download the `simple` folder from this repository or via this URL: https://github.com/Lux-AI-Challenge/Lux-Design-2021/raw/master/kits/kotlin/simple/submission.tar.gz
+To get started, download the `simple` folder from this repository.
 
 Then navigate to that folder via command line e.g. `cd simple` or for windows `chdir simple`.
 
 Your main code will go into `bot/src/main/kotlin/Bot.Kt` and you can use create other files to help you as well. You should leave `main.py` and the `lux` package alone in `bot/src/main/kotlin/`. Read the `Bot.Kt` file to get an idea of how a bot is programmed and a feel for the Kotlin API.
 
-Make sure you have Java 11 (higher versions are probably fine too). The competition servers run on openjdk 11.0.10 at the moment.
+Make sure you have Java 11 (higher versions are probably fine too) and [Gradle](https://gradle.org/install/). The competition servers run on openjdk 11.0.10 at the moment.
 
 To confirm your setup, in your bot folder run
 
