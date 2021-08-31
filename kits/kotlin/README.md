@@ -26,7 +26,16 @@ and this should produce a `bot-all.jar` file in `bot/build/libs/` which comprise
 lux-ai-2021 run.sh run.sh --out=replay.json
 ```
 
-which should produce no errors. If you find some bugs or unfixable errors, please let an admin know via Discord, the forums, or email us.
+which should produce no errors.
+
+To debug your bot locally you can use any remote JMV debugger (embedded in your preferred IDE).
+First, start a game with `debug.sh` script (also increase the bot timeout):
+
+```lux-ai-2021 run.sh debug.sh --maxtime=9999999```
+
+Then, connect the debugger to `localhost:5005`. Now you can use breakpoints and other debug features!
+
+If you find some bugs or unfixable errors, please let an admin know via Discord, the forums, or email us.
 
 Note that your submitted bot must include the compiled `.jar` file with it or else it will not work on the competition servers.
 
