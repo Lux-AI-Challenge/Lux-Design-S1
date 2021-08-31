@@ -11,7 +11,7 @@ class GameMap(val width: Int, val height: Int) {
     }
 
     /** Internal use only  */
-    fun _setResource(rType: String, x: Int, y: Int, amount: Int) {
+    internal fun _setResource(rType: String, x: Int, y: Int, amount: Int) {
         val cell: Cell? = getCell(x, y)
         cell!!.resource = Resource(rType, amount)
     }
