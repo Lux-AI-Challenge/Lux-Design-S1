@@ -6,7 +6,7 @@ class City(var team: Int, var cityid: String, var fuel: Double, lightUpKeep: Dou
     var citytiles: ArrayList<CityTile> = ArrayList<CityTile>()
     var lightUpkeep = 0.0
 
-    fun _add_city_tile(x: Int, y: Int, cooldown: Double): CityTile {
+    internal fun _add_city_tile(x: Int, y: Int, cooldown: Double): CityTile {
         val ct = CityTile(team, cityid, x, y, cooldown)
         citytiles.add(ct)
         return ct
