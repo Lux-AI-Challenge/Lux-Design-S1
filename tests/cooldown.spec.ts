@@ -57,23 +57,23 @@ describe('Test cooldown computations', () => {
     w1.giveAction(new MoveAction(Game.ACTIONS.MOVE, 0, w1.id, Game.DIRECTIONS.NORTH, game.map.getCell(4, 3)));
     w1.handleTurn(game);
     game.runCooldowns();
-    // cooldown goes down by new road level of 1 and then base 1, so 3.5 to 1.5
-    expect(w1.cooldown).to.equal(1.5);
+    // cooldown goes down by new road level of 1.25 and then base 1, so 3.5 to 1.25
+    expect(w1.cooldown).to.equal(1.25);
     expect(cell.road).to.equal(0);
-    // road upgraded at end of turn from 0.5 to 1
-    expect(cell2.road).to.equal(1);
+    // road upgraded at end of turn from 0.5 to 1.25
+    expect(cell2.road).to.equal(1.25);
 
-    // stay still, reduce cooldown by 1 + 1.5 = 2.5, upgrade road to 1
-    w1.handleTurn(game);
-    game.runCooldowns();
-    expect(w1.cooldown).to.equal(0);
-    expect(cell2.road).to.equal(1.5);
-
-    // still again, road should be level 1+0.5=1.5 and cooldown 0
+    // stay still, reduce cooldown by 1 + 2 = 3, upgrade road to 1.25 + 0.75 = 2
     w1.handleTurn(game);
     game.runCooldowns();
     expect(w1.cooldown).to.equal(0);
     expect(cell2.road).to.equal(2);
+
+    // still again, road should be level 2+0.75=2.75 and cooldown 0
+    w1.handleTurn(game);
+    game.runCooldowns();
+    expect(w1.cooldown).to.equal(0);
+    expect(cell2.road).to.equal(2.75);
   });
   it('should reduce cooldown correctly for moving cart with no target road to begin with', () => {
     const cell = game.map.getCell(4, 4);
@@ -86,25 +86,24 @@ describe('Test cooldown computations', () => {
     w1.cooldown = 0;
     w1.giveAction(new MoveAction(Game.ACTIONS.MOVE, 0, w1.id, Game.DIRECTIONS.NORTH, game.map.getCell(4, 3)));
     w1.handleTurn(game);
+    w1.cooldown = 4.5; // cant happen, just for testing
     game.runCooldowns();
-    // cooldown goes down by new road level of 1 and then base 1, so 3.5 to 1.5
-    expect(w1.cooldown).to.equal(1.5);
+    // cooldown goes down by new road level of 0.75 and then base 1, so 4 to 2.25
+    expect(w1.cooldown).to.equal(2.75);
     expect(cell.road).to.equal(6);
-    // road upgraded at end of turn from 0.5 to 1
-    expect(cell2.road).to.equal(0.5);
+    // road upgraded at end of turn to 0.75
+    expect(cell2.road).to.equal(0.75);
 
-    // stay still, reduce cooldown by 1 + 1.5 = 2.5, upgrade road to 1
     w1.handleTurn(game);
-    expect(w1.cooldown).to.equal(1.5); // can't act still yet
+    expect(w1.cooldown).to.equal(2.75); // should not change if turned is handled..
     game.runCooldowns();
-    expect(w1.cooldown).to.equal(0);
-    expect(cell2.road).to.equal(1);
-
-    // still again, road should be level 1+0.5=1.5 and cooldown 0
-    w1.handleTurn(game);
-    game.runCooldowns();
-    expect(w1.cooldown).to.equal(0);
+    expect(w1.cooldown).to.equal(0.25);
     expect(cell2.road).to.equal(1.5);
+
+    w1.handleTurn(game);
+    game.runCooldowns();
+    expect(w1.cooldown).to.equal(0);
+    expect(cell2.road).to.equal(2.25);
   });
   it('should reduce cooldown correctly for moving cart that has 0.5 CD with no target road to begin with', () => {
     const cell = game.map.getCell(4, 4);
@@ -118,22 +117,18 @@ describe('Test cooldown computations', () => {
     w1.giveAction(new MoveAction(Game.ACTIONS.MOVE, 0, w1.id, Game.DIRECTIONS.NORTH, game.map.getCell(4, 3)));
     w1.handleTurn(game);
     game.runCooldowns();
-    // cooldown goes down by new road level of 1 and then base 1, so 3.5 to 1.5
-    expect(w1.cooldown).to.equal(2);
+    expect(w1.cooldown).to.equal(1.75);
     expect(cell.road).to.equal(6);
-    // road upgraded at end of turn from 0.5 to 1
-    expect(cell2.road).to.equal(0.5);
+    expect(cell2.road).to.equal(0.75);
 
-    // stay still, reduce cooldown by 1 + 1.5 = 2.5, upgrade road to 1
-    w1.handleTurn(game);
-    game.runCooldowns();
-    expect(w1.cooldown).to.equal(0);
-    expect(cell2.road).to.equal(1);
-
-    // still again, road should be level 1+0.5=1.5 and cooldown 0
     w1.handleTurn(game);
     game.runCooldowns();
     expect(w1.cooldown).to.equal(0);
     expect(cell2.road).to.equal(1.5);
+
+    w1.handleTurn(game);
+    game.runCooldowns();
+    expect(w1.cooldown).to.equal(0);
+    expect(cell2.road).to.equal(2.25);
   });
 });
