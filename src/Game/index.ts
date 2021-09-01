@@ -702,9 +702,11 @@ export class Game {
         const toFill = Math.min(Math.min(...(amountsReqs.map(e => e[0] as number))), Math.floor(amountLeft / amountsReqs.length));
         amountsReqs.map(e => e[1] as ResourceRequest).forEach(r => {
           if(r.city) {
+            this.stats.teamStats[r.city.team].resourcesCollected[resourceType] += toFill;
             r.city.fuel += toFill * this.resourceConversionRate(resourceType);
           } else {
             const toGive = Math.min(r.worker.getCargoSpaceLeft(), toFill);
+            this.stats.teamStats[r.worker.team].resourcesCollected[resourceType] += (toGive);
             r.worker.cargo[resourceType] += toGive;
           }
         });
