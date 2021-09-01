@@ -55,7 +55,7 @@ The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits)
 - [C++](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/cpp)
 - [Java](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/java)
 - [Typescript](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/ts)
-- [Kotlin](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/kotlin) (maintained by @Tolsi)
+- [Kotlin](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/kotlin) (maintained by [@Tolsi](https://github.com/Tolsi))
 
 Want to use another language but it's not supported? Feel free to suggest that language to our issues or even better, create a starter kit for the community to use and make a PR to this repository. See our [CONTRIBUTING.md document](https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/CONTRIBUTING.md) for more information on this.
 
