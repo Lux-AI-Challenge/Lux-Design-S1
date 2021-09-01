@@ -1,5 +1,18 @@
 # Change Log
 
+### v3.1.0
+
+This update includes some spec changes that **require you to immediately update your CLI tool and or kaggle-environments** to the latest version. This should be the final patch of the season!
+
+- Base CityTile upkeep is now 23, previously was 30
+- Carts build roads at a rate of 0.75 per turn
+- Wood regrowth increased to 2.5%, previously was 1%
+- Mining is now symmetric and there is no longer a marginal "side" preference on the map anymore
+
+Bug Fixes:
+
+- Carts no longer mine when on a citytile
+
 ### v3.0.0
 
 This update includes some spec changes that **require you to immediately update your CLI tool and or kaggle-environments** to the latest version

@@ -30,7 +30,7 @@ Each player will start with a single [CityTile](#CityTiles) and a single worker 
 
 There are 3 kinds of resources: Wood, Coal, and Uranium (in order of increasing fuel efficiency). These resources are collected by workers, then dropped off once a worker moves on top of a [CityTile](#CityTiles) to then be converted into fuel for the city. Some resources require research points before they are possible to collect.
 
-Wood in particular can regrow. Each turn, every wood tile's wood amount increases by 1% of its current wood amount rounded up. Wood tiles that have been depleted will not regrow. Only wood tiles with less than 500 wood will regrow.
+Wood in particular can regrow. Each turn, every wood tile's wood amount increases by 2.5% of its current wood amount rounded up. Wood tiles that have been depleted will not regrow. Only wood tiles with less than 500 wood will regrow.
 
 <table>
   <tr>
@@ -77,14 +77,11 @@ Wood in particular can regrow. Each turn, every wood tile's wood amount increase
 
 ### Collection Mechanics
 
-At the end of each turn, [Workers](#Workers) automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current formula:
+At the end of each turn, [Workers](#Workers) automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current symmetric formula:
 
-- Uranium, coal, then wood tiles do the following in order:
-  - Determine the number of eligible workers (adjacent and have required research level)
-  - If there are enough resources left, each eligible worker receives up to the collection rate (or up to their carrying capacity)
-  - If there aren't enough resources to give to all workers, the resources distributed are evenly divided between workers (rounded down to the nearest integer).
-
-[Workers](#Workers) will always receive resources from the North, then West, Center, East, then South directions in that order.
+- Iterating over uranium, coal, then wood resources:
+  - Each unit makes resource collection requests to collect a even number of resources from each adjacent tile of the current iterated resource such that the collected amount takes the unit's cargo above capacity. E.g. worker with 60 wood adjacent to 3 wood tiles asks for 14 from each, receives 40 wood and wastes 2.
+  - All tiles of the current iterated resource then try to fulfill requests, if they can't they make sure all unfulfilled requests get an equal amount, left over is wasted. E.g. if 4 workers are mining a tile of 25 wood, but one of them is only asking for 5 while the others are asking for 20 wood each, then first all workers get 5 wood each, leaving 5 wood left over for 3 more workers with space left. This can evenly be distributed 1 wood each to the last 3 workers, leaving 2 wood left that is then wasted.
 
 [Workers](#Workers) cannot mine while on [CityTiles](#CityTiles). Instead, if there is at least one Worker on a CityTile, that CityTile will automatically collect adjacent resources at the same rate as a worker each turn and directly convert it all to fuel. The collection mechanic for a CityTile is the same as a worker and you can treat a CityTile as an individual Worker collecting resources.
 
@@ -199,7 +196,7 @@ Should any [Unit](#Units) during the night run out of fuel, they will be removed
   <tr>
    <td>CityTile
    </td>
-   <td>30 - 5 * number of adjacent friendly CityTiles
+   <td>23 - 5 * number of adjacent friendly CityTiles
    </td>
    <td>N/A
    </td>

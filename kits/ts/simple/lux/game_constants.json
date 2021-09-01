@@ -20,11 +20,11 @@
     "NIGHT_LENGTH": 10,
     "MAX_DAYS": 360,
     "LIGHT_UPKEEP": {
-      "CITY": 30,
+      "CITY": 23,
       "WORKER": 4,
       "CART": 10
     },
-    "WOOD_GROWTH_RATE": 1.01,
+    "WOOD_GROWTH_RATE": 1.025,
     "MAX_WOOD_AMOUNT": 500,
     "CITY_BUILD_COST": 100,
     "CITY_ADJACENCY_BONUS": 5,
@@ -53,7 +53,7 @@
     },
     "MAX_ROAD": 6,
     "MIN_ROAD": 0,
-    "CART_ROAD_DEVELOPMENT_RATE": 0.5,
+    "CART_ROAD_DEVELOPMENT_RATE": 0.75,
     "PILLAGE_RATE": 0.5
   }
 }

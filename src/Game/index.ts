@@ -23,6 +23,21 @@ import { Replay } from '../Replay';
 import { deepCopy } from '../utils';
 import { Position } from '../GameMap/position';
 
+class ResourceRequest {
+  constructor(
+    public readonly fromPos: Position, 
+    public readonly amount: number,
+    public readonly worker?: Worker,
+    public readonly city?: City,
+  ) {}
+
+
+  public equals(other: ResourceRequest): boolean {
+    return this.fromPos.equals(other.fromPos) && this.worker?.id === other.worker?.id && 
+      this.amount === other.amount && this.city?.id === other.city?.id;
+  }
+}
+
 /**
  * Holds basically all game data, including the map.
  *
@@ -584,125 +599,130 @@ export class Game {
       Resource.Types.WOOD,
     ];
     for (const curType of miningOrder) {
-      this.map.resources
-        .filter((cell) => cell.resource.type === curType)
-        .forEach((cell) => {
-          this.handleResourceRelease(cell);
-        });
+      this.handleResourceTypeRelease(curType);
+    }
+  }
+
+  resourceMiningRate(type: Resource.Types): number {
+    switch (type) {
+      case Resource.Types.WOOD:
+        return this.configs.parameters.WORKER_COLLECTION_RATE.WOOD;
+      case Resource.Types.COAL:
+        return this.configs.parameters.WORKER_COLLECTION_RATE.COAL;
+      case Resource.Types.URANIUM:
+        return this.configs.parameters.WORKER_COLLECTION_RATE.URANIUM;
+    }
+  }
+
+  resourceConversionRate(type: Resource.Types): number {
+    switch (type) {
+      case Resource.Types.WOOD:
+        return this.configs.parameters.RESOURCE_TO_FUEL_RATE.WOOD;
+      case Resource.Types.COAL:
+        return this.configs.parameters.RESOURCE_TO_FUEL_RATE.COAL;
+      case Resource.Types.URANIUM:
+        return this.configs.parameters.RESOURCE_TO_FUEL_RATE.URANIUM;
     }
   }
 
   /**
-   * For cells with resources, this will release the resource to all adjacent workers (including any unit on top) in a
-   * even manner and taking in account for the worker's team's research level. This is effectively a worker mining.
-   *
-   * Workers adjacent will only receive resources if they can mine it. They will
-   * never receive more than they carry
-   *
-   * This function is called on cells in the order of uranium, coal, then wood resource deposits
-   *
-   *
-   * @param cell - a cell with a resource
+   * For each unit, check current and orthoganally adjancent cells for that resource
+   * type. If found, request as much as we can carry from these cells. In the case of un-even 
+   * amounts, the unit will request an equal amount from all tiles to fill their cargo, then
+   * discard the rest. (for example on 3 wood tiles with 60 wood it would request 17 to each
+   * wood tile and discard/waste the extra 1 wood mined).
+   * 
+   * If the unit is on a city tile, only one request will be made (even if there are 
+   * multiple workers on the tile )and the resources will be deposited into the city as fuel.
+   * 
+   * Once all units have requested resources, distrubte the resources, reducing requests
+   * requests if it would exceed the current value. In this case the remaining
+   * will be distributed evenly, with the leftovers discarded.
+   * 
+   * @param resourceType - the type of the resource
    */
-  handleResourceRelease(originalCell: Cell): void {
-    if (originalCell.hasResource()) {
-      const type = originalCell.resource.type;
-      const cells = [originalCell, ...this.map.getAdjacentCells(originalCell)];
-      const workersToReceiveResources: Array<Worker | CityTile> = [];
-      for (const cell of cells) {
-        if (cell.isCityTile() && cell.units.size > 0 && this.state.teamStates[cell.citytile.team].researched[type]) {
-          workersToReceiveResources.push(cell.citytile);
-        } else {
-          cell.units.forEach((unit) => {
-            // note, this loop only appends one unit to the array since we can only have one unit per city tile
-            if (
-              unit.type === Unit.Type.WORKER &&
-              this.state.teamStates[unit.team].researched[type]
-            ) {
-              workersToReceiveResources.push(unit as Worker);
-            }
-          });
-        }
-        
-      }
-      const isWorker = (pet: Worker | CityTile): pet is Worker => {
-        return (pet as Worker).cargo !== undefined;
-      }
+  handleResourceTypeRelease(resourceType: Resource.Types): void {
+    // build up the resource requests
+    const requests = this.createResourceRequests(resourceType);
 
-      let rate: number;
-      let conversionRate: number;
-      switch (type) {
-        case Resource.Types.WOOD:
-          rate = this.configs.parameters.WORKER_COLLECTION_RATE.WOOD;
-          conversionRate = this.configs.parameters.RESOURCE_TO_FUEL_RATE.WOOD;
-          break;
-        case Resource.Types.COAL:
-          rate = this.configs.parameters.WORKER_COLLECTION_RATE.COAL;
-          conversionRate = this.configs.parameters.RESOURCE_TO_FUEL_RATE.COAL;
-          break;
-        case Resource.Types.URANIUM:
-          rate = this.configs.parameters.WORKER_COLLECTION_RATE.URANIUM;
-          conversionRate = this.configs.parameters.RESOURCE_TO_FUEL_RATE.URANIUM;
-          break;
-      }
-      // find out how many resources to distribute and release
-      let amountToDistribute = rate * workersToReceiveResources.length;
-      let amountDistributed = 0;
-      // distribute only as much as the cell contains
-      amountToDistribute = Math.min(
-        amountToDistribute,
-        originalCell.resource.amount
-      );
-
-      // distribute resources as evenly as possible
-
-      // sort from least space to most so those with more capacity will have the correct distribution of resources before we reach cargo capacity
-      workersToReceiveResources.sort(
-        (a, b) => {
-          if (isWorker(a) && isWorker(b)) {
-            return a.getCargoSpaceLeft() - b.getCargoSpaceLeft()
-          } else if (isWorker(a)) {
-            return 1;
-          } else if (isWorker(b)) {
-            return -1;
-          }
-        }
-      );
-
-      workersToReceiveResources.forEach((entity, i) => {
-        const spaceLeft = isWorker(entity) ? entity.getCargoSpaceLeft() : 9999999;
-        const maxReceivable =
-          amountToDistribute / (workersToReceiveResources.length - i);
-
-        const distributeAmount = Math.min(spaceLeft, maxReceivable, rate);
-        // we give workers a floored amount for sake of integers and effectiely waste the remainder
-        if (isWorker(entity)) {
-          entity.cargo[type] += Math.floor(distributeAmount);
-        } else {
-          const city = this.cities.get(entity.cityid);
-          city.fuel += conversionRate * Math.floor(distributeAmount);
-        }
-
-        amountDistributed += distributeAmount;
-
-        // update stats
-        this.stats.teamStats[entity.team].resourcesCollected[type] +=
-          Math.floor(distributeAmount);
-
-        // subtract how much was given.
-        amountToDistribute -= distributeAmount;
-      });
-
-      originalCell.resource.amount -= amountDistributed;
-
-      // fixes a rare bug where sometimes JS will subtract a floating point (caused by a division somewhere)
-      // and cause a 0 value to equal to the floating point approx equal to 7e-15
-      if (originalCell.resource.amount < 1e-10) {
-        originalCell.resource.amount = 0;
-      }
-    }
+    // resolve resource requests
+    this.resolveResourceRequests(resourceType, requests);
   }
 
+  createResourceRequests(resourceType: Resource.Types): Map<string, ResourceRequest[]> {
+    const miningRate = this.resourceMiningRate(resourceType);
+    const reqs = new Map<string,ResourceRequest[]>();
+    [Unit.TEAM.A, Unit.TEAM.B].forEach((team) => {
+      const units = this.getTeamsUnits(team);
+      if (!this.state.teamStates[team].researched[resourceType]) {
+        return;
+      }
+      units.forEach((unit) => {
+        if (unit.type !== Unit.Type.WORKER) {
+          return;
+        }
+        const minable = Game.ALL_DIRECTIONS.map(dir => unit.pos.translate(dir)).filter(pos => {
+          if (!this.map.inMap(pos)) return false;
+          const cell = this.map.getCellByPos(pos);
+          if (!cell.hasResource()) return false;
+          return cell.resource?.type === resourceType && cell.resource.amount > 0
+        }).map((pos => this.map.getCellByPos(pos)));
+        const mineAmount = Math.min(Math.ceil(unit.getCargoSpaceLeft()/minable.length), miningRate);
+        minable.forEach(cell => {
+          if (!reqs.has(cell.pos.toString())) {
+            reqs.set(cell.pos.toString(), []);
+          }
+          const unitCell = this.map.getCellByPos(unit.pos);
+          const req = new ResourceRequest(
+            unit.pos,
+            mineAmount,
+            unitCell.isCityTile() ? undefined : unit as Worker, // should be city tile
+            unitCell.isCityTile() ? this.cities.get(unitCell.citytile.cityid) : undefined,
+          )
+          const hasReq = reqs.get(cell.pos.toString()).some(r => r.equals(req))
+          if (!hasReq) {
+            reqs.get(cell.pos.toString()).push(req);
+          }
+        });
+      });
+    });
+    return reqs;
+  }
+
+  resolveResourceRequests(resourceType: Resource.Types, requests: Map<string, ResourceRequest[]>): void {
+    requests.forEach((reqs: ResourceRequest[], posStr: string) => {
+      const position = Position.fromString(posStr);
+      let amountLeft = this.map.getCell(position.x, position.y).resource.amount;
+      let amountsReqs = reqs.map(r => [r.amount, r]);
+      while(amountsReqs.length > 0 && amountsReqs.map(e => e[0] as number).reduce((a, b) => a + b) > 0 && amountLeft > 0) {
+        // calculate the smallest amount we should fill
+        // should be equal to the lowest request, or the amount that 
+        // mines out the tile
+        // ie if you have three requests [10, 20, 20] fill 10 first
+        const toFill = Math.min(Math.min(...(amountsReqs.map(e => e[0] as number))), Math.floor(amountLeft / amountsReqs.length));
+        amountsReqs.map(e => e[1] as ResourceRequest).forEach(r => {
+          if(r.city) {
+            this.stats.teamStats[r.city.team].resourcesCollected[resourceType] += toFill;
+            r.city.fuel += toFill * this.resourceConversionRate(resourceType);
+          } else {
+            const toGive = Math.min(r.worker.getCargoSpaceLeft(), toFill);
+            this.stats.teamStats[r.worker.team].resourcesCollected[resourceType] += (toGive);
+            r.worker.cargo[resourceType] += toGive;
+          }
+        });
+
+        amountsReqs = amountsReqs.map(([amount, req]: [number, ResourceRequest]) => [amount - toFill, req]);
+        amountLeft -= toFill * amountsReqs.length
+        if (amountLeft < amountsReqs.length) {
+          amountLeft = 0;
+        }
+        amountsReqs = amountsReqs.filter(([amount, _]: [number, ResourceRequest]) => amount > 0);
+      }
+      // set the remaining amount to be the new cell total
+      const cell = this.map.getCellByPos(position);
+      cell.resource.amount = amountLeft;
+    });
+  }
   /**
    * Auto deposit resources of unit to tile it is on
    */
@@ -1068,6 +1088,14 @@ export namespace Game {
     WEST = 'w',
     CENTER = 'c',
   }
+
+  export const ALL_DIRECTIONS = [
+    DIRECTIONS.NORTH,
+    DIRECTIONS.EAST,
+    DIRECTIONS.SOUTH,
+    DIRECTIONS.WEST,
+    DIRECTIONS.CENTER,
+  ]
 }
 
 /**
