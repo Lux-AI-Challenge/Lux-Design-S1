@@ -10,7 +10,7 @@ The night is dark and full of terrors. Two teams must fight off the darkness, co
 
 In the Lux AI Challenge Season 1, two competing teams control a team of [Units](#Units) and [CityTiles](#CityTile) that collect resources to fuel their Cities, with the main objective to own as many [CityTiles](#CityTiles) as possible at the end of the turn-based game. Both teams have complete information about the entire game state and will need to make use of that information to optimize resource collection, compete for scarce resources against the opponent, and build cities to gain points.
 
-Each competitor must program their own agent in their language of choice. Each turn, your agent gets 3 seconds of time to submit their actions, excess time is not saved across turns. Each game, you are given a pool of 60 seconds that is tapped into each time you go over a turn's 3 second limit. Upon using up all 60 seconds and going over the 3 second limit, your agent freezes and can no longer submit additional actions.
+Each competitor must program their own agent in their language of choice. Each turn, your agent gets 3 seconds to submit their actions, excess time is not saved across turns. In each game, you are given a pool of 60 seconds that is tapped into each time you go over a turn's 3-second limit. Upon using up all 60 seconds and going over the 3-second limit, your agent freezes and can no longer submit additional actions.
 
 The rest of the document will go through the key features of this game.
 
@@ -80,14 +80,14 @@ Wood in particular can regrow. Each turn, every wood tile's wood amount increase
 At the end of each turn, [Workers](#Workers) automatically receive resources from all adjacent (North, East, South, West, or Center) resource tiles they can collect resources from according to the current symmetric formula:
 
 - Iterating over uranium, coal, then wood resources:
-  - Each unit makes resource collection requests to collect a even number of resources from each adjacent tile of the current iterated resource such that the collected amount takes the unit's cargo above capacity. E.g. worker with 60 wood adjacent to 3 wood tiles asks for 14 from each, receives 40 wood and wastes 2.
-  - All tiles of the current iterated resource then try to fulfill requests, if they can't they make sure all unfulfilled requests get an equal amount, left over is wasted. E.g. if 4 workers are mining a tile of 25 wood, but one of them is only asking for 5 while the others are asking for 20 wood each, then first all workers get 5 wood each, leaving 5 wood left over for 3 more workers with space left. This can evenly be distributed 1 wood each to the last 3 workers, leaving 2 wood left that is then wasted.
+  - Each unit makes resource collection requests to collect an even number of resources from each adjacent tile of the current iterated resource such that the collected amount takes the unit's cargo above capacity. E.g. worker with 60 wood adjacent to 3 wood tiles asks for 14 from each, receives 40 wood, and wastes 2.
+  - All tiles of the current iterated resource then try to fulfill requests, if they can't they make sure all unfulfilled requests get an equal amount, the leftover is wasted. E.g. if 4 workers are mining a tile of 25 wood, but one of them is only asking for 5 while the others are asking for 20 wood each, then first all workers get 5 wood each, leaving 5 wood left over for 3 more workers with space left. This can evenly be distributed by giving 1 wood each to the last 3 workers, leaving 2 wood left that is then wasted.
 
 [Workers](#Workers) cannot mine while on [CityTiles](#CityTiles). Instead, if there is at least one Worker on a CityTile, that CityTile will automatically collect adjacent resources at the same rate as a worker each turn and directly convert it all to fuel. The collection mechanic for a CityTile is the same as a worker and you can treat a CityTile as an individual Worker collecting resources.
 
 ## Actions
 
-There are Units and CityTiles that can perform actions each turn given certain conditions. In general, all actions are simultaneously applied and are validated against the state of the game at the start of a turn. The next few sections describe the Units and CityTiles in detail.
+Units and CityTiles can perform actions each turn given certain conditions. In general, all actions are simultaneously applied and are validated against the state of the game at the start of a turn. The next few sections describe the Units and CityTiles in detail.
 
 ## CityTiles
 
@@ -95,8 +95,8 @@ A CityTile is a building that takes up one tile of space. Adjacent CityTiles col
 
 Actions
 
-- Build Worker - Build [Worker](#Workers) unit on top of this CityTile (cannot build a worker if current number of owned workers + carts equals the number of owned CityTiles)
-- Build Cart - Build [Carts](#Carts) unit on top of this CityTile (cannot build a cart if there are if current number of owned workers + carts equals the number of owned CityTiles)
+- Build Worker - Build [Worker](#Workers) unit on top of this CityTile (cannot build a worker if the current number of owned workers + carts equals the number of owned CityTiles)
+- Build Cart - Build [Carts](#Carts) unit on top of this CityTile (cannot build a cart if the current number of owned workers + carts equals the number of owned CityTiles)
 - Research - Increase your team’s Research Points by 1
 
 ## Units
@@ -109,7 +109,7 @@ Whenever a unit moves on top of a friendly [CityTile](#CityTiles), the City that
 
 There can be at most one unit on tiles without a [CityTile](#CityTiles). Moreover, units cannot move on top of the opposing team’s [CityTiles](#CityTiles). However, units can stack on top of each other on a friendly [CityTile](#CityTiles).
 
-If two units attempt to move to the same tile that is not a [CityTile](#CityTiles), this is considered a collision and the move action is cancelled.
+If two units attempt to move to the same tile that is not a [CityTile](#CityTiles), this is considered a collision, and the move action is canceled.
 
 ### Workers
 
@@ -117,7 +117,7 @@ Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
 - Pillage - Reduce the [Road](#Roads) level of the tile the unit is on by 0.5
-- Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to the latter's cargo-capcity. Excess is returned to the original unit.
+- Transfer - Send any amount of a single resource-type from a unit's cargo to another (start-of-turn) adjacent Unit, up to the latter's cargo capacity. Excess is returned to the original unit.
 - Build [CityTile](#CityTiles) - Build a [CityTile](#CityTiles) right under this worker provided the worker has 100 total resources of any type in their cargo (full cargo) and the tile is empty. If building is successful, all carried resources are consumed and a new [CityTile](#CityTiles) is built with 0 starting resources.
 
 ### Carts
@@ -125,13 +125,13 @@ Actions
 Actions
 
 - Move - Move the unit in one of 5 directions, North, East, South, West, Center.
-- Transfer - Send any amount of a single resource-type from own cargo to another (start-of-turn) adjacent Unit, up to the latter's cargo-capcity. Excess is returned to the original unit.
+- Transfer - Send any amount of a single resource-type from a unit's cargo to another (start-of-turn) adjacent Unit, up to the latter's cargo capacity. Excess is returned to the original unit.
 
 ## Cooldown
 
 [CityTiles](#CityTiles), [Workers](#Workers) and [Carts](#Carts) all have a cooldown mechanic after each action. [Units](#Units) and [CityTiles](#CityTiles) can only perform an action when they have &lt; 1 Cooldown.
 
-At the **end of each turn**, after [Road](#roads) have been built and pillaged, each unit's Cooldown decreases by 1 and further decreases by the level of the [Road](#Roads) the unit is on at the end of the turn. CityTiles are not affected by road levels however, cooldown decreases by 1 only for them. The minimum Cooldown is 0.
+At the **end of each turn**, after [Road](#roads) have been built and pillaged, each unit's Cooldown decreases by 1 and further decreases by the level of the [Road](#Roads) the unit is on at the end of the turn. CityTiles are not affected by road levels and cooldown always decreases by 1. The minimum Cooldown is 0.
 
 After an action is performed, the unit’s Cooldown will increase by a Base Cooldown.
 
@@ -164,7 +164,7 @@ After an action is performed, the unit’s Cooldown will increase by a Base Cool
 
 ## Roads
 
-As [Carts](#Carts) travel across the map, they start to create roads which allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). At the end of each turn, [Cart](#Carts) will upgrade the road level of the tile it ends on by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0, and are capped at 6.
+As [Carts](#Carts) travel across the map, they start to create roads that allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). At the end of each turn, [Cart](#Carts) will upgrade the road level of the tile it ends on by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0 and are capped at 6.
 
 Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
@@ -178,11 +178,11 @@ The Day/Night cycle consists of a 40 turn cycle, the first 30 turns being day tu
 
 During the night, [Units](#Units) and Cities need to produce light to survive. Each turn of night, each [Unit](#Units) and [CityTile](#CityTiles) will consume an amount of fuel, see table below for rates. [Units](#Units) in particular will use their carried resources to produce light whereas [CityTiles](#CityTiles) will use their fuel to produce light.
 
-[Workers](#Workers) and [Carts](#Carts) will only need to consume resources if they are not on a [CityTile](#CityTiles). When outside the City, Workers and [Carts](#Carts) must consume whole units of resources to satisfy their night needs, e.g. if a worker carries 1 wood and 5 uranium on them, they will consume a full wood for 1 fuel, then a full uranium to fulfill the last 3 fuel requirements, wasting 37 fuel. [Units](#Units) will always consume the least efficient resources first.
+[Workers](#Workers) and [Carts](#Carts) will only need to consume resources if they are not on a [CityTile](#CityTiles). When outside the City, Workers and [Carts](#Carts) must consume whole units of resources to satisfy their night needs, e.g. if a worker carries 1 wood and 5 uranium on them, they will consume a full wood for 1 fuel, then a full unit of uranium to fulfill the last 3 fuel requirements, wasting 37 fuel. [Units](#Units) will always consume the least efficient resources first.
 
 Lastly, at night, [Units](#Units) gain 2x more Base [Cooldown](#Cooldown)
 
-Should any [Unit](#Units) during the night run out of fuel, they will be removed from the game and disappear into the night forever. Should a City run out of fuel however, the entire City with all of the [CityTiles](#CityTiles) it owns will fall into darkness and be removed from the game.
+Should any [Unit](#Units) during the night run out of fuel, they will be removed from the game and disappear into the night forever. Should a City run out of fuel, however, the entire City with all of the [CityTiles](#CityTiles) it owns will fall into darkness and be removed from the game.
 
 <table>
   <tr>
@@ -240,7 +240,7 @@ Otherwise, actions such as one unit building a CityTile, then another unit movin
 
 ## Win Conditions
 
-At the conclusion of 360 turns the winner is whichever team has the most [CityTiles](#CityTiles) on the map. If that is a tie, then whichever team has the most units owned on the board wins. If still a tie, the game is marked as a tie.
+After 360 turns the winner is whichever team has the most [CityTiles](#CityTiles) on the map. If that is a tie, then whichever team has the most units owned on the board wins. If still a tie, the game is marked as a tie.
 
 A game may end early if a team no longer has any more [Units](#Units) or [CityTiles](#CityTiles). Then the other team wins.
 
