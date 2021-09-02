@@ -11,6 +11,7 @@ with open(file_path, "r") as f:
     markup_regex = '\[({0})]\(\s*({1})\s*\)'.format(name_regex, url_regex)
     matches = re.findall(markup_regex, txt)
     for match in matches:
-        txt = txt.replace(f"[{match[0]}]({match[1]})", match[0])
+        if "https" not in match[1]:
+            txt = txt.replace(f"[{match[0]}]({match[1]})", match[0])
     print(txt)
 
