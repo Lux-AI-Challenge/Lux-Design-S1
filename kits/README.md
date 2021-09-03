@@ -18,7 +18,7 @@ Additionally in the game state, are the following nested objects, `map` of type 
 
 ### <u>GameMap</u>
 
-The map is organized such that the top left corner of the map is at `(0, 0)` and the bottom right is at `(width, height)`. The map is always square.
+The map is organized such that the top left corner of the map is at `(0, 0)` and the bottom right is at `(width - 1, height - 1)`. The map is always square.
 
 Properties:
 
