@@ -164,11 +164,11 @@ After an action is performed, the unit’s Cooldown will increase by a Base Cool
 
 ## Roads
 
-As [Carts](#Carts) travel across the map, they start to create roads that allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). At the end of each turn, [Cart](#Carts) will upgrade the road level of the tile it ends on by 0.5. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0 and are capped at 6.
+As [Carts](#Carts) travel across the map, they start to create roads that allow all [Units](#Units) to move faster (see [Cooldown](#Cooldown)). At the end of each turn, [Cart](#Carts) will upgrade the road level of the tile it ends on by 0.75. The higher the road level, the faster [Units](#Units) can move and perform actions. All tiles start with a road level of 0 and are capped at 6.
 
 Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
-Roads can also be destroyed by [Workers](#Workers) via the pillage action which reduces road level by 0.5 each time.
+Roads can also be destroyed by [Workers](#Workers) via the pillage action which reduces road level by 0.75 each time.
 
 If a City is consumed by darkness, the road level of all tiles in the City's CityTiles will go back to 0.
 
