@@ -168,7 +168,7 @@ As [Carts](#Carts) travel across the map, they start to create roads that allow 
 
 Moreover, [CityTiles](#CityTiles) automatically have the max road level of 6.
 
-Roads can also be destroyed by [Workers](#Workers) via the pillage action which reduces road level by 0.75 each time.
+Roads can also be destroyed by [Workers](#Workers) via the pillage action which reduces road level by 0.5 each time.
 
 If a City is consumed by darkness, the road level of all tiles in the City's CityTiles will go back to 0.
 
