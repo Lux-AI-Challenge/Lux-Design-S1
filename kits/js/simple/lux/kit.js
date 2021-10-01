@@ -196,7 +196,7 @@ const annotate = {
     return `dl ${x1} ${y1} ${x2} ${y2}`
   },
   text: (x1, y1, message, fontsize = 16) => {
-    return `dt ${x1} ${y1} ${fontsize} '${message}'`
+    return `dt ${x1} ${y1} '${message}' ${fontsize}`
   },
   sidetext: (message) => {
     return `dst '${message}'`
