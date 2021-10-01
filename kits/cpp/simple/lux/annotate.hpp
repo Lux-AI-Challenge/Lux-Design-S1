@@ -15,10 +15,10 @@ namespace lux {
       return "dl " + to_string(x1) + " " + to_string(y1) + " " +  to_string(x2) + " " + to_string(y2);
     };
     static string text(int x1, int y1, string message) {
-      return "dt " + to_string(x1) + " " + to_string(y1) + " 16 '" +  message + "'";
+      return "dt " + to_string(x1) + " " + to_string(y1) + " '" +  message + "' 16";
     };
     static string text(int x1, int y1, string message, int fontsize) {
-      return "dt " + to_string(x1) + " " + to_string(y1) + " " + to_string(fontsize) + " '" +  message + "'";
+      return "dt " + to_string(x1) + " " + to_string(y1) + " '" +  message + "' " + to_string(fontsize);
     };
     static string sidetext(string message) {
       return "dst '" + message + "'";

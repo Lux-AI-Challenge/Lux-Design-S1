@@ -11,10 +11,10 @@ public class Annotate {
     return "dl " + x1 + " " + y1 + " " + x2 + " " + y2;
   }
   public static String text(int x1, int y1, String message) {
-    return "dt " + x1 + " " + y1 + " 16 '" + message + "'";
+    return "dt " + x1 + " " + y1 + " '" + message + "' 16 ";
   }
   public static String text(int x1, int y1, String message, int fontsize) {
-    return "dt " + x1 + " " + y1 +  " " + fontsize + " '" + message + "'";
+    return "dt " + x1 + " " + y1 + " '" + message + "' " + fontsize;
   }
   public static String sidetext(String message) {
     return "dst '" + message + "'";
