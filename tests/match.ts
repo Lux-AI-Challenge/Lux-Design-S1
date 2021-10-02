@@ -21,6 +21,7 @@ const pySimple = './kits/python/simple/main.py';
 const cppSimple = './kits/cpp/simple/main.cpp';
 const cppOrganic = './tests/bots/cpporganic/main.cpp';
 const javaSimple = './kits/java/simple/Bot.java';
+const juliaSimple = './kits/julia/simple/main.jl';
 const cppSimpleTranspiled = './kits/cpp/simple/main.js';
 const cppOrganicTranspiled = './kits/cpp/organic/main.js';
 const botList = [
