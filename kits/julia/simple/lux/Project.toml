@@ -1,0 +1,9 @@
+name = "LuxAI"
+uuid = "2dcf1b2f-c367-41fa-9531-ffe19c618c81"
+authors = ["José Bayoán Santiago Calderón <naoyabpr@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+PackageCompiler = "9b87118b-4619-50d2-8e1e-99f35a4d4d9d"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
