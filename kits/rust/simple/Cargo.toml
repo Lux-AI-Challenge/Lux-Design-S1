@@ -1,0 +1,12 @@
+[package]
+authors = ["Tye singwa"]
+edition = "2021"
+name = "lux-ai-simple-bot"
+version = "0.1.0"
+
+[[bin]]
+name = "solution"
+path = "./src/main.rs"
+
+[dependencies]
+lux-ai-api = {path = "./lux"}

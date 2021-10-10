@@ -36,6 +36,10 @@ describe('Test kits', () => {
       file: './kits/python/simple/main.py',
       name: 'py',
     },
+    rust: {
+      file: './kits/rust/simple/main',
+      name: 'rust',
+    },
   };
   const options = {
     storeErrorLogs: false,
@@ -115,6 +119,21 @@ describe('Test kits', () => {
     const res = await match.run();
 
     botList = [bots.java, bots.java];
+    const match2 = await luxdim.createMatch(botList, options);
+    const res2 = await match.run();
+    const state: LuxMatchState = match.state;
+    const state2: LuxMatchState = match.state;
+    const cmds1 = state.game.replay.data.allCommands;
+    const cmds2 = state2.game.replay.data.allCommands;
+    verifyCommands(cmds1, cmds2);
+  }).timeout(10000);
+
+  it('should run rust', async () => {
+    let botList = [bots.js, bots.rust];
+    const match = await luxdim.createMatch(botList, options);
+    const res = await match.run();
+
+    botList = [bots.rust, bots.rust];
     const match2 = await luxdim.createMatch(botList, options);
     const res2 = await match.run();
     const state: LuxMatchState = match.state;
