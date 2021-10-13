@@ -57,6 +57,8 @@ The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits)
 - [Typescript](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/ts)
 - [Kotlin](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/kotlin) (maintained by [@Tolsi](https://github.com/Tolsi))
 
+There are also many [community provided tools](#Community-Tools) to help people build better bots, feel free to check those out and use whatever suits your needs
+
 Want to use another language but it's not supported? Feel free to suggest that language to our issues or even better, create a starter kit for the community to use and make a PR to this repository. See our [CONTRIBUTING.md document](https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/CONTRIBUTING.md) for more information on this.
 
 To stay up to date on changes and updates to the competition and the engine, watch for announcements on the [forums](https://www.kaggle.com/c/hungry-geese/discussion) or the [Discord](https://discord.com/invite/DZSm47VHMz). See https://github.com/Lux-AI-Challenge/Lux-Design-2021/blob/master/ChangeLog.md for a full change log.
@@ -115,6 +117,15 @@ RUN pip3 install <package_name>
 ```
 
 After changing the Dockerfile, run `bash cli.sh clean` to clean the old docker stuff and then use `cli.sh` as usual.
+
+## Community-Tools
+
+This is a list of all community tools built by our community!
+
+- [Optics](https://github.com/rooklift/optics): A simple, fast, Top-Down view visualizer by [rooklift](https://github.com/rooklift/)
+- [Command Line Visualizer](https://github.com/nathanbabcock/lux-ai-vis): A streamlined tool to watch a replay by running a single command in the CLI
+- [Public Notebooks](https://www.kaggle.com/c/lux-ai-2021/code): A collection of all public notebooks (in python usually) where competitors share their ideas, code, and more. There are all kinds of solutions here, from RL, Imitation Learning, to rule based approaches.
+
 
 ## Contributing
 
