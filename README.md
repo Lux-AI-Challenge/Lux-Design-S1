@@ -122,7 +122,7 @@ After changing the Dockerfile, run `bash cli.sh clean` to clean the old docker s
 
 This is a list of all community tools built by our community!
 
-- [Lux AI Python Gym](https://github.com/glmcdona/LuxPythonEnvGym/): A OpenAI compliant gym that replicates the entire Lux AI 2021 design. Is much faster for python agents and makes it easier to try more ML / search heavy approaches to the competition, maintained by [glmcdona](https://github.com/glmcdona/)
+- [Lux AI Python Gym](https://github.com/glmcdona/LuxPythonEnvGym/): A OpenAI compliant gym that replicates the entire Lux AI 2021 design. About 45x faster than the official environment for python agents and makes it easier to try more ML / search heavy approaches to the competition, maintained by [glmcdona](https://github.com/glmcdona/)
 - [Optics](https://github.com/rooklift/optics): A simple, fast, Top-Down view visualizer by [rooklift](https://github.com/rooklift/)
 - [Command Line Visualizer](https://github.com/nathanbabcock/lux-ai-vis): A streamlined tool to watch a replay by running a single command in the CLI
 - [Public Notebooks](https://www.kaggle.com/c/lux-ai-2021/code): A collection of all public notebooks (in python usually) where competitors share their ideas, code, and more. There are all kinds of solutions here, from RL, Imitation Learning, to rule based approaches.
