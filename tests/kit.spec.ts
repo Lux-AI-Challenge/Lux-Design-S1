@@ -37,7 +37,7 @@ describe('Test kits', () => {
       name: 'py',
     },
     rust: {
-      file: './kits/rust/simple/main',
+      file: './kits/rust/simple/main.out',
       name: 'rust',
     },
   };

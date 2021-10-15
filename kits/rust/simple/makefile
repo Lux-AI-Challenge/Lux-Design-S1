@@ -38,7 +38,7 @@ docker-build: ${DOCKERFILE_PATH}
 docker-rebuild: ${DOCKERFILE_PATH}
 	$(DOCKER_BUILD_COMMAND)
 
-${BUILD_DIR}/solution: docker-build ${CARGO_TOMLS} ${SOURCES}
+${BUILD_DIR}/main.out: docker-build ${CARGO_TOMLS} ${SOURCES}
 	mkdir -p "${CURDIR}/target/"
 	docker run \
 		-u $(shell id -u):$(shell id -g) \
@@ -49,29 +49,25 @@ ${BUILD_DIR}/solution: docker-build ${CARGO_TOMLS} ${SOURCES}
 		--rm "${DOCKER_TARGET}" \
 		cargo build --release --bin solution
 	mkdir -p "${BUILD_DIR}"
-	cp "${CURDIR}/target/release/solution" "${BUILD_DIR}/"
-
-${SUBMISSION_ARCHIVE_PATH}: ${BUILD_DIR}/main.py ${BUILD_DIR}/solution
-	tar -czvf "$@" -C "${BUILD_DIR}" $(foreach file,$^,$(shell realpath --relative-to ${BUILD_DIR} $(file)))
+	cp "${CURDIR}/target/release/solution" "$@"
 
 else
 
-${BUILD_DIR}/solution: ${CARGO_TOMLS} ${SOURCES}
+${BUILD_DIR}/main.out: ${CARGO_TOMLS} ${SOURCES}
 	cargo build --release --bin solution
 	mkdir -p "${BUILD_DIR}"
 	cp "${CURDIR}/target/release/solution" "$@"
 
-${SUBMISSION_ARCHIVE_PATH}: ${BUILD_DIR}/main.py ${BUILD_DIR}/solution
-	mkdir -p "${BUILD_DIR}"
-	tar -czvf "$@" -C "${BUILD_DIR}" $(foreach file,$^,$(shell realpath --relative-to ${BUILD_DIR} $(file)))
-
 endif
 
-${CURDIR}/main: ${BUILD_DIR}/solution
+${SUBMISSION_ARCHIVE_PATH}: ${BUILD_DIR}/main.py ${BUILD_DIR}/main.out
+	tar -czvf "$@" -C "${BUILD_DIR}" $(foreach file,$^,$(shell realpath --relative-to ${BUILD_DIR} $(file)))
+
+${CURDIR}/main.out: ${BUILD_DIR}/main.out
 	cp "$^" "$@"
 
 .PHONY: solution-build
-solution-build: ${BUILD_DIR}/solution ${CURDIR}/main
+solution-build: ${BUILD_DIR}/main.out ${CURDIR}/main.out
 
 .PHONY: submission-build
 submission-build: solution-build ${SUBMISSION_ARCHIVE_PATH}

@@ -90,7 +90,7 @@ agent_processes = [None, None]
 t = None
 q = None
 
-command = "./solution"
+command = "./main.out"
 agent_runner = AgentRunner(
     command=command, agent_processes=agent_processes, thread=t, queue=q)
 
