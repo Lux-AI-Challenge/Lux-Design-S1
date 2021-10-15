@@ -6,7 +6,7 @@ use crate::*;
 #[derive(Clone, fmt::Debug)]
 pub struct Agent {
     /// Team id of our Bot's Player
-    pub team_id: TeamId,
+    pub team: TeamId,
 
     /// Turn index
     pub turn: TurnAmount,
@@ -29,28 +29,28 @@ impl Agent {
     ///
     /// # Parameters
     ///
-    /// - `environment` - mutable reference to `Environment`
+    /// - `environment` - mutable reference to [`Environment`]
     ///
     /// # Returns
     /// Initialized `Agent` or error
     pub fn new(environment: &mut Environment) -> LuxAiResult<Self> {
-        let team_id = Self::read_team_id(environment)?;
-        let dimensions = Self::read_map_dimensions(environment)?;
-        let game_map = GameMap::new(dimensions);
+        let team = Self::read_team(environment)?;
+        let (width, height) = Self::read_map_dimensions(environment)?;
+        let game_map = GameMap::new(width, height);
         let turn = 0;
         let players = (0..TEAM_COUNT)
             .map(|team_id| Player::new(team_id))
             .collect();
 
         Ok(Self {
-            team_id,
+            team,
             turn,
             game_map,
             players,
         })
     }
 
-    /// Returns our Bot's Player
+    /// Returns our Bot's [`Player`]
     ///
     /// # Parameters
     ///
@@ -59,7 +59,7 @@ impl Agent {
     /// # Returns
     ///
     /// `Player` reference
-    pub fn player(&self) -> &Player { &self.players[self.team_id as usize] }
+    pub fn player(&self) -> &Player { &self.players[self.team as usize] }
 
     /// Updates Agent's map for current turn
     /// - updates turn
@@ -103,7 +103,7 @@ impl Agent {
         }
     }
 
-    fn read_team_id(environment: &mut Environment) -> LuxAiResult<TeamId> {
+    fn read_team(environment: &mut Environment) -> LuxAiResult<TeamId> {
         let command = environment.read_len_command(1)?;
 
         let team_id = command.argument(0)?;
@@ -111,7 +111,7 @@ impl Agent {
         Ok(team_id)
     }
 
-    fn read_map_dimensions(environment: &mut Environment) -> LuxAiResult<GameMapDimensions> {
+    fn read_map_dimensions(environment: &mut Environment) -> LuxAiResult<(Coordinate, Coordinate)> {
         let command = environment.read_len_command(2)?;
 
         let (width, height) = (command.argument(0)?, command.argument(1)?);
@@ -147,7 +147,7 @@ impl Agent {
 
     fn update_unit(&mut self, command: &Command) -> LuxAiResult {
         command.expect_arguments(10)?;
-        let (unit_type, team_id, unit_id, x, y, cooldown) = (
+        let (unit_type, team, unit_id, x, y, cooldown) = (
             command.argument(1)?,
             command.argument(2)?,
             command.argument(3)?,
@@ -158,12 +158,12 @@ impl Agent {
         let argument_offset = 7;
 
         let position = Position::new(x, y);
-        let mut unit = Unit::new(team_id, unit_type, unit_id, position, cooldown);
+        let mut unit = Unit::new(team, unit_type, unit_id, position, cooldown);
         for (index, resource_type) in ResourceType::VALUES.iter().enumerate() {
             let amount = command.argument(argument_offset + index)?;
-            unit.cargo.insert(resource_type.clone(), amount);
+            unit.cargo[*resource_type] = amount;
         }
-        self.players[team_id as usize].units.push(unit);
+        self.players[team as usize].units.push(unit);
 
         Ok(())
     }
@@ -206,7 +206,7 @@ impl Agent {
 
     fn update_road(&mut self, command: &Command) -> LuxAiResult {
         command.expect_arguments(4)?;
-        let (x, y, road_progress) = (
+        let (x, y, road) = (
             command.argument::<Coordinate>(1)?,
             command.argument::<Coordinate>(2)?,
             command.argument(3)?,
@@ -214,7 +214,7 @@ impl Agent {
 
         let position = Position::new(x, y);
         let cell = &mut self.game_map[position];
-        cell.road_progress = road_progress;
+        cell.road = road;
 
         Ok(())
     }
@@ -222,9 +222,9 @@ impl Agent {
     fn fix_dependencies(&mut self) {
         for player in self.players.iter_mut() {
             for (_city_id, city) in player.cities.iter_mut() {
-                for city_tile in city.city_tiles.iter() {
-                    let position = city_tile.borrow().position;
-                    self.game_map[position].city_tile = Some(city_tile.clone());
+                for city_tile in city.citytiles.iter() {
+                    let position = city_tile.borrow().pos;
+                    self.game_map[position].citytile = Some(city_tile.clone());
                 }
             }
         }

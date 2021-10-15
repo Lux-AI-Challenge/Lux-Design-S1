@@ -20,6 +20,9 @@ DOCKER_BUILD_COMMAND = docker build \
 	"$(CURDIR)"
 
 
+.PHONY: all
+all: submission-build
+
 ${BUILD_DIR}/main.py: ${CURDIR}/main.py
 	mkdir -p "${BUILD_DIR}"
 	cp "$^" "$@"

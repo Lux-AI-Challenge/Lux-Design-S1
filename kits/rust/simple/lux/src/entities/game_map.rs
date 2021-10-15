@@ -53,15 +53,15 @@ impl Into<String> for ObjectType {
 ///
 /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
 #[derive(Default, Clone, fmt::Debug)]
-pub struct GameMapCell {
-    /// `Position` of tile
+pub struct Cell {
+    /// [`Position`] of tile
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
-    pub position: Position,
+    pub pos: Position,
 
-    /// `Resource` which located on this tile
+    /// [`Resource`] which located on this tile
     ///
     /// # See also
     ///
@@ -69,33 +69,38 @@ pub struct GameMapCell {
     /// Check <https://www.lux-ai.org/specs-2021#Resources>
     pub resource: Option<Resource>,
 
-    /// `CityTile` located on this tile
+    /// [`CityTile`] located on this tile
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
     /// Check <https://www.lux-ai.org/specs-2021#CityTiles>
-    pub city_tile: Option<Rc<RefCell<CityTile>>>,
+    pub citytile: Option<Rc<RefCell<CityTile>>>,
 
     /// Road development progress of this tile
+    ///
+    /// The amount of Cooldown subtracted from a Unit's Cooldown whenever they
+    /// perform an action on this tile. If there are roads, the more developed
+    /// the road, the higher this Cooldown rate value is. Note that a Unit will
+    /// always gain a base Cooldown amount whenever any action is performed.
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
     /// Check <https://www.lux-ai.org/specs-2021#Roads>
-    pub road_progress: RoadAmount,
+    pub road: RoadAmount,
 }
 
-impl GameMapCell {
-    /// Creates empty `GameMapCell`
+impl Cell {
+    /// Creates empty [`Cell`]
     ///
     /// # Parameters
     ///
-    /// - `position` - `Position` of tile
+    /// - `position` - [`Position`] of tile
     ///
     /// # Returns
     ///
-    /// Created empty `GameMapCell`, with no `Resource`, `CityTile`, and zero
+    /// Created empty [`Cell`], with no [`Resource`], [`CityTile`], and zero
     /// road development progress
     ///
     /// # See also
@@ -103,12 +108,13 @@ impl GameMapCell {
     /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
     pub fn new(position: Position) -> Self {
         Self {
-            position,
+            pos: position,
             ..Self::default()
         }
     }
 
-    /// Checks if tile contains any `Resource`
+    /// Returns `true` if this [`Cell`] has a non-depleted [`Resource`], `false`
+    /// otherwise
     ///
     /// # Parameters
     ///
@@ -124,52 +130,85 @@ impl GameMapCell {
     pub fn has_resource(&self) -> bool {
         self.resource
             .as_ref()
-            .map_or(false, |resource| resource.amount > 0.0f32)
+            .map_or(false, |resource| resource.amount > 0)
     }
 }
 
-/// Represents dimensions of `GameMap` 2D grid
-///
-/// # See also
-///
-/// Check <https://www.lux-ai.org/specs-2021#The%20Map>
-pub type GameMapDimensions = (usize, usize);
-
 /// Represents Game Map
+///
+/// The map is organized such that the top left corner of the map is at `(0, 0)`
+/// and the bottom right is at `(width - 1, height - 1)`. The map is always
+/// square.
 ///
 /// # See also
 ///
 /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
 #[derive(fmt::Debug, Clone)]
 pub struct GameMap {
-    /// Dimensions (width and height) of Game Map
+    /// Width of Game Map (along the `X` direction)
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
-    pub dimensions: GameMapDimensions,
+    pub width: Coordinate,
 
-    /// 2D grid of `GameMapCell`
+    /// Height of Game Map (along the `Y` direction)
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
-    pub cells: Vec<Vec<GameMapCell>>,
+    pub height: Coordinate,
+
+    /// A 2D array of Cell objects, defining the current state of the map.
+    /// `map[y][x]` represents the cell at coordinates (x, y) with `map[0][0]`
+    /// being the top left Cell.
+    ///
+    /// # See also
+    ///
+    /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
+    pub map: Vec<Vec<Cell>>,
 }
 
-/// Access `GameMap` by `Position`
+/// Access [cells][`Cell`] by [`Position`]
 impl Index<Position> for GameMap {
-    type Output = GameMapCell;
+    type Output = Cell;
 
+    /// Returns the [`Cell`] at the given `position`
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// let position = Position::new(1, 2);
+    /// let cell = game_map[position];
+    /// ```
+    ///
+    /// # Parameters
+    ///
+    /// - `self` - Self reference
+    /// - `position` - [`Position`] to get [`Cell`] from
+    ///
+    /// # Returns
+    ///
+    /// Reference to [`Cell`]
     fn index(&self, position: Position) -> &Self::Output {
-        &self.cells[position.y as usize][position.x as usize]
+        &self.map[position.y as usize][position.x as usize]
     }
 }
 
-/// Access `GameMap` by `Position`
+/// Access [cells][`Cell`] by [`Position`]
 impl IndexMut<Position> for GameMap {
+    /// Returns the [`Cell`] at the given `position`
+    ///
+    /// # Parameters
+    ///
+    /// - `self` - Self reference
+    /// - `position` - [`Position`] to get [`Cell`] from
+    ///
+    /// # Returns
+    ///
+    /// Reference to [`Cell`]
     fn index_mut(&mut self, position: Position) -> &mut Self::Output {
-        &mut self.cells[position.y as usize][position.x as usize]
+        &mut self.map[position.y as usize][position.x as usize]
     }
 }
 
@@ -178,7 +217,8 @@ impl GameMap {
     ///
     /// # Parameters
     ///
-    /// - `dimensions` - `GameMapDimensions` of 2D grid
+    /// - `width` - the width of the map (along the x direction)
+    /// - `height` - the height of the map (along the y direction)
     ///
     /// # Returns
     ///
@@ -187,14 +227,12 @@ impl GameMap {
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
-    pub fn new(dimensions: GameMapDimensions) -> Self {
-        Self {
-            dimensions,
-            cells: Self::empty_cells_map(dimensions),
-        }
+    pub fn new(width: Coordinate, height: Coordinate) -> Self {
+        let map = Self::empty_map(width as usize, height as usize);
+        Self { height, width, map }
     }
 
-    /// Returns dimensions of `GameMap` 2D grid
+    /// Returns dimensions of [`GameMap`] 2D grid
     ///
     /// # Parameters
     ///
@@ -207,13 +245,11 @@ impl GameMap {
     /// # Returns
     ///
     /// Pair of `width` and `height` with desired type `T`
-    pub fn dimensions<T: From<usize>>(&self) -> (T, T) {
-        let (width, height) = self.dimensions;
-
-        (width.into(), height.into())
+    pub fn dimensions<T: From<Coordinate>>(&self) -> (T, T) {
+        (self.width.into(), self.height.into())
     }
 
-    /// Returns height of `GameMap` 2D grid
+    /// Returns height of 2D grid
     ///
     /// # Parameters
     ///
@@ -226,12 +262,9 @@ impl GameMap {
     /// # Returns
     ///
     /// `height` with desired type `T`
-    pub fn height<T: From<usize>>(&self) -> T {
-        let (_, height) = self.dimensions;
-        height.into()
-    }
+    pub fn height<T: From<Coordinate>>(&self) -> T { self.height.into() }
 
-    /// Returns width of `GameMap` 2D grid
+    /// Returns width of 2D grid
     ///
     /// # Parameters
     ///
@@ -244,12 +277,9 @@ impl GameMap {
     /// # Returns
     ///
     /// `width` with desired type `T`
-    pub fn width<T: From<usize>>(&self) -> T {
-        let (width, _) = self.dimensions;
-        width.into()
-    }
+    pub fn width<T: From<Coordinate>>(&self) -> T { self.width.into() }
 
-    /// Clears `GameMap` cells from `Resource`, `CityTile` and road tiles
+    /// Clears [`GameMap`] cells from [`Resource`], [`CityTile`] and road tiles
     ///
     /// # Parameters
     ///
@@ -258,17 +288,48 @@ impl GameMap {
     /// # Returns
     ///
     /// Nothing
-    pub fn reset_state(&mut self) { self.cells = Self::empty_cells_map(self.dimensions); }
+    pub fn reset_state(&mut self) {
+        self.map = Self::empty_map(self.width as usize, self.height as usize);
+    }
 
-    fn empty_cells_map((width, height): GameMapDimensions) -> Vec<Vec<GameMapCell>> {
-        let mut cells = vec![vec![GameMapCell::default(); width]; height];
+    /// Returns the [`Cell`] at the given `position`
+    ///
+    /// # Parameters
+    ///
+    /// - `self` - Self reference
+    /// - `position` - [`Position`] to get [`Cell`] from
+    ///
+    /// # Returns
+    ///
+    /// Reference to [`Cell`]
+    pub fn get_cell_by_pos(&self, position: Position) -> &Cell {
+        self.get_cell(position.x, position.y)
+    }
+
+    /// Returns the [`Cell`] at the given `position`
+    ///
+    /// # Parameters
+    ///
+    /// - `self` - Self reference
+    /// - `x` - x [coordinate][`Coordinate`] of cell
+    /// - `y` - y [coordinate][`Coordinate`] of cell
+    ///
+    /// # Returns
+    ///
+    /// Reference to [`Cell`]
+    pub fn get_cell(&self, x: Coordinate, y: Coordinate) -> &Cell {
+        &self.map[y as usize][x as usize]
+    }
+
+    fn empty_map(width: usize, height: usize) -> Vec<Vec<Cell>> {
+        let mut map = vec![vec![Cell::default(); width]; height];
 
         for x in 0..width {
             for y in 0..height {
-                cells[y][x].position = Position::new(x as Coordinate, y as Coordinate);
+                map[y][x].pos = Position::new(x as Coordinate, y as Coordinate);
             }
         }
 
-        cells
+        map
     }
 }

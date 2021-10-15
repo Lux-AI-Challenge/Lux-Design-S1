@@ -1,8 +1,5 @@
 use std::cell::Ref;
 
-// import lux_ai crate
-use lux_ai_api as lux_ai;
-
 /// Entry point of Bot
 fn main() -> lux_ai::LuxAiResult<()> {
     // Initialize Lux AI I/O environment
@@ -21,11 +18,11 @@ fn main() -> lux_ai::LuxAiResult<()> {
         let ref game_map = agent.game_map;
 
         #[allow(unused_variables)]
-        let ref opponent = agent.players[(agent.team_id as usize + 1) % 2];
+        let ref opponent = agent.players[(agent.team as usize + 1) % 2];
         let player = agent.player();
 
         // Cache all resource cells
-        let mut resource_cells: Vec<&lux_ai::GameMapCell> = vec![];
+        let mut resource_cells: Vec<&lux_ai::Cell> = vec![];
         for y in 0..game_map.height() {
             for x in 0..game_map.width() {
                 let position = lux_ai::Position::new(x, y);
@@ -38,16 +35,16 @@ fn main() -> lux_ai::LuxAiResult<()> {
             match unit.unit_type {
                 // If worker has zero cooldown
                 lux_ai::UnitType::Worker if unit.can_act() => {
-                    if unit.cargo_space_left() > 0.0 {
+                    if unit.get_cargo_space_left().is_positive() {
                         // If has cargo space left
-                        let mut closest_distance = i32::max_value();
-                        let mut closest_resource_cell: Option<&lux_ai::GameMapCell> = None;
+                        let mut closest_distance = f32::MAX;
+                        let mut closest_resource_cell: Option<&lux_ai::Cell> = None;
 
                         // Find closest already researhed resource cell
-                        for resource_cell in resource_cells.iter() {
-                            let distance = resource_cell.position.distance_to(unit.position);
+                        for &resource_cell in resource_cells.iter() {
+                            let distance = resource_cell.pos.distance_to(&unit.pos);
                             if let Some(resource) = &resource_cell.resource {
-                                if player.is_researched(&resource.resource_type) &&
+                                if player.is_researched(resource.resource_type) &&
                                     distance < closest_distance
                                 {
                                     closest_distance = distance;
@@ -58,20 +55,19 @@ fn main() -> lux_ai::LuxAiResult<()> {
 
                         // And if any move in that direction
                         if let Some(closest_resource_cell) = closest_resource_cell {
-                            let direction =
-                                unit.position.direction_to(closest_resource_cell.position);
-                            environment.write_action(unit.move_command(direction));
+                            let direction = unit.pos.direction_to(&closest_resource_cell.pos);
+                            environment.write_action(unit.move_(direction));
                         }
                     } else {
                         // Else if no cargo space left
-                        let mut closest_distance = i32::max_value();
+                        let mut closest_distance = f32::MAX;
                         let mut closest_city_tile: Option<Ref<lux_ai::CityTile>> = None;
 
                         // Find nearest city tile
                         for city in player.cities.values() {
-                            for city_tile in city.city_tiles.iter() {
+                            for city_tile in city.citytiles.iter() {
                                 let city_tile = city_tile.borrow();
-                                let distance = city_tile.position.distance_to(unit.position);
+                                let distance = city_tile.pos.distance_to(&unit.pos);
 
                                 if distance < closest_distance {
                                     closest_distance = distance;
@@ -82,8 +78,8 @@ fn main() -> lux_ai::LuxAiResult<()> {
 
                         // And if any move in that direction
                         if let Some(closest_city_tile) = closest_city_tile {
-                            let direction = unit.position.direction_to(closest_city_tile.position);
-                            environment.write_action(unit.move_command(direction));
+                            let direction = unit.pos.direction_to(&closest_city_tile.pos);
+                            environment.write_action(unit.move_(direction));
                         }
                     }
                 },

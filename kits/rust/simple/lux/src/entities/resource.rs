@@ -5,14 +5,14 @@ use serde::{Deserialize, Serialize};
 use crate::*;
 
 /// Represents amount of resource
-pub type ResourceAmount = f32;
+pub type ResourceAmount = i32;
 
 /// Represents type of resource (Wood, Coal or Uranium)
 ///
 /// # See also
 ///
 /// Check <https://www.lux-ai.org/specs-2021#Resources>
-#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, fmt::Debug, Hash)]
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Copy, fmt::Debug, Hash)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ResourceType {
     /// Wood resource
@@ -21,8 +21,6 @@ pub enum ResourceType {
     Coal,
     /// Uranium resource
     Uranium,
-    /// Not yet specified resource (in case of extensibility)
-    Unknown(String),
 }
 
 /// Convert from command argument into `ResourceType`
@@ -31,11 +29,10 @@ impl str::FromStr for ResourceType {
 
     fn from_str(string: &str) -> Result<Self, Self::Err> {
         let value = match string.to_lowercase().as_str() {
-            "" => Err(Self::Err::UnknownResource(string.to_string()))?,
             "wood" => Self::Wood,
             "coal" => Self::Coal,
             "uranium" => Self::Uranium,
-            _ => Self::Unknown(string.to_string()),
+            _ => Err(Self::Err::UnknownResource(string.to_string()))?,
         };
         Ok(value)
     }
@@ -84,7 +81,7 @@ impl ResourceType {
 ///
 /// # See also
 ///
-/// Check <https://www.lux-ai.org/specs-2021#Resources>
+/// Check https://www.lux-ai.org/specs-2021#Resources<>
 #[derive(PartialEq, Clone, fmt::Debug)]
 pub struct Resource {
     /// Type of resource
@@ -95,7 +92,7 @@ pub struct Resource {
     pub resource_type: ResourceType,
 
     /// Amount of resource
-    pub amount:        ResourceAmount,
+    pub amount: ResourceAmount,
 }
 
 /// Compare `Resource` amounts of same type

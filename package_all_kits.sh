@@ -9,3 +9,4 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 (cd $SCRIPT_DIR/kits/java/simple && tar -czvf simple.tar.gz *)
 (cd $SCRIPT_DIR/kits/js/simple && tar -czvf simple.tar.gz *)
 (cd $SCRIPT_DIR/kits/ts/simple && tar -czvf simple.tar.gz *)
+(cd $SCRIPT_DIR/kits/rust/simple && tar --exclude='./target' --exclude='./build' -czvf simple.tar.gz *)

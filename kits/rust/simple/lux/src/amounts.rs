@@ -12,6 +12,8 @@ pub type DayAmount = i32;
 /// Check <https://www.lux-ai.org/specs-2021#Day/Night%20Cycle>
 pub type TurnAmount = i32;
 
+pub type Cooldown = f32;
+
 /// Fuel amount
 pub type FuelAmount = f32;
 

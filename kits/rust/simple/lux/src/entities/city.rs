@@ -9,75 +9,92 @@ use crate::*;
 /// Check <https://www.lux-ai.org/specs-2021#CityTiles>
 #[derive(Clone, fmt::Debug)]
 pub struct City {
-    /// City id used as command arguments
-    pub city_id: EntityId,
+    /// Id of this [`City`]. Each City id in the game is unique and will never
+    /// be reused by new cities
+    pub cityid: EntityId,
 
-    /// Team id, whom this city belongs to
-    pub team_id: TeamId,
+    /// Team id, whom this [`City`] belongs to
+    pub teamid: TeamId,
 
-    /// Amount of fuel that city has
+    /// Amount of fuel that city has. This fuel is consumed by all
+    /// [`CityTiles`][CityTile] in this [`City`] during each turn of night
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#Resources>
     pub fuel: FuelAmount,
 
-    /// List of city tiles
-    pub city_tiles: Vec<Rc<RefCell<CityTile>>>,
+    /// A list of [`CityTile`] objects that form this one City collectively. A
+    /// City is defined as all [`CityTiles`][CityTile] that are connected
+    /// via adjacent [`CityTiles`][CityTile].
+    pub citytiles: Vec<Rc<RefCell<CityTile>>>,
 
-    /// How many fuel required for city to live one turn more on night_length
+    /// Light upkeep per turn of the City. Fuel in the City is subtracted by the
+    /// light upkeep each turn of night.
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#Day/Night%20Cycle>
-    pub light_up_keep: FuelAmount,
+    pub light_upkeep: FuelAmount,
 }
 
 impl City {
-    /// Creates new City
+    /// Creates new [`City`]
     ///
     /// # Parameters
     ///
-    /// - `team_id` - Team id, whom this city belongs to
-    /// - `city_id` - City id used as command arguments
+    /// - `teamid` - Team id, whom this city belongs to
+    /// - `cityid` - City id used as command arguments
     /// - `fuel` - Amount of fuel that city has
-    /// - `light_up_keep` - How many fuel required for city to live one turn
-    ///   more on night_length. Check <https://www.lux-ai.org/specs-2021#Day/Night%20Cycle>
+    /// - `light_upkeep` - How many fuel required for city to live one turn more
+    ///   on night_length. Check <https://www.lux-ai.org/specs-2021#Day/Night%20Cycle>
     ///
     /// # Returns
     ///
-    /// A new created `City` with no `CityTile`
+    /// A new created [`City`] with no [`CityTile`]
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#CityTiles>
     pub fn new(
-        team_id: TeamId, city_id: EntityId, fuel: FuelAmount, light_up_keep: FuelAmount,
+        teamid: TeamId, cityid: EntityId, fuel: FuelAmount, light_upkeep: FuelAmount,
     ) -> Self {
         Self {
-            team_id,
-            city_id,
+            teamid,
+            cityid,
             fuel,
-            city_tiles: vec![],
-            light_up_keep,
+            citytiles: vec![],
+            light_upkeep,
         }
     }
 
-    /// Add `CityTile` to the `City`
+    /// Add [`CityTile`] to the [`City`]
     ///
     /// # Parameters
     ///
     /// - `self` - mutable reference to Self
-    /// - `position` - position of `CityTile`
-    /// - `cooldown` - cooldown of `CityTile`
+    /// - `position` - [`Position`] of [`CityTile`]
+    /// - `cooldown` - cooldown of [`City`]
     ///
     /// # Returns
     ///
     /// Nothing
-    pub fn add_city_tile(&mut self, position: Position, cooldown: TurnAmount) {
-        let city_tile = CityTile::new(self.team_id, self.city_id.clone(), position, cooldown);
-        self.city_tiles.push(Rc::new(RefCell::new(city_tile)));
+    pub fn add_city_tile(&mut self, position: Position, cooldown: Cooldown) {
+        let city_tile = CityTile::new(self.teamid, self.cityid.clone(), position, cooldown);
+        self.citytiles.push(Rc::new(RefCell::new(city_tile)));
     }
+
+    /// Light upkeep per turn of the [`City`]. Fuel in the [`City`] is
+    /// subtracted by the light upkeep each turn of night.
+    ///
+    /// # Parameters
+    ///
+    /// - `self` - reference to Self
+    ///
+    /// # Returns
+    ///
+    /// Fuel amount
+    pub fn get_light_upkeep(&self) -> FuelAmount { self.light_upkeep }
 
     /// How many resources required to build city
     ///

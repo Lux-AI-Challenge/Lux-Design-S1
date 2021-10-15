@@ -1,3 +1,5 @@
+cargo-features = ["strip"]
+
 [package]
 authors = ["Tye singwa"]
 edition = "2021"
@@ -8,5 +10,12 @@ version = "0.1.0"
 name = "solution"
 path = "./src/main.rs"
 
-[dependencies]
-lux-ai-api = {path = "./lux"}
+[dependencies.lux-ai]
+path = "./lux"
+package = "lux-ai-api"
+
+[profile.release]
+opt-level = 3
+lto = true
+panic = "abort"
+strip = "symbols"

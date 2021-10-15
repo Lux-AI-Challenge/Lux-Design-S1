@@ -7,3 +7,4 @@ rm -rfv $(find "./kits/python"  -name "__pycache__")
 rm -fv $(find "./kits"  -name ".DS_Store")
 rm -rf ./.nyc_output
 rm -rf ./coverage
+rm -rf "./kits/rust/simple/target" "./kits/rust/simple/main"

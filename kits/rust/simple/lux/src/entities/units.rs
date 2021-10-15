@@ -1,6 +1,7 @@
-use std::{collections::HashMap,
-          convert::{From, Into},
-          fmt, str};
+use std::{convert::{Into, TryFrom},
+          fmt,
+          ops::{Index, IndexMut},
+          str};
 
 use serde::{Deserialize, Serialize};
 
@@ -11,23 +12,71 @@ use crate::*;
 /// # See also
 ///
 /// Check <https://www.lux-ai.org/specs-2021#Resources>
-pub type Cargo = HashMap<ResourceType, ResourceAmount>;
+#[derive(Clone, Copy, Default, fmt::Debug)]
+pub struct Cargo {
+    /// Amount of wood held by Unit
+    pub wood:    ResourceAmount,
+    /// Amount of coal held by Unit
+    pub coal:    ResourceAmount,
+    /// Amount of uranium held by Unit
+    pub uranium: ResourceAmount,
+}
+
+impl Index<ResourceType> for Cargo {
+    type Output = ResourceAmount;
+
+    /// Returns amount of resource for given [`ResourceType`]
+    ///
+    /// # Arguments:
+    ///
+    /// - `self` - reference to Self
+    /// - `resource_type` - type of [`Resource`]
+    ///
+    /// Returns:
+    ///
+    /// [`ResourceAmount`]
+    fn index(&self, resource_type: ResourceType) -> &Self::Output {
+        match resource_type {
+            ResourceType::Wood => &self.wood,
+            ResourceType::Coal => &self.coal,
+            ResourceType::Uranium => &self.uranium,
+        }
+    }
+}
+
+impl IndexMut<ResourceType> for Cargo {
+    /// Returns mutable reference to amount of resource for given
+    /// [`ResourceType`]
+    ///
+    /// # Arguments:
+    ///
+    /// - `self` - reference to Self
+    /// - `resource_type` - type of [`Resource`]
+    ///
+    /// Returns:
+    ///
+    /// mutable reference to [`ResourceAmount`]
+    fn index_mut(&mut self, resource_type: ResourceType) -> &mut Self::Output {
+        match resource_type {
+            ResourceType::Wood => &mut self.wood,
+            ResourceType::Coal => &mut self.coal,
+            ResourceType::Uranium => &mut self.uranium,
+        }
+    }
+}
 
 /// Represents type of Unit
 ///
 /// # See also
 ///
 /// Check <https://www.lux-ai.org/specs-2021#Units>
-#[derive(Eq, PartialEq, Clone, fmt::Debug, Hash, Serialize, Deserialize)]
-#[serde(from = "String", into = "String")]
+#[derive(Eq, PartialEq, Clone, Copy, fmt::Debug, Hash, Serialize, Deserialize)]
+#[serde(try_from = "String", into = "String")]
 pub enum UnitType {
     /// Worker unit
     Worker,
     /// Cart unit
     Cart,
-
-    /// Not yet known unit (in case of extensibility)
-    Unknown(String),
 }
 
 /// Convert from command argument
@@ -45,13 +94,16 @@ impl str::FromStr for UnitType {
 }
 
 /// Convert from SCREAMING_SNAKE_CASE string
-impl From<String> for UnitType {
-    fn from(string: String) -> Self {
-        match string.as_str() {
+impl TryFrom<String> for UnitType {
+    type Error = LuxAiError;
+
+    fn try_from(string: String) -> Result<Self, Self::Error> {
+        let value = match string.as_str() {
             "WORKER" => Self::Worker,
             "CART" => Self::Cart,
-            _ => Self::Unknown(string),
-        }
+            _ => Err(Self::Error::UnknownUnit(string.to_string()))?,
+        };
+        Ok(value)
     }
 }
 
@@ -61,7 +113,6 @@ impl Into<String> for UnitType {
         match self {
             Self::Worker => "WORKER".to_string(),
             Self::Cart => "CART".to_string(),
-            Self::Unknown(code) => code.to_string(),
         }
     }
 }
@@ -75,6 +126,14 @@ impl UnitType {
     /// let space = UnitType::Worker::cargo_space_available(); 
     /// ```
     ///
+    /// # Arguments
+    ///
+    /// - `self` - reference to Self
+    ///
+    /// # Returns
+    ///
+    /// [`ResourceAmount`] that given unit type can hold
+    ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#Units>
@@ -83,29 +142,34 @@ impl UnitType {
     }
 }
 
-/// Represents Unit on `GameMap`
+/// Represents Unit on [`GameMap`]
 #[derive(Clone, fmt::Debug)]
 pub struct Unit {
-    /// `Position` of unit on 2D grid
-    pub position:  Position,
+    /// [`Position`] of unit on 2D grid
+    pub pos: Position,
+
     /// Team, whom unit belongs to
-    pub team_id:   TeamId,
+    pub team: TeamId,
+
     /// Unit id, used in command arguments
-    pub unit_id:   EntityId,
+    pub id: EntityId,
+
     /// Amount of turns to next action
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#Cooldown>
-    pub cooldown:  TurnAmount,
-    /// Cargo, map amount of resources by types
-    pub cargo:     Cargo,
+    pub cooldown: Cooldown,
+
+    /// [`Cargo`], map amount of resources by types
+    pub cargo: Cargo,
+
     /// Type of unit
     pub unit_type: UnitType,
 }
 
 impl Unit {
-    /// Creates new `CityTile`
+    /// Creates new [`CityTile`]
     ///
     /// # Parameters
     ///
@@ -117,22 +181,21 @@ impl Unit {
     ///
     /// # Returns
     ///
-    /// A new created `Unit`
+    /// A new created [`Unit`]
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#Units>
     pub fn new(
-        team_id: TeamId, unit_type: UnitType, unit_id: EntityId, position: Position,
-        cooldown: TurnAmount,
+        team: TeamId, unit_type: UnitType, id: EntityId, pos: Position, cooldown: Cooldown,
     ) -> Self {
         Self {
-            team_id,
+            team,
             unit_type,
-            unit_id,
-            position,
+            id,
+            pos,
             cooldown,
-            cargo: Cargo::new(),
+            cargo: Cargo::default(),
         }
     }
 
@@ -144,38 +207,32 @@ impl Unit {
     ///
     /// # Returns
     ///
-    /// Cargo space used by all resources, `ResourceAmount`
-    pub fn cargo_space_used(&self) -> ResourceAmount { self.cargo.values().sum() }
-
-    /// Returns cargo space available for unit
-    ///
-    /// # Parameters
-    ///
-    /// - `self` - Self  reference
-    ///
-    /// # Returns
-    ///
-    /// `ResourceAmount`
-    ///
-    /// # See also
-    ///
-    /// Check <https://www.lux-ai.org/specs-2021#Units>
-    pub fn cargo_space_available(&self) -> ResourceAmount { self.unit_type.cargo_space_available() }
+    /// Cargo space used by all resources, [`ResourceAmount`]
+    pub fn cargo_space_used(&self) -> ResourceAmount {
+        ResourceType::VALUES
+            .into_iter()
+            .map(|resource_type| self.cargo[resource_type])
+            .sum()
+    }
 
     /// Returns free cargo space (space available - space used)
     ///
+    /// Note that any Resource takes up the same space, e.g. 70 wood takes up as
+    /// much space as 70 uranium, but 70 uranium would produce much more fuel
+    /// than wood when deposited at a City
+    ///
     /// # Parameters
     ///
     /// - `self` - Self  reference
     ///
     /// # Returns
     ///
-    /// Free cargo space, `ResourceAmount`
-    pub fn cargo_space_left(&self) -> ResourceAmount {
-        self.cargo_space_available() - self.cargo_space_used()
+    /// Free cargo space, [`ResourceAmount`]
+    pub fn get_cargo_space_left(&self) -> ResourceAmount {
+        self.unit_type.cargo_space_available() - self.cargo_space_used()
     }
 
-    /// Check if Unit can perform action, i.e. cooldown is 0
+    /// Check if [`Unit`] can perform action, i.e. cooldown is less than 1
     ///
     /// # Parameters
     ///
@@ -188,22 +245,22 @@ impl Unit {
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#Cooldown>
-    pub fn can_act(&self) -> bool { self.cooldown < 1 }
+    pub fn can_act(&self) -> bool { self.cooldown < 1.0 }
 
-    /// Check if Unit can build CityTile, i.e. cooldown is 0 and unit is worker
-    /// and cell not has resource and amount of resources is greater than
-    /// needed
+    /// Check if Unit can build [`CityTile`], i.e. cooldown is less than 1 and
+    /// unit is worker and cell not has resource and amount of resources is
+    /// greater than needed
     ///
     /// # Parameters
     ///
     /// - `self` - reference to Self
-    /// - `game_map` - reference to `GameMap`
+    /// - `game_map` - reference to [`GameMap`]
     ///
     /// # Returns
     ///
-    /// `bool` value
+    /// `true` if the [`Unit`] can build a [`City`] on the tile it is on now.
     pub fn can_build(&self, game_map: &GameMap) -> bool {
-        let ref cell = game_map[self.position];
+        let ref cell = game_map[self.pos];
         self.unit_type == UnitType::Worker &&
             !cell.has_resource() &&
             self.can_act() &&
@@ -222,51 +279,54 @@ impl Unit {
     ///
     /// `bool` value
     pub fn can_pillage(&self, game_map: &GameMap) -> bool {
-        let ref cell = game_map[self.position];
-        self.unit_type == UnitType::Worker && self.can_act() && cell.road_progress > 0.0
+        let ref cell = game_map[self.pos];
+        self.unit_type == UnitType::Worker && self.can_act() && cell.road > 0.0
     }
 
-    /// Command to move unit to given `direction`
+    /// Returns action to move unit to given `direction`
+    ///
+    /// When applied, Unit will move in the specified direction by one Unit,
+    /// provided there are no other units in the way or opposition cities.
+    /// (Units can stack on top of each other however when over a friendly City)
     ///
     /// # Parameters
     ///
     /// - `self` - reference to Self
-    /// - `direction` - `Direction` to move to
+    /// - `direction` - [`Direction`] to move to
     ///
     /// # Returns
     ///
     /// Action to perform
-    pub fn move_command(&self, direction: Direction) -> String {
-        format!(
-            "{} {} {}",
-            Commands::MOVE,
-            self.unit_id,
-            direction.to_argument()
-        )
+    pub fn move_(&self, direction: Direction) -> Action {
+        format!("{} {} {}", Commands::MOVE, self.id, direction.to_argument())
     }
 
-    /// Command to transfer resource to other unit
+    /// Returns action to transfer resource to other (`to_unit`) [`Unit`]
     ///
     /// # Parameters
     ///
     /// - `self` - reference to Self
-    /// - `to_unit` - `Unit` reference, transfered to
-    /// - `resource` - reference to tranfering `Resource`
+    /// - `to_unit` - [`Unit`] reference, transfered to
+    /// - `resource_type` - [`ResourceType`] of transfering resource
+    /// - `resource_amount` - [`ResourceAmount`] of transfering resource
     ///
     /// # Returns
     ///
     /// Action to perform
-    pub fn transfer_command(&self, to_unit: &Unit, resource: &Resource) -> String {
+    pub fn transfer(
+        &self, to_unit: &Unit, resource_type: ResourceType, resource_amount: ResourceAmount,
+    ) -> Action {
         format!(
-            "{} {} {} {}",
+            "{} {} {} {} {}",
             Commands::TRANSFER,
-            self.unit_id,
-            to_unit.unit_id,
-            resource.to_argument(),
+            self.id,
+            to_unit.id,
+            resource_type.to_argument(),
+            resource_amount
         )
     }
 
-    /// Command to build city
+    /// Returns action to build [`City`]
     ///
     /// # Parameters
     ///
@@ -275,11 +335,9 @@ impl Unit {
     /// # Returns
     ///
     /// Action to perform
-    pub fn build_city_command(&self) -> String {
-        format!("{} {}", Commands::BUILD_CITY, self.unit_id)
-    }
+    pub fn build_city(&self) -> Action { format!("{} {}", Commands::BUILD_CITY, self.id) }
 
-    /// Command to pillage road
+    /// Returns action to pillage road
     ///
     /// # Parameters
     ///
@@ -288,5 +346,5 @@ impl Unit {
     /// # Returns
     ///
     /// Action to perform
-    pub fn pillage_command(&self) -> String { format!("{} {}", Commands::PILLAGE, self.unit_id) }
+    pub fn pillage(&self) -> Action { format!("{} {}", Commands::PILLAGE, self.id) }
 }

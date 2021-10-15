@@ -3,10 +3,10 @@ use std::{convert::{TryFrom, TryInto},
 
 use crate::*;
 
-/// Represents `GameMap` coordinate (x or y)
+/// Represents coordinate (x or y) on 2D grid
 pub type Coordinate = i32;
 
-/// Represents position of `GameMapCell` on `GameMap` 2D grid
+/// Represents position on 2D grid
 ///
 /// # See also
 ///
@@ -15,6 +15,7 @@ pub type Coordinate = i32;
 pub struct Position {
     /// X coordinate
     pub x: Coordinate,
+
     /// Y coordinate
     pub y: Coordinate,
 }
@@ -29,7 +30,7 @@ impl fmt::Display for Position {
 }
 
 impl Position {
-    /// Creates `Position` with given X and Y `Coordinate`
+    /// Creates [`Position`] with given X and Y [`Coordinate`]
     ///
     /// # Parameters
     ///
@@ -42,7 +43,7 @@ impl Position {
     ///
     /// # Returns
     ///
-    /// `Position` with set coordinates
+    /// [`Position`] with set coordinates
     ///
     /// # See also
     ///
@@ -58,17 +59,18 @@ impl Position {
         }
     }
 
-    /// Translate `Position` in given `Direction` by `units`
+    /// Returns the [`Position`] equal to going in a `direction` `units` number
+    /// of times from this [`Position`]
     ///
     /// # Parameters
     ///
-    /// - `self` - Self reference (Position to translate)
-    /// - `direction` - Direction to translate to
+    /// - `self` - Self reference ([`Position `] to translate)
+    /// - `direction` - [`Direction `] to translate to
     /// - `units` - amount of tiles to translate to
     ///
     /// # Returns
     ///
-    /// Translated `Position`
+    /// Translated [`Position`]
     ///
     /// # See also
     ///
@@ -83,25 +85,30 @@ impl Position {
         }
     }
 
-    /// `Direction` (relative to `self`) pointing to nearest to `target` tile
+    /// Returns the direction that would move you closest to `target` from this
+    /// [`Position`] if you took a single step. In particular, will return
+    /// [`Direction::Center`] if this [`Position`] is equal to the `target`.
+    /// Note that this does not check for potential collisions with other
+    /// units but serves as a basic pathfinding method
     ///
     /// # Parameters
     ///
-    /// - `self` - Self reference (Position relative to)
-    /// - `position` - `Position` to find direction to
+    /// - `self` - Self reference ([`Position`] relative to)
+    /// - `target` - [`Position`] to find direction to
     ///
     /// # Returns
     ///
-    /// `Direction` which points to `target`
+    /// [`Direction`] (relative to `self`) pointing to nearest to `target` tile
+    ///
     ///
     /// # See also
     ///
     /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
-    pub fn direction_to(&self, target: Position) -> Direction {
+    pub fn direction_to(&self, target: &Self) -> Direction {
         let mut closest_direction = Direction::Center;
-        let mut closest_distance = target.distance_to(*self);
+        let mut closest_distance = target.distance_to(self);
         for direction in Direction::DIRECTIONS {
-            let new_position = self.translate(direction, 1);
+            let ref new_position = self.translate(direction, 1);
             let distance = target.distance_to(new_position);
             if distance < closest_distance {
                 closest_direction = direction;
@@ -111,41 +118,57 @@ impl Position {
         closest_direction
     }
 
-    /// Amount of moves from `self` to `other`
+    /// Returns [the Manhattan (rectilinear) distance](https://en.wikipedia.org/wiki/Taxicab_geometry) from this [`Position`] to `other` position
     ///
     /// # Parameters
     ///
-    /// - `self` - Self reference (Position from which to measure)
-    /// - `other` - `Position` to which to measure
+    /// - `self` - Self value ([`Position`] from which to measure)
+    /// - `other` - [`Position`] to which to measure
     ///
     /// # Returns
     ///
-    /// Amount of moves from one tile to other
+    /// Number of moves from one `self` position to `other`
     ///
     /// # See also
     ///
     /// Check <https://en.wikipedia.org/wiki/Taxicab_geometry>
     /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
-    pub fn distance_to(&self, other: Self) -> i32 {
-        (self.x - other.x).abs() + (self.y - other.y).abs()
+    pub fn distance_to(&self, other: &Self) -> f32 {
+        let x_difference = (self.x - other.x).abs();
+        let y_difference = (self.y - other.y).abs();
+        (x_difference + y_difference) as f32
     }
 
-    /// Checks if two tiles adjacent or equal
+    /// Returns `true` if this [`Position`] is adjacent or equal to `other`.
+    /// `false` otherwise
     ///
     /// # Parameters
     ///
     /// - `self` - Self reference
-    /// - `other` - `Position` to check
+    /// - `other` - [`Position`] to check
     ///
     /// # Returns
     ///
-    /// `True` if `self` and `other` adjacent or equal
+    /// `true` if positions are adjacent
     ///
     /// # See also
     ///
     /// Check <https://en.wikipedia.org/wiki/Taxicab_geometry>
     /// Check <https://www.lux-ai.org/specs-2021#The%20Map>
-    pub fn is_adjacent(&self, other: Self) -> bool { self.distance_to(other) <= 1 }
+    pub fn is_adjacent(&self, other: &Self) -> bool { self.distance_to(other) <= 1.0 }
+
+    /// Returns `true` if this [`Position`] is equal to the `other` position
+    /// object by checking `x`, `y` coordinates. `false` otherwise
+    ///
+    /// # Parameters
+    ///
+    /// - `self` - Self reference
+    /// - `other` - [`Position`] to compare with
+    ///
+    /// # Returns
+    ///
+    /// `true` if positions are equal
+    pub fn equals(&self, other: &Self) -> bool { self == other }
 
     /// Convert to command argument
     ///
