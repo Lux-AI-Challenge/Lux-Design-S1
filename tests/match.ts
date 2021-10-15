@@ -18,6 +18,7 @@ const luxdim = Dimensions.create(design, {
 
 const jsSimple = './kits/js/simple/main.js';
 const pySimple = './kits/python/simple/main.py';
+const rustSimple = './kits/rust/simple/src/main.rs';
 const cppSimple = './kits/cpp/simple/main.cpp';
 const cppOrganic = './tests/bots/cpporganic/main.cpp';
 const javaSimple = './kits/java/simple/Bot.java';

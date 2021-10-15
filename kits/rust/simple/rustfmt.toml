@@ -1,0 +1,98 @@
+binop_separator = 'Back'
+
+blank_lines_lower_bound = 0
+blank_lines_upper_bound = 1
+
+brace_style = 'SameLineWhere'
+
+color = 'Auto'
+
+combine_control_expr = false
+
+comment_width = 80
+
+condense_wildcard_suffixes = true
+
+control_brace_style = 'AlwaysSameLine'
+
+disable_all_formatting = false
+
+edition = '2021'
+
+empty_item_single_line = true
+
+enum_discrim_align_threshold = 20
+
+error_on_line_overflow = false
+error_on_unformatted = false
+
+fn_args_layout = 'Compressed'
+fn_single_line = true
+
+force_explicit_abi = true
+force_multiline_blocks = true
+format_code_in_doc_comments = true
+
+format_macro_matchers= true
+format_macro_bodies = true
+format_strings = true
+
+hard_tabs = false
+
+hide_parse_errors = false
+
+ignore = []
+
+imports_indent = 'Visual'
+imports_layout = 'Mixed'
+indent_style = 'Block'
+inline_attribute_width = 0
+license_template_path = ''
+
+match_arm_blocks = false
+match_arm_leading_pipes = 'Preserve'
+match_block_trailing_comma = true
+max_width  = 100
+merge_derives = true
+
+imports_granularity = 'Crate'
+newline_style = 'Auto'
+
+normalize_comments = true
+normalize_doc_attributes = true
+overflow_delimited_expr = true
+remove_nested_parens = true
+
+reorder_impl_items = true
+reorder_imports = true
+
+group_imports = 'StdExternalCrate'
+
+reorder_modules = true
+report_fixme = 'Always'
+report_todo = 'Always'
+
+skip_children = false
+space_after_colon = true
+space_before_colon = false
+
+spaces_around_ranges = false
+struct_field_align_threshold = 20
+struct_lit_single_line = true
+
+tab_spaces = 4
+
+trailing_comma = 'Vertical'
+trailing_semicolon = true
+type_punctuation_density = 'Wide'
+unstable_features = false
+use_field_init_shorthand = true
+
+use_small_heuristics = 'Default'
+use_try_shorthand = true
+version = 'Two'
+
+where_single_line = false
+
+wrap_comments = true
+

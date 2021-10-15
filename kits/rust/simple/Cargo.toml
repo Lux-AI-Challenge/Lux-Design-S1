@@ -1,0 +1,21 @@
+cargo-features = ["strip"]
+
+[package]
+authors = ["Tye singwa"]
+edition = "2021"
+name = "lux-ai-simple-bot"
+version = "0.1.0"
+
+[[bin]]
+name = "solution"
+path = "./src/main.rs"
+
+[dependencies.lux-ai]
+path = "./lux"
+package = "lux-ai-api"
+
+[profile.release]
+opt-level = 3
+lto = true
+panic = "abort"
+strip = "symbols"

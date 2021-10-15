@@ -52,6 +52,7 @@ The [kits](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits)
 
 - [Python](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/python)
 - [Javascript](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/js)
+- [Rust](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/rust) (maintained by [@tye-singwa](https://github.com/tye-singwa))
 - [C++](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/cpp)
 - [Java](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/java)
 - [Typescript](https://github.com/Lux-AI-Challenge/Lux-Design-2021/tree/master/kits/ts)
