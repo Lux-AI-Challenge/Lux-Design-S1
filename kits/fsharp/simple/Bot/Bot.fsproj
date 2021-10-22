@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>fsharp_simple</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarnOn>3390;$(WarnOn)</WarnOn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Lux\game_constants.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="Lux\Annotate.fs" />
+    <Compile Include="Lux\Constants.fs" />
+    <Compile Include="Lux\GameConstants.fs" />
+    <Compile Include="Lux\GameObjects.fs" />
+    <Compile Include="Lux\Agent.fs" />
+    <Compile Include="Bot.fs" />
+    <Compile Include="Main.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FSharp.Data" Version="4.2.4" />
+  </ItemGroup>
+</Project>
