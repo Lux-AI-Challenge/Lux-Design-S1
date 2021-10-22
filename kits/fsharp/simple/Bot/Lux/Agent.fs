@@ -3,10 +3,9 @@ module Lux.Agent
 open System
 open GameObjects
 open System.Collections.Generic
-open System.IO
 
-let private updateUnfold (gameState:Game) (input: TextReader) : option<Game * Game> =
-    let updateInfo = input.ReadLine()
+let private updateUnfold (gameState:Game) : option<Game * Game> =
+    let updateInfo = Console.ReadLine()
     if updateInfo = Constants.INPUT_CONSTANTS.DONE then
         None
     else
@@ -16,7 +15,7 @@ let private updateUnfold (gameState:Game) (input: TextReader) : option<Game * Ga
             | s when s = Constants.INPUT_CONSTANTS.RESEARCH_POINTS ->
                 let team: int = Int32.Parse(updates.[1]);
                 let newPoints = Int32.Parse(updates.[2])
-                gameState.Players.[team].research_points <- newPoints
+                gameState.Players.[team].ResearchPoints <- newPoints
                 Some(gameState, gameState)
             | s when s = Constants.INPUT_CONSTANTS.RESOURCES ->
                 let r_type = updates.[1];
@@ -61,7 +60,7 @@ let private updateUnfold (gameState:Game) (input: TextReader) : option<Game * Ga
                 let city = gameState.Players.[team].Cities.Item cityid
                 let citytile = city._add_city_tile(x, y, cooldown);
                 gameState.GameMap.GetCell(x, y).Citytile <- citytile;
-                gameState.Players.[team].city_tile_count <- gameState.Players.[team].city_tile_count + 1;
+                gameState.Players.[team].CityTileCount <- gameState.Players.[team].CityTileCount + 1;
                 Some(gameState, gameState)
             | s when s = Constants.INPUT_CONSTANTS.ROADS ->
                 let x = Int32.Parse(updates.[1]);
@@ -80,9 +79,9 @@ type GameStateIO =
     {
         gameState : Game
     }
-    static member initialize(input: TextReader) : Game =
-        let id = Int32.Parse(input.ReadLine())
-        let mapInfo: string = input.ReadLine()
+    static member initialize() : Game =
+        let id = Int32.Parse(Console.ReadLine())
+        let mapInfo: string = Console.ReadLine()
         let mapInfoSplit: string[] = mapInfo.Split(" ")
         let mapWidth = Int32.Parse(mapInfoSplit.[0])
         let mapHeight = Int32.Parse(mapInfoSplit.[1])
@@ -96,19 +95,19 @@ type GameStateIO =
                 }
         gameState
 
-    member self.update(input: TextReader) =
+    member self.update() =
         let newPlayer0 = 
-            Player(0, [], new Dictionary<string, City>(), self.gameState.Players.[0].city_tile_count)
+            Player(0, [], new Dictionary<string, City>(), self.gameState.Players.[0].CityTileCount)
         let newPlayer1 = 
-            Player(1, [], new Dictionary<string, City>(), self.gameState.Players.[1].city_tile_count)
+            Player(1, [], new Dictionary<string, City>(), self.gameState.Players.[1].CityTileCount)
         let newGameState = 
             { self.gameState with
                 Turn = self.gameState.Turn + 1;
                 Players = [newPlayer0; newPlayer1]
-                GameMap = GameMap(self.gameState.GameMap.height, self.gameState.GameMap.width)
+                GameMap = GameMap(self.gameState.GameMap.Height, self.gameState.GameMap.Width)
                 }
             |> Seq.unfold (fun state ->
-                updateUnfold state input
+                updateUnfold state
                 )
             |> Seq.last
         { self with gameState = newGameState }
