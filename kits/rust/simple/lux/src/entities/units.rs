@@ -264,7 +264,7 @@ impl Unit {
         self.unit_type == UnitType::Worker &&
             !cell.has_resource() &&
             self.can_act() &&
-            self.cargo_space_used() > City::city_build_cost()
+            self.cargo_space_used() >= City::city_build_cost()
     }
 
     /// Check if Unit can pillage road, i.e. cooldown is 0 and unit is worker
