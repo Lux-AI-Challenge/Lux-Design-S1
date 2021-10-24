@@ -249,7 +249,7 @@ impl Unit {
 
     /// Check if Unit can build [`CityTile`], i.e. cooldown is less than 1 and
     /// unit is worker and cell not has resource and amount of resources is
-    /// greater than needed
+    /// greater or equal than needed
     ///
     /// # Parameters
     ///
