@@ -127,6 +127,7 @@ This is a list of all community tools built by our community!
 - [Optics](https://github.com/rooklift/optics): A simple, fast, top-down-view visualizer by [rooklift](https://github.com/rooklift/)
 - [Command Line Visualizer](https://github.com/nathanbabcock/lux-ai-vis): A streamlined tool to watch a replay by running a single command in the CLI
 - [Public Notebooks](https://www.kaggle.com/c/lux-ai-2021/code): A collection of all public notebooks (in python usually) where competitors share their ideas, code, and more. There are all kinds of solutions here, from RL, Imitation Learning, to rule based approaches.
+- [Submission Statistics](https://lux-ai-stats.herokuapp.com/): A tool to track any submission to the competition, showing score change over time, wins and losses etc.
 
 
 ## Contributing
