@@ -249,7 +249,7 @@ impl Unit {
 
     /// Check if Unit can build [`CityTile`], i.e. cooldown is less than 1 and
     /// unit is worker and cell not has resource and amount of resources is
-    /// greater than needed
+    /// greater or equal than needed
     ///
     /// # Parameters
     ///
@@ -264,7 +264,7 @@ impl Unit {
         self.unit_type == UnitType::Worker &&
             !cell.has_resource() &&
             self.can_act() &&
-            self.cargo_space_used() > City::city_build_cost()
+            self.cargo_space_used() >= City::city_build_cost()
     }
 
     /// Check if Unit can pillage road, i.e. cooldown is 0 and unit is worker
