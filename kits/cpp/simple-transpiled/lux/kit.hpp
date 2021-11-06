@@ -2,6 +2,7 @@
 // emcc -s FORCE_FILESYSTEM=1 --pre-js init_fs.js hello.cpp
 #ifndef kit_h
 #define kit_h
+#include <ostream>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -10,13 +11,15 @@
 #include "game_objects.hpp"
 #include "annotate.hpp"
 #include "city.hpp"
+
 namespace kit
 {
     using namespace std;
+
     static string getline()
     {
         // exit if stdin is bad now
-        if (!std::cin.good())
+        if (!cin.good())
             exit(0);
 
         char str[2048], ch;
@@ -76,12 +79,12 @@ namespace kit
             mapWidth = stoi(map_parts[0]);
             mapHeight = stoi(map_parts[1]);
 
-            this->map = lux::GameMap(mapWidth, mapHeight);
+            map = lux::GameMap(mapWidth, mapHeight);
         }
         // end a turn
         static void end_turn()
         {
-            cout << "D_FINISH" << std::endl
+            cout << "D_FINISH" << endl
                  << std::flush;
         }
 
@@ -91,9 +94,9 @@ namespace kit
          */
         void update()
         {
-            this->turn++;
+            turn++;
             resetPlayerStates();
-            this->map = lux::GameMap(mapWidth, mapHeight);
+            map = lux::GameMap(mapWidth, mapHeight);
 
             while (true)
             {
@@ -107,7 +110,7 @@ namespace kit
                 if (input_identifier == INPUT_CONSTANTS::RESEARCH_POINTS)
                 {
                     int team = stoi(updates[1]);
-                    this->players[team].researchPoints = stoi(updates[2]);
+                    players[team].researchPoints = stoi(updates[2]);
                 }
                 else if (input_identifier == INPUT_CONSTANTS::RESOURCES)
                 {
@@ -116,7 +119,7 @@ namespace kit
                     int y = stoi(updates[3]);
                     int amt = stoi(updates[4]);
                     lux::ResourceType rtype = lux::ResourceType(type.at(0));
-                    this->map._setResource(rtype, x, y, amt);
+                    map._setResource(rtype, x, y, amt);
                 }
                 else if (input_identifier == INPUT_CONSTANTS::UNITS)
                 {
@@ -131,7 +134,7 @@ namespace kit
                     int coal = stoi(updates[i++]);
                     int uranium = stoi(updates[i++]);
                     lux::Unit unit = lux::Unit(team, unittype, unitid, x, y, cooldown, wood, coal, uranium);
-                    this->players[team].units.push_back(unit);
+                    players[team].units.push_back(unit);
                 }
                 else if (input_identifier == INPUT_CONSTANTS::CITY)
                 {
@@ -140,7 +143,7 @@ namespace kit
                     string cityid = updates[i++];
                     float fuel = stof(updates[i++]);
                     float lightUpkeep = stof(updates[i++]);
-                    this->players[team].cities[cityid] = lux::City(team, cityid, fuel, lightUpkeep);
+                    players[team].cities[cityid] = lux::City(team, cityid, fuel, lightUpkeep);
                 }
                 else if (input_identifier == INPUT_CONSTANTS::CITY_TILES)
                 {
@@ -160,7 +163,7 @@ namespace kit
                     int x = stoi(updates[i++]);
                     int y = stoi(updates[i++]);
                     float road = stof(updates[i++]);
-                    lux::Cell * cell = this->map.getCell(x, y);
+                    lux::Cell * cell = map.getCell(x, y);
                     cell->road = road;
                 }
             }
@@ -179,14 +182,15 @@ namespace kit
         }
 
     private:
-        void resetPlayerStates(){
-            for (int team = 0; team < 2; team++) {
+        void resetPlayerStates()
+        {
+            for (int team = 0; team < 2; team++)
+            {
                 players[team].units.clear();
                 players[team].cities.clear();
                 players[team].cityTileCount = 0;
             }
-            
-        };
+        }
     };
 }
 
