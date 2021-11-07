@@ -28,9 +28,9 @@ namespace lux
     class Cell
     {
     public:
-        Position pos = Position(-1, -1);
+        Position pos;
         Resource resource;
-        CityTile * citytile;
+        CityTile * citytile = nullptr;
         float road = 0.0;
 
         Cell(){}
