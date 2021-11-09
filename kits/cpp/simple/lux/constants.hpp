@@ -78,4 +78,5 @@ namespace lux
   };
   static const DIRECTIONS ALL_DIRECTIONS[] = { NORTH, EAST, SOUTH, WEST };
 };
+
 #endif

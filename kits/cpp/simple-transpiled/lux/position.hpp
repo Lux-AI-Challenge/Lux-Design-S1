@@ -1,69 +1,74 @@
 #ifndef position_h
 #define position_h
+#include <cmath>
+#include <ostream>
 #include <vector>
 #include <string>
 #include "constants.hpp"
+
 namespace lux
 {
     using namespace std;
+
     class Position
     {
     public:
         int x = -1;
         int y = -1;
+
         Position() {}
-        Position(int x, int y)
+        Position(int x, int y) : x(x), y(y) {}
+
+        /** Returns true if pos is adjacent in x or y direction or if pos is the same */
+        bool isAdjacent(const Position &pos) const
         {
-            this->x = x;
-            this->y = y;
-        }
-        bool isAdjacent(const Position &pos)
-        {
-            const int dx = this->x - pos.x;
-            const int dy = this->y - pos.y;
-            if (abs(dx) + abs(dy) > 1)
-            {
-                return false;
-            }
-            return true;
-        }
-        bool operator==(const Position &pos)
-        {
-            return this->x == pos.x && this->y == pos.y;
+            const int dx = x - pos.x;
+            const int dy = y - pos.y;
+            return (abs(dx) + abs(dy)) <= 1;
         }
 
-        Position translate(const DIRECTIONS &direction, int units)
+        bool operator==(const Position &pos) const noexcept
+        {
+            return x == pos.x && y == pos.y;
+        }
+        bool operator!=(const Position &pos) const noexcept
+        {
+            return !(operator==(pos));
+        }
+
+        /** Returns a new position created by applying direction units number of times. Does not modify this itself */
+        Position translate(const DIRECTIONS &direction, int units) const
         {
             switch (direction)
             {
             case DIRECTIONS::NORTH:
-                return Position(this->x, this->y - units);
+                return Position(x, y - units);
             case DIRECTIONS::EAST:
-                return Position(this->x + units, this->y);
+                return Position(x + units, y);
             case DIRECTIONS::SOUTH:
-                return Position(this->x, this->y + units);
+                return Position(x, y + units);
             case DIRECTIONS::WEST:
-                return Position(this->x - units, this->y);
+                return Position(x - units, y);
             case DIRECTIONS::CENTER:
-                return Position(this->x, this->y);
+                return Position(x, y);
             }
         }
 
         /** Returns Manhattan distance to pos from this position */
         float distanceTo(const Position &pos) const
         {
-            return abs(pos.x - this->x) + abs(pos.y - this->y);
+            return abs(pos.x - x) + abs(pos.y - y);
         }
 
         /** Returns closest direction to targetPos, or center if staying put is best */
-        DIRECTIONS directionTo(const Position &targetPos)
+        DIRECTIONS directionTo(const Position &targetPos) const
         {
 
             DIRECTIONS closestDirection = DIRECTIONS::CENTER;
-            float closestDist = this->distanceTo(targetPos);
+            float closestDist = distanceTo(targetPos);
             for (const DIRECTIONS dir : ALL_DIRECTIONS)
             {
-                const Position newpos = this->translate(dir, 1);
+                const Position newpos = translate(dir, 1);
                 float dist = targetPos.distanceTo(newpos);
                 if (dist < closestDist)
                 {
@@ -73,12 +78,15 @@ namespace lux
             }
             return closestDirection;
         }
+
         friend ostream &operator<<(ostream &out, const Position &p);
-        operator std::string() const
+
+        operator string() const
         {
-            return "(" + to_string(this->x) + ", " + to_string(this->y) + ")";
+            return "(" + to_string(x) + ", " + to_string(y) + ")";
         }
     };
+
     ostream &operator<<(ostream &out, const Position &p);
 }
 
