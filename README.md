@@ -144,3 +144,18 @@ With balance testing help from [David](https://github.com/holypegasus)
 
 ## Sponsors
 We would like to thank our 3 sponsors, [QuantCo](https://quantco.com/), [J Ventures](http://www.thejiangmen.com/), and [QAImera](https://qaimera.com) this year for allowing us to provide a prize pool and exciting opportunities to our competitors! For more information on them, check them out here: https://www.lux-ai.org/sponsors-2021
+
+## Citation
+
+If you use the Lux AI Season 1 environment in your work, please cite this repository as so
+
+```
+@software{Doerschuk-Tiberi_Lux_AI_Challenge_2021,
+author = {Doerschuk-Tiberi, Bovard and Tao, Stone},
+month = {7},
+title = {{Lux AI Challenge Season 1}},
+url = {https://github.com/Lux-AI-Challenge/Lux-Design-2021},
+version = {1.0.0},
+year = {2021}
+}
+```
