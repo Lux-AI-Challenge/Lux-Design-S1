@@ -150,7 +150,7 @@ We would like to thank our 3 sponsors, [QuantCo](https://quantco.com/), [J Ventu
 If you use the Lux AI Season 1 environment in your work, please cite this repository as so
 
 ```
-@software{Doerschuk-Tiberi_Lux_AI_Challenge_2021,
+@software{Lux_AI_Challenge_S1,
   author = {Doerschuk-Tiberi, Bovard and Tao, Stone},
   month = {7},
   title = {{Lux AI Challenge Season 1}},
