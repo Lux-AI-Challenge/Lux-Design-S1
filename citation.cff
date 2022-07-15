@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-- family-names: "Tao"
-  given-names: "Stone"
 - family-names: "Doerschuk-Tiberi"
   given-names: "Bovard"
+- family-names: "Tao"
+  given-names: "Stone"
 title: "Lux AI Challenge Season 1"
 version: 1.0.0
 date-released: 2021-07-16
