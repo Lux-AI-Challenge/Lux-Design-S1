@@ -151,11 +151,11 @@ If you use the Lux AI Season 1 environment in your work, please cite this reposi
 
 ```
 @software{Doerschuk-Tiberi_Lux_AI_Challenge_2021,
-author = {Doerschuk-Tiberi, Bovard and Tao, Stone},
-month = {7},
-title = {{Lux AI Challenge Season 1}},
-url = {https://github.com/Lux-AI-Challenge/Lux-Design-2021},
-version = {1.0.0},
-year = {2021}
+  author = {Doerschuk-Tiberi, Bovard and Tao, Stone},
+  month = {7},
+  title = {{Lux AI Challenge Season 1}},
+  url = {https://github.com/Lux-AI-Challenge/Lux-Design-2021},
+  version = {1.0.0},
+  year = {2021}
 }
 ```
