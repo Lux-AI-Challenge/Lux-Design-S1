@@ -1,0 +1,1 @@
+dotnet build ./Bot/ --configuration Release

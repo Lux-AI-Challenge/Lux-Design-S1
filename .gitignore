@@ -17,6 +17,9 @@ kits/cpp/**/*/main.js
 kits/cpp/**/*/main.wasm
 kits/cpp/**/*.out
 kits/java/**/*.class
+kits/csharp/**/obj/*
+kits/csharp/**/bin/*
+kits/csharp/**/.vs/*
 __pycache__
 kits/ts/dist
 
